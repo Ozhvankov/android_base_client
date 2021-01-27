@@ -1,0 +1,82 @@
+<resources>
+    <string name="app_name">Shipment</string>
+
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="footprint">Footprint</string>
+    <string name="initial">Initial</string>
+    <string name="printed_lpn">Printed LPN</string>
+    <string name="status">Status</string>
+    <string name="articles">Articles</string>
+    <string name="unit_of_measurement">Unit of measurement</string>
+    <string name="shelf_lifedays">Shelf lifedays</string>
+    <string name="implementation_period">Implementation Period</string>
+    <string name="plan_weight">Plan weight</string>
+    <string name="plan_box">Plan box</string>
+    <string name="fact_weight">Fact Weight</string>
+    <string name="fact_box">Fact box</string>
+    <string name="fact_weight_empty_box">Fact Weight Empty Box</string>
+    <string name="fact_weight_empty_pallet">Fact Weight Empty Pallet</string>
+    <string name="manufacturing_date">Manufacturing Date</string>
+    <string name="inbound_date">Inbound Date</string>
+    <string name="number_of_party">Number of party</string>
+    <string name="lot_number_batch">Lot Number Batch</string>
+    <string name="transport_equipment_number">Transport Equipment Number</string>
+    <string name="pallet_type">Pallet Type</string>
+    <string name="destination_location">Destination Location</string>
+    <string name="page">Page:</string>
+    <string name="save">save</string>
+    <string name="inbound_shipment_list">Inbound shipment list</string>
+    <string name="outbound_shipment_list">Outbound shipment list</string>
+    <string name="stock_operations">Stock operations</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="change_server">Change server</string>
+    <string name="login">Login</string>
+    <string name="refill">Refill</string>
+    <string name="partial">Partial</string>
+    <string name="stagging">Stagging</string>
+    <string name="task">Task:</string>
+    <string name="enter_the_lpn">Enter the LPN</string>
+    <string name="lpn_modify">LPN Modify</string>
+    <string name="lpn_inventory">LPN Inventory</string>
+    <string name="item_id">Item ID</string>
+    <string name="item">Item</string>
+    <string name="name">Name</string>
+    <string name="article">Article</string>
+    <string name="quantity_box">Quantity, box</string>
+    <string name="quantity_kg">Quantity. kg</string>
+    <string name="lpn">LPN</string>
+
+    <string name="current_quantity_kg">Current Quantity, kg</string>
+    <string name="current_quantity_box">Current Quantity, box</string>
+    <string name="location">location</string>
+    <string name="new_location">New Location</string>
+    <string name="new_lpn">new LPN</string>
+    <string name="inbound_shipment_number">Inbound Shipment Number</string>
+    <string name="supplier">Supplier</string>
+    <string name="client">Client</string>
+    <string name="items">Items</string>
+
+    <string name="pallet_status">Pallet Status</string>
+    <string name="pallet_location">Pallet Location</string>
+
+    <string name="available_quantity_kg">Available quantity, kg</string>
+    <string name="reserved_quantity_kg">Reserved quantity, kg</string>
+    <string name="available_quantity_box">Available quantity, box</string>
+    <string name="reserved_quantity_box">Reserved quantity, box</string>
+    <string name="ip_domain">IP/Domain</string>
+    <string name="test_save">Test/Save</string>
+
+    <string name="pallet">Pallet</string>
+    <string name="returntask">Return</string>
+    <string name="warehouse">Warehouse</string>
+    <string name="conn_err">Connection Err</string>
+    <string name="wrong_cred_err">Wrong email or password</string>
+    <string name="empty_cred_err">Enter credentials</string>
+    <string name="apply">apply</string>
+    <string name="success">Success</string>
+    <string name="err">Something went wrong</string>
+
+
+</resources>
