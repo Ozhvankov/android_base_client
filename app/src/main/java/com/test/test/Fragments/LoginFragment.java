@@ -103,6 +103,11 @@ public class LoginFragment extends Fragment {
                 mFragmentTransactiion.change();
             }
         });
+        if(Stash.getString("domain").length() == 0)
+            mFragmentTransactiion.change();
+        else {
+            mServerBtn.setText(getText(R.string.change_server) + ": " +Stash.getString("domain"));
+        }
         return mBaseView;
     }
 

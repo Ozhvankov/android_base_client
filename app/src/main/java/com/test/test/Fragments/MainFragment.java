@@ -38,12 +38,19 @@ public class MainFragment extends Fragment {
 
     private View mBaseView;
     private LinearLayout mInboundListLay, mOutboundListLay, mStockLay;
-    private Spinner mWarehouseSpinner;
-    private Button mApplyBtn;
     private MainActivity.toolbarChangeListener mToolbarChangeListener;
     private ArrayAdapter<String> adapter;
 
     public MainFragment(MainActivity.toolbarChangeListener toolbarChangeListener) {
+        setToolbarChangeListener(toolbarChangeListener);
+    }
+
+    public MainFragment() {
+
+    }
+
+
+    public void setToolbarChangeListener(MainActivity.toolbarChangeListener toolbarChangeListener){
         this.mToolbarChangeListener = toolbarChangeListener;
     }
 
@@ -56,8 +63,6 @@ public class MainFragment extends Fragment {
         mInboundListLay = mBaseView.findViewById(R.id.inbound_container);
         mOutboundListLay = mBaseView.findViewById(R.id.outbound_container);
         mStockLay = mBaseView.findViewById(R.id.stock_container);
-        mWarehouseSpinner = mBaseView.findViewById(R.id.warehouse_spinner);
-        mApplyBtn = mBaseView.findViewById(R.id.apply_btn);
 
         mInboundListLay.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,50 +85,6 @@ public class MainFragment extends Fragment {
             }
         });
 
-        setWarehouseSpinner(mWarehouseSpinner, getContext());
-        mApplyBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DataRepo.getData dataRepo = new DataRepo.getData(new DataRepo.onDataListener() {
-                    @Override
-                    public void returnData(String data) {
-                        if (data != null && !data.isEmpty()) {
-                            try {
-                                JSONObject object = new JSONObject(data);
-                                if (object.has("data")) {
-                                    if (object.getString("data").equals("success")) {
-                                        mToolbarChangeListener.onChange((String) mWarehouseSpinner.getSelectedItem());
-                                        Stash.put("warehouse", (String) mWarehouseSpinner.getSelectedItem());
-                                        Toast.makeText(getContext(), R.string.success, Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        Toast.makeText(getContext(), R.string.err, Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-
-                        }
-                    }
-                });
-                dataRepo.setWarehouse(String.valueOf(mWarehouseSpinner.getSelectedItemPosition() + 1), Stash.getString("user_id"));
-                dataRepo.start();
-            }
-        });
-
         return mBaseView;
-    }
-
-    private void setWarehouseSpinner(Spinner warehouseSpinner, Context context) {
-        List<String> models = new ArrayList<>();
-        models.add("Main ");
-        models.add("Fish ");
-
-        adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, models);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        warehouseSpinner.setAdapter(adapter);
-        Log.d("asdasd234", String.valueOf(Stash.getString("warehouse")));
-        Log.d("asdasd234", String.valueOf(models.indexOf(Stash.getString("warehouse"))));
-        warehouseSpinner.setSelection(models.indexOf(Stash.getString("warehouse")));
     }
 }
