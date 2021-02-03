@@ -14,34 +14,22 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
-
+        <activity android:name=".Activities.Inbound.AddPalletActivity"></activity>
         <activity android:name=".Activities.Outbound.StagingActivity" />
-
         <activity android:name=".Activities.Outbound.ReturnActivity" />
-
         <activity android:name=".Activities.Outbound.PartialActivity" />
-
         <activity android:name=".Activities.Outbound.RefillActivity" />
-
         <activity android:name=".Activities.Outbound.TaskActivity" />
-
         <activity android:name=".Activities.Outbound.TasksActivity" />
-
         <activity android:name=".Activities.Outbound.OutboundActivity" />
-
         <activity android:name=".Activities.Stock.InventoryActivity" />
-
         <activity android:name=".Activities.Stock.ModifyActivity" />
-
         <activity android:name=".Activities.Stock.StockActivity" />
-
-        <activity android:name=".Activities.Inbound.DetailActivity"
-            android:windowSoftInputMode="adjustResize"/>
-
+        <activity
+            android:name=".Activities.Inbound.DetailActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".Activities.Inbound.ListActivity" />
-
         <activity android:name=".Activities.MainActivity" />
-
         <activity android:name=".Activities.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

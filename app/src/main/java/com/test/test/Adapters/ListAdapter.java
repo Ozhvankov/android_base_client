@@ -47,15 +47,14 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull ListViewHolder holder, final int position) {
-        holder.shipmentNmber.setText(mListModels.get(position).inboundShipmentNumber);
-        holder.articles.setText(mListModels.get(position).articles);
-        holder.status.setText(mListModels.get(position).items);
+        holder.shipmentNmber.setText(mListModels.get(position).Inbound_shipment_number);
+        holder.articles.setText("");//mListModels.get(position).Item_articles);
+        holder.status.setText(String.valueOf(mListModels.get(position).status_id));
         holder.container.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mContext, DetailActivity.class);
-                intent.putExtra("status_id", mListModels.get(position).status);
-                intent.putExtra("list_id", String.valueOf(mListModels.get(position).id));
+                intent.putExtra("mListModel", mListModels.get(position));
                 mContext.startActivity(intent);
             }
         });
