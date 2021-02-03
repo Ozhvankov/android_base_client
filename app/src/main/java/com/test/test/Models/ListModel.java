@@ -5,8 +5,8 @@ import android.os.Parcelable;
 
 public class ListModel implements Parcelable {
     public int id;
-    public String Inbound_shipment_number, created_at, Item_articles,updated_at;
-    public int Items_amount, Supplier, Client, Gate, status_id, Warehouse;
+    public String Warehouse, Supplier, Inbound_shipment_number, created_at, Item_articles,updated_at;
+    public int Items_amount, Gate, Client, status_id;
 
     public static final int STATUS_INPUT_FACT = 1;
     public static final int STATUS_PUT_AWAY = 2;
@@ -30,9 +30,9 @@ public class ListModel implements Parcelable {
                      int Gate,
                      String Item_articles,
                      String updated_at,
-                     int Supplier,
+                     String Supplier,
                      int Client,
-                     int Warehouse,
+                     String Warehouse,
                      String created_at,
                      int status_id) {
         this.id = id;
@@ -56,11 +56,11 @@ public class ListModel implements Parcelable {
         Item_articles = in.readString();
         updated_at = in.readString();
         Items_amount = in.readInt();
-        Supplier = in.readInt();
+        Supplier = in.readString();
         Client = in.readInt();
         Gate = in.readInt();
         status_id = in.readInt();
-        Warehouse = in.readInt();
+        Warehouse = in.readString();
     }
 
     @Override
@@ -71,11 +71,11 @@ public class ListModel implements Parcelable {
         dest.writeString(Item_articles);
         dest.writeString(updated_at);
         dest.writeInt(Items_amount);
-        dest.writeInt(Supplier);
+        dest.writeString(Supplier);
         dest.writeInt(Client);
         dest.writeInt(Gate);
         dest.writeInt(status_id);
-        dest.writeInt(Warehouse);
+        dest.writeString(Warehouse);
     }
 
     @Override

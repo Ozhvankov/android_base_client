@@ -142,9 +142,9 @@ public class ListActivity extends AppCompatActivity {
                             o.getInt("Gate"),
                             o.getString("Item_articles"),
                             o.getString("updated_at"),
-                            o.getInt("Supplier"),
+                            o.getString("Supplier"),
                             o.getInt("Client"),
-                            o.getInt("Warehouse"),
+                            o.getString("Warehouse"),
                             o.getString("created_at"),
                             o.getInt("status_id")));
                 }
