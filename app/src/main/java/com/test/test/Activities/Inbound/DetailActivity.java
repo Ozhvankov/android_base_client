@@ -1,5 +1,6 @@
 package com.test.test.Activities.Inbound;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
@@ -19,6 +20,7 @@ import com.test.test.Fragments.InboundDetailsFragment;
 import com.test.test.Models.Item;
 import com.test.test.Models.ItemModel;
 import com.test.test.Models.ListModel;
+import com.test.test.Models.Lot;
 import com.test.test.R;
 import com.test.test.Repository.DataRepo;
 
@@ -38,9 +40,11 @@ public class DetailActivity extends AppCompatActivity {
     private TextView isn, supplier, client, items, status;
     private ListModel mListModel;
     private ArrayList<Item> mItems = new ArrayList<Item>();
+    private ArrayList<Lot> mLots = new ArrayList<Lot>();
     private ArrayList<ItemModel> mItemModels = new ArrayList<ItemModel>();
     private ItemPageAdapter mItemPageAdapter;
     private Button mDelete;
+    private Button mAddPallete;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,51 +69,18 @@ public class DetailActivity extends AppCompatActivity {
         mItemPageAdapter = new ItemPageAdapter(getSupportFragmentManager(), mItemModels);
         mViewPager.setAdapter(mItemPageAdapter);
         mDelete = findViewById(R.id.delete);
-        findViewById(R.id.pallet_add).setOnClickListener(new View.OnClickListener() {
+        mAddPallete = findViewById(R.id.pallet_add);
+        mAddPallete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(DetailActivity.this, AddPalletActivity.class);
                 intent.putExtra("items", mItems);
+                intent.putExtra("lots", mLots);
+                intent.putExtra("list_id", mListModel.id);
                 startActivityForResult(intent, 2);
             }
         });
-        mDelete.setEnabled(false);
-        mDataRepo = new DataRepo.getData(new DataRepo.onDataListener() {
-            @Override
-            public void returnData(String data) {
-                if (!data.isEmpty()) {
-                    mProgressBar.setVisibility(View.GONE);
-                    try {
-                    JSONObject jsonResponse = new JSONObject(data);
-                        JSONObject objects = jsonResponse.getJSONObject("items");
-                        for(int i1 = 0; i1< objects.names().length();i1++){
-                            String id = objects.names().getString(i1);
-                            JSONObject o = objects.getJSONObject(objects.names().getString(i1));
-                            String Item_No = o.getString("Item_No");
-                            String Item_article = o.getString("Item_article");
-                            Item Item = new Item(id, Item_No, Item_article);
-                            mItems.add(Item);
-                        }
-                        JSONArray array = jsonResponse.getJSONArray("Inbound_shipment");
-                        for (int i = 0; i < array.length(); i++) {
-                            JSONObject varObj = array.getJSONObject(i);
-                            ItemModel model = parseVarObj(varObj);
-                            if(model != null){
-                                mItemModels.add(model);
-                            }
-                        }
-                        mItemPageAdapter.notifyDataSetChanged();
-                        mDelete.setEnabled(true);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        return;
-                    }
-                }
-            }
-        });
-        mDataRepo.getListById(String.valueOf(mListModel.id));
-        mDataRepo.start();
-
+        load();
         mDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -136,6 +107,71 @@ public class DetailActivity extends AppCompatActivity {
                 mDataRepo.start();
             }
         });
+    }
+
+    private void load(){
+        mDelete.setEnabled(false);
+        mAddPallete.setEnabled(false);
+        mItems.clear();
+        mLots.clear();
+        mItemModels.clear();
+        mItemPageAdapter.notifyDataSetChanged();
+        mDataRepo = new DataRepo.getData(new DataRepo.onDataListener() {
+            @Override
+            public void returnData(String data) {
+                if (!data.isEmpty()) {
+                    mProgressBar.setVisibility(View.GONE);
+                    try {
+                        JSONObject jsonResponse = new JSONObject(data);
+                        JSONObject objects = jsonResponse.getJSONObject("items");
+                        for(int i1 = 0; i1 < objects.names().length();i1++){
+                            String id = objects.names().getString(i1);
+                            JSONObject o = objects.getJSONObject(objects.names().getString(i1));
+                            String Item_No = o.getString("Item_No");
+                            String Item_article = o.getString("Item_article");
+                            Item item = new Item(id, Item_No, Item_article);
+                            mItems.add(item);
+                        }
+                        objects = jsonResponse.getJSONObject("lots");
+                        if(objects.names().length() == 0) {
+                            mLots.add(Lot.getEmptyLot());
+                        } else {
+                            for (int i1 = 0; i1 < objects.names().length(); i1++) {
+                                String id = objects.names().getString(i1);
+                                JSONObject o = objects.getJSONObject(objects.names().getString(i1));
+                                String Name = o.getString("Name");
+                                Lot lot = new Lot(id, Name);
+                                mLots.add(lot);
+                            }
+                        }
+                        JSONArray array = jsonResponse.getJSONArray("Inbound_shipment");
+                        for (int i = 0; i < array.length(); i++) {
+                            JSONObject varObj = array.getJSONObject(i);
+                            ItemModel model = parseVarObj(varObj);
+                            if(model != null){
+                                mItemModels.add(model);
+                            }
+                        }
+                        mItemPageAdapter.notifyDataSetChanged();
+                        mDelete.setEnabled(true);
+                        mAddPallete.setEnabled(true);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        return;
+                    }
+                }
+            }
+        });
+        mDataRepo.getListById(String.valueOf(mListModel.id));
+        mDataRepo.start();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if(requestCode ==2 && resultCode == 0) {
+            load();
+        } else
+            super.onActivityResult(requestCode, resultCode, data);
     }
 
     private ItemModel parseVarObj(JSONObject varObj) {

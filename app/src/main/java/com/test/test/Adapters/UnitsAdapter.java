@@ -1,15 +1,14 @@
 package com.test.test.Adapters;
 
 import android.content.Context;
-import android.database.DataSetObserver;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
-import com.test.test.Models.Item;
+import com.test.test.Models.Item_shipment_unit_type;
+import com.test.test.Models.Lot;
 import com.test.test.R;
 
 import java.util.ArrayList;
@@ -17,14 +16,14 @@ import java.util.ArrayList;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-public class ItemsAdapter extends ArrayAdapter<Item> {
+public class UnitsAdapter extends ArrayAdapter<Item_shipment_unit_type> {
 
-    private final ArrayList<Item> mItems;
+    private final ArrayList<Item_shipment_unit_type> mLots;
     private final LayoutInflater mInflater;
 
-    public ItemsAdapter(@NonNull Context context, int resource, ArrayList<Item> items) {
+    public UnitsAdapter(@NonNull Context context, int resource, ArrayList<Item_shipment_unit_type> items) {
         super(context, resource);
-        this.mItems = items;
+        this.mLots = items;
         mInflater = LayoutInflater.from(context);
     }
 
@@ -33,7 +32,7 @@ public class ItemsAdapter extends ArrayAdapter<Item> {
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View row = mInflater.inflate(R.layout.spinner_item_row, parent, false);
         TextView t = row.findViewById(R.id.text);
-        t.setText(mItems.get(position).id + ". " + mItems.get(position).Item_No + " - " + mItems.get(position).Item_article);
+        t.setText(mLots.get(position).id + ". " + mLots.get(position).Item_shipment_unit_type);
         return row;
     }
 
@@ -42,23 +41,23 @@ public class ItemsAdapter extends ArrayAdapter<Item> {
                                 ViewGroup parent) {
         View row = mInflater.inflate(R.layout.spinner_item_row, parent, false);
         TextView t = row.findViewById(R.id.text);
-        t.setText(mItems.get(position).id + ". " + mItems.get(position).Item_No + " - " + mItems.get(position).Item_article);
+        t.setText(mLots.get(position).id + ". " + mLots.get(position).Item_shipment_unit_type);
         return row;
     }
 
     @Override
     public int getCount(){
-        return mItems.size();
+        return mLots.size();
     }
 
     @Override
-    public Item getItem(int position){
-        return mItems.get(position);
+    public Item_shipment_unit_type getItem(int position){
+        return mLots.get(position);
     }
 
     @Override
     public long getItemId(int position){
-        return Long.valueOf(mItems.get(position).id);
+        return Long.valueOf(mLots.get(position).id);
     }
 
 }

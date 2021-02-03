@@ -71,6 +71,69 @@ public class DataRepo {
 
         }
 
+        public void getFootprint(int id) {
+            url = HttpUrl.parse(Stash.getString("domain") + "/engineapi")
+                    .newBuilder()
+                    .addQueryParameter("module", "footprint")
+                    .addQueryParameter("search",
+                            "Item:equal:" + id)
+                    .build();
+            Log.d("asdasd", url.toString());
+            request = new Request.Builder()
+                    .url(url).get()
+                    .header("User-Agent", System.getProperty("http.agent"))
+                    .header("Authorization", Credentials.basic(Stash.getString("email"), Stash.getString("api_key")))
+                    .build();
+
+        }
+        public void getItemShipmentUnitType() {
+            url = HttpUrl.parse(Stash.getString("domain") + "/engineapi")
+                    .newBuilder()
+                    .addQueryParameter("module", "itemshipmentunittype")
+                    .build();
+            Log.d("asdasd", url.toString());
+            request = new Request.Builder()
+                    .url(url).get()
+                    .header("User-Agent", System.getProperty("http.agent"))
+                    .header("Authorization", Credentials.basic(Stash.getString("email"), Stash.getString("api_key")))
+                    .build();
+
+        }
+
+        public void addPallete(String item_id, String footprint_id, String unit_id, String gross, String pallet_wight
+                , String packaging_wight, String list_id, String lot_id) {
+            url = HttpUrl.parse(Stash.getString("domain") + "/engineapi")
+                    .newBuilder()
+                    .addQueryParameter("module", "inboundshipment")
+                    .addQueryParameter("item_id", item_id)
+                    .addQueryParameter("footprint_id", item_id)
+                    .addQueryParameter("unit_id", item_id)
+                    .addQueryParameter("gross", item_id)
+                    .addQueryParameter("pallet_wight", item_id)
+                    .addQueryParameter("packaging_wight", packaging_wight)
+                    .addQueryParameter("list_id", list_id)
+                    .addQueryParameter("lot_id", lot_id)
+                    .build();
+            Log.d("asdasd", url.toString());
+            request = new Request.Builder()
+                    .url(url).post(new RequestBody() {
+                        @Nullable
+                        @Override
+                        public MediaType contentType() {
+                            return null;
+                        }
+
+                        @Override
+                        public void writeTo(@NotNull BufferedSink bufferedSink) throws IOException {
+
+                        }
+                    })
+                    .header("User-Agent", System.getProperty("http.agent"))
+                    .header("Authorization", Credentials.basic(Stash.getString("email"), Stash.getString("api_key")))
+                    .build();
+
+        }
+
 
         public void setWarehouse(String warehouse, String user_id) {
             url = HttpUrl.parse(Stash.getString("domain") + "/engineapi")
