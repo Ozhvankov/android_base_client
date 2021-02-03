@@ -5,11 +5,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 
+import com.google.gson.JsonArray;
+import com.google.gson.annotations.JsonAdapter;
 import com.test.test.Adapters.ListAdapter;
 import com.test.test.Models.ListModel;
 import com.test.test.R;
@@ -54,12 +59,16 @@ public class ListActivity extends AppCompatActivity {
                         mListModels.clear();
                         setList(data);
                         mRecyclerView.setOnScrollListener(null);
+                        setBackgroundColorButton(mPlanFactBtn, true);
+                        setBackgroundColorButton(mPutAwayBtn, false);
                     }
                 });
-                getData.getListByStatus(0);
+                getData.getListByStatus(ListModel.STATUS_INPUT_FACT);
                 getData.start();
+
             }
         });
+
 
         mPutAwayBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,14 +80,18 @@ public class ListActivity extends AppCompatActivity {
                         mListModels.clear();
                         setList(data);
                         mRecyclerView.setOnScrollListener(null);
+                        setBackgroundColorButton(mPlanFactBtn, false);
+                        setBackgroundColorButton(mPutAwayBtn, true);
                     }
                 });
-                getData.getListByStatus(2);
+                getData.getListByStatus(ListModel.STATUS_PUT_AWAY);
                 getData.start();
             }
         });
 
         getList();
+        setBackgroundColorButton(mPlanFactBtn, true);
+        setBackgroundColorButton(mPutAwayBtn, false);
 
         mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -104,6 +117,13 @@ public class ListActivity extends AppCompatActivity {
             }
         });
     }
+    private void setBackgroundColorButton(Button btn, boolean selected){
+            if(selected) {
+                btn.getBackground().setColorFilter(Color.GREEN, PorterDuff.Mode.MULTIPLY);
+            } else {
+                btn.getBackground().setColorFilter(Color.LTGRAY, PorterDuff.Mode.MULTIPLY);
+            }
+    }
 
     public void setList(String data) {
         if (!data.isEmpty()) {
@@ -111,14 +131,22 @@ public class ListActivity extends AppCompatActivity {
             try {
                 JSONObject jsonObject = new JSONObject(data);
                 mPages = jsonObject.getInt("total") / 10;
+
                 JSONArray array = jsonObject.getJSONArray("rows");
                 for (int i = 0; i < array.length(); i++) {
+                    JSONObject o = array.getJSONObject(i);
                     mListModels.add(new ListModel(
-                            array.getJSONObject(i).getInt("id"),
-                            array.getJSONObject(i).getString("Inbound_shipment_number"),
-                            array.getJSONObject(i).getString("Items"),
-                            array.getJSONObject(i).getString("Articles"),
-                            array.getJSONObject(i).getString("status_id")));
+                            o.getInt("id"),
+                            o.getString("Inbound_shipment_number"),
+                            o.getInt("Items_amount"),
+                            o.getInt("Gate"),
+                            o.getString("Item_articles"),
+                            o.getString("updated_at"),
+                            o.getInt("Supplier"),
+                            o.getInt("Client"),
+                            o.getInt("Warehouse"),
+                            o.getString("created_at"),
+                            o.getInt("status_id")));
                 }
                 mListAdapter = new ListAdapter(ListActivity.this, mListModels);
                 mRecyclerView.setLayoutManager(new LinearLayoutManager(ListActivity.this));

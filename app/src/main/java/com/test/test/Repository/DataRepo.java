@@ -35,7 +35,7 @@ public class DataRepo {
         onDataListener listener;
         private HttpUrl url;
         Request request;
-        String cred = Credentials.basic(Stash.getString("email"), Stash.getString("pass"));
+        String cred = Credentials.basic(Stash.getString("email"), Stash.getString("api_key"));
 
 
         public getData(onDataListener listener) {
@@ -45,6 +45,32 @@ public class DataRepo {
         public getData(onDataListener listener, String query, int page) {
             this.listener = listener;
         }
+        public void deletePallet(int id) {
+            url = HttpUrl.parse(Stash.getString("domain") + "/engineapi")
+                    .newBuilder()
+                    .addPathSegment(String.valueOf(id))
+                    .addQueryParameter("module", "inboundshipment")
+                    .build();
+            Log.d("asdasd", url.toString());
+            request = new Request.Builder()
+                    .url(url).delete(new RequestBody() {
+                        @Nullable
+                        @Override
+                        public MediaType contentType() {
+                            return null;
+                        }
+
+                        @Override
+                        public void writeTo(@NotNull BufferedSink bufferedSink) throws IOException {
+
+                        }
+                    })
+                    .header("User-Agent", System.getProperty("http.agent"))
+                    .header("Authorization", Credentials.basic(Stash.getString("email"), Stash.getString("api_key")))
+                    .build();
+
+        }
+
 
         public void setWarehouse(String warehouse, String user_id) {
             url = HttpUrl.parse(Stash.getString("domain") + "/engineapi")
@@ -69,7 +95,7 @@ public class DataRepo {
                         }
                     })
                     .header("User-Agent", System.getProperty("http.agent"))
-                    .header("Authorization", Credentials.basic(Stash.getString("email"), "94FdL2-pnZTY-ynmgjr-89jA8"))
+                    .header("Authorization", Credentials.basic(Stash.getString("email"), Stash.getString("api_key")))
                     .build();
         }
 
@@ -319,7 +345,7 @@ public class DataRepo {
         }
 
         public void getList() {
-            url = HttpUrl.parse(Stash.getString("domain") + "/frameworkapi")
+            url = HttpUrl.parse(Stash.getString("domain") + "/engineapi")
                     .newBuilder()
                     .addQueryParameter("module", "inboundshipmentlist")
                     .build();
@@ -349,7 +375,7 @@ public class DataRepo {
         }
 
         public void getListById(String list_id) {
-            url = HttpUrl.parse(Stash.getString("domain") + "/frameworkapi")
+            url = HttpUrl.parse(Stash.getString("domain") + "/engineapi")
                     .newBuilder()
                     .addPathSegment(list_id)
                     .addQueryParameter("module", "inboundshipmentlist")
@@ -364,7 +390,7 @@ public class DataRepo {
         }
 
         public void getListByStatus(int status_id) {
-            url = HttpUrl.parse(Stash.getString("domain") + "/frameworkapi")
+            url = HttpUrl.parse(Stash.getString("domain") + "/engineapi")
                     .newBuilder()
                     .addQueryParameter("module", "inboundshipmentlist")
                     .addQueryParameter("search", "status_id:equal:" + status_id)
@@ -379,7 +405,7 @@ public class DataRepo {
         }
 
         public void getList(int page) {
-            url = HttpUrl.parse(Stash.getString("domain") + "/frameworkapi")
+            url = HttpUrl.parse(Stash.getString("domain") + "/engineapi")
                     .newBuilder()
                     .addQueryParameter("module", "inboundshipmentlist")
                     .addQueryParameter("page", String.valueOf(page))
