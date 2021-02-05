@@ -14,6 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.JsonArray;
 import com.test.test.Adapters.ItemPageAdapter;
 import com.test.test.Adapters.PageAdapter;
 import com.test.test.Fragments.InboundDetailsFragment;
@@ -21,6 +22,7 @@ import com.test.test.Models.Item;
 import com.test.test.Models.ItemModel;
 import com.test.test.Models.ListModel;
 import com.test.test.Models.Lot;
+import com.test.test.Models.PalletType;
 import com.test.test.R;
 import com.test.test.Repository.DataRepo;
 
@@ -41,10 +43,15 @@ public class DetailActivity extends AppCompatActivity {
     private ListModel mListModel;
     private ArrayList<Item> mItems = new ArrayList<Item>();
     private ArrayList<Lot> mLots = new ArrayList<Lot>();
+    private ArrayList<PalletType> mPalletType = new ArrayList<PalletType>();
     private ArrayList<ItemModel> mItemModels = new ArrayList<ItemModel>();
     private ItemPageAdapter mItemPageAdapter;
     private Button mDelete;
     private Button mAddPallete;
+    private Button mCopyData;
+
+    private ItemModel mCopyItem;
+    private Button mInsertData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,10 +73,36 @@ public class DetailActivity extends AppCompatActivity {
         items.setText(mListModel.Item_articles);
         status.setText(String.valueOf(mListModel.status_id));
         mViewPager = findViewById(R.id.pager);
-        mItemPageAdapter = new ItemPageAdapter(getSupportFragmentManager(), mItemModels);
+        mItemPageAdapter = new ItemPageAdapter(getSupportFragmentManager(), mListModel.id, mItemModels, mPalletType);
         mViewPager.setAdapter(mItemPageAdapter);
         mDelete = findViewById(R.id.delete);
         mAddPallete = findViewById(R.id.pallet_add);
+        mCopyData = findViewById(R.id.copy_data);
+        mCopyData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mCopyItem = mItemModels.get(mViewPager.getCurrentItem());
+                Toast.makeText(DetailActivity.this, "copy ok", Toast.LENGTH_SHORT).show();
+            }
+        });
+        mInsertData = findViewById(R.id.insert_data);
+        mInsertData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ItemModel im = mItemModels.get(mViewPager.getCurrentItem());
+                im.fact_item_weight = mCopyItem.fact_item_weight;
+                im.fact_item_box= mCopyItem.fact_item_box;;
+                im.fact_weight_empty_box= mCopyItem.fact_weight_empty_box;;
+                im.fact_weight_empty_pallet= mCopyItem.fact_weight_empty_pallet;;
+                im.number_party= mCopyItem.number_party;;
+                im.Manufacturing_Date= mCopyItem.Manufacturing_Date;;
+                im.inbound_date= mCopyItem.inbound_date;;
+                im.Lot_number_batch= mCopyItem.Lot_number_batch;;
+                im.Pallet_Type= mCopyItem.Pallet_Type;;
+                ((InboundDetailsFragment)mItemPageAdapter.getCurrentFragment()).setItemModel(im);
+            }
+        });
+
         mAddPallete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -80,12 +113,12 @@ public class DetailActivity extends AppCompatActivity {
                 startActivityForResult(intent, 2);
             }
         });
-        load();
+        load(-1);
         mDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(mItemModels.size() == 1){
-                    Toast.makeText(DetailActivity.this, "Нельзя удалить последнюю паллету!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(DetailActivity.this, "Don't delete last pallete!", Toast.LENGTH_LONG).show();
                     return;
                 }
                 mProgressBar.setVisibility(View.VISIBLE);
@@ -107,9 +140,48 @@ public class DetailActivity extends AppCompatActivity {
                 mDataRepo.start();
             }
         });
+        mProgressBar.setVisibility(View.VISIBLE);
+        mDataRepo = new DataRepo.getData(new DataRepo.onDataListener() {
+
+            @Override
+            public void returnData(String data) {
+                mProgressBar.setVisibility(View.GONE);
+                if(data != null) {
+                    if(!data.isEmpty()) {
+                        try {
+                            JSONObject jsonResponse = new JSONObject(data);
+                            JSONArray objects = jsonResponse.getJSONArray("rows");
+                            for (int i1 = 0; i1 < objects.length(); i1++) {
+                                JSONObject o = objects.getJSONObject(i1);
+                                int id = o.getInt("id");
+                                String Pallet_Type = o.getString("Pallet_Type");
+                                PalletType item = new PalletType(id, Pallet_Type);
+                                mPalletType.add(item);
+                            }
+                            mItemPageAdapter.setPallettypes(mPalletType);
+                        } catch (JSONException e) {
+                            Toast.makeText(DetailActivity.this, "Error: not parse PalletType list!", Toast.LENGTH_LONG).show();
+                            finish();
+                        }
+
+                    } else {
+                        Toast.makeText(DetailActivity.this, "Error: PalletType list is empty!", Toast.LENGTH_LONG).show();
+                        finish();
+                    }
+                } else {
+                    Toast.makeText(DetailActivity.this, "Error: not load PalletType list!", Toast.LENGTH_LONG).show();
+                    finish();
+                }
+            }
+        });
+        mDataRepo.getPalletType();
+        mDataRepo.start();
+
     }
 
-    private void load(){
+    private void load(final int index){
+        mCopyData.setEnabled(false);
+        mInsertData.setEnabled(false);
         mDelete.setEnabled(false);
         mAddPallete.setEnabled(false);
         mItems.clear();
@@ -140,7 +212,8 @@ public class DetailActivity extends AppCompatActivity {
                                 String id = objects.names().getString(i1);
                                 JSONObject o = objects.getJSONObject(objects.names().getString(i1));
                                 String Name = o.getString("Name");
-                                Lot lot = new Lot(id, Name);
+                                int Unit_id = o.getInt("Unit_id");
+                                Lot lot = new Lot(id, Name, Unit_id);
                                 mLots.add(lot);
                             }
                         }
@@ -153,13 +226,18 @@ public class DetailActivity extends AppCompatActivity {
                             }
                         }
                         mItemPageAdapter.notifyDataSetChanged();
-                        mDelete.setEnabled(true);
-                        mAddPallete.setEnabled(true);
+                        if(index != -1 && index < mItemModels.size())
+                            mViewPager.setCurrentItem(index);
+
                     } catch (JSONException e) {
-                        e.printStackTrace();
+                        Toast.makeText(DetailActivity.this, "Error: not load pallet list: " + e.toString(), Toast.LENGTH_LONG).show();
                         return;
                     }
                 }
+                mDelete.setEnabled(true);
+                mAddPallete.setEnabled(true);
+                mCopyData.setEnabled(true);
+                mInsertData.setEnabled(true);
             }
         });
         mDataRepo.getListById(String.valueOf(mListModel.id));
@@ -168,15 +246,15 @@ public class DetailActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if(requestCode ==2 && resultCode == 0) {
-            load();
+        if(requestCode == 2 && resultCode == 0) {
+            Toast.makeText(DetailActivity.this, "ADDED", Toast.LENGTH_SHORT).show();
+            load(mItemModels.size());
         } else
             super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private ItemModel parseVarObj(JSONObject varObj) {
+    private ItemModel parseVarObj(JSONObject varObj) throws JSONException {
         ItemModel model = null;
-        try {
             final Bundle bundle = new Bundle();
             String Initial_PRINTED_LPN = "";
             if(!varObj.isNull("Initial_PRINTED_LPN"))
@@ -199,9 +277,9 @@ public class DetailActivity extends AppCompatActivity {
             int shelf_life_days= -1;
             if(!varObj.isNull("shelf_life_days"))
                 shelf_life_days= varObj.getInt("shelf_life_days");
-            int Implementation_period = -1;
+            String Implementation_period = "";
             if(!varObj.isNull("Implementation_period"))
-                Implementation_period= varObj.getInt("Implementation_period");
+                Implementation_period= varObj.getString("Implementation_period");
             int item_weight = -1;
             if(!varObj.isNull("item_weight"))
                 item_weight =varObj.getInt("item_weight");
@@ -292,9 +370,6 @@ public class DetailActivity extends AppCompatActivity {
                     plan_item_box,
                     cell_id
             );
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
         return model;
     }
 

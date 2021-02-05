@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:text="@string/footprint"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/insert_data" />
+            app:layout_constraintTop_toTopOf="parent" />
 
 
         <TextView
@@ -156,6 +156,7 @@
             android:layout_marginStart="12dp"
             android:digits="1234567890."
             android:ems="4"
+            android:selectAllOnFocus="true"
             android:imeOptions="actionNext"
             android:inputType="number"
             android:text=""
@@ -178,6 +179,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:ems="4"
+            android:selectAllOnFocus="true"
             android:imeOptions="actionNext"
             android:inputType="number"
             android:text=""
@@ -201,6 +203,7 @@
             android:layout_marginStart="12dp"
             android:digits="1234567890."
             android:ems="4"
+            android:selectAllOnFocus="true"
             android:imeOptions="actionNext"
             android:inputType="number"
             android:text=""
@@ -224,6 +227,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:digits="1234567890."
+            android:selectAllOnFocus="true"
             android:ems="4"
             android:imeOptions="actionNext"
             android:inputType="number"
@@ -299,6 +303,7 @@
             android:ems="4"
             android:imeOptions="actionNext"
             android:inputType="number"
+            android:selectAllOnFocus="true"
             android:text=""
             android:hint="input"
             app:layout_constraintStart_toEndOf="@+id/textView41"
@@ -320,6 +325,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:ems="4"
+            android:selectAllOnFocus="true"
             android:imeOptions="actionNext"
             android:inputType="number"
             android:text=""
@@ -343,6 +349,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:ems="4"
+            android:selectAllOnFocus="true"
             android:imeOptions="actionNext"
             android:inputType="number"
             android:text=""
@@ -356,16 +363,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/pallet_type"
-            app:layout_constraintBottom_toBottomOf="@+id/pallet_type_edit"
+            app:layout_constraintBottom_toBottomOf="@+id/pallet_type_spinner"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/pallet_type_edit" />
+            app:layout_constraintTop_toTopOf="@+id/pallet_type_spinner" />
 
-        <EditText
-            android:id="@+id/pallet_type_edit"
+        <Spinner
+            android:id="@+id/pallet_type_spinner"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
+            android:minWidth="50dp"
             android:layout_marginStart="12dp"
             android:ems="4"
+            android:selectAllOnFocus="true"
             android:imeOptions="actionDone"
             android:inputType="number"
             android:hint="input"
@@ -402,21 +411,5 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <Button
-            android:id="@+id/copy_data"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="copy data"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <Button
-            android:id="@+id/insert_data"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="insert data"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

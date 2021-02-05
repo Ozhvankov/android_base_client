@@ -88,8 +88,8 @@ public class ListActivity extends AppCompatActivity {
                 getData.start();
             }
         });
-
-        getList();
+        mPlanFactBtn.performClick();
+       // getList();
         setBackgroundColorButton(mPlanFactBtn, true);
         setBackgroundColorButton(mPutAwayBtn, false);
 
@@ -99,7 +99,7 @@ public class ListActivity extends AppCompatActivity {
                 LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
                 if (layoutManager != null
                         && layoutManager.findLastCompletelyVisibleItemPosition() == mListModels.size() - 1) {
-                    if (mPage < mPages) {
+                    if (mPage + 1 < mPages) {
                         mPage = mPage + 1;
                         mProgressBar.setVisibility(View.VISIBLE);
                         getData = new DataRepo.getData(new DataRepo.onDataListener() {
