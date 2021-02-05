@@ -86,6 +86,22 @@ public class DataRepo {
                     .build();
 
         }
+
+        public void getPalletType() {
+            url = HttpUrl.parse(Stash.getString("domain") + "/engineapi")
+                    .newBuilder()
+                    .addQueryParameter("module", "locationspallettype")
+                    .build();
+            Log.d("asdasd", url.toString());
+            request = new Request.Builder()
+                    .url(url).get()
+                    .header("User-Agent", System.getProperty("http.agent"))
+                    .header("Authorization", Credentials.basic(Stash.getString("email"), Stash.getString("api_key")))
+                    .build();
+
+        }
+
+
         public void getItemShipmentUnitType() {
             url = HttpUrl.parse(Stash.getString("domain") + "/engineapi")
                     .newBuilder()
@@ -360,21 +376,33 @@ public class DataRepo {
         }
 
         public void setModify(int id, HashMap<String, String> hashMap) {
-            url = HttpUrl.parse(Stash.getString("domain") + "/frameworkapi")
+            HttpUrl.Builder h = HttpUrl.parse(Stash.getString("domain") + "/engineapi")
                     .newBuilder()
                     .addPathSegment(String.valueOf(id))
-                    .addQueryParameter("module", "lpnmodify")
-                    .build();
-            FormBody.Builder requestBody = new FormBody.Builder();
+                    .addQueryParameter("module", "inboundshipmentlist")
+                    .addQueryParameter("action", "fact");
             for (Map.Entry<String, String> entry : hashMap.entrySet()) {
-                requestBody.add(entry.getKey(), entry.getValue());
+                h.addQueryParameter(entry.getKey(), entry.getValue());
             }
+
+            url =h.build();
 
             request = new Request.Builder()
                     .url(url)
                     .header("User-Agent", System.getProperty("http.agent"))
                     .header("Authorization", cred)
-                    .put(requestBody.build())
+                    .put(new RequestBody() {
+                        @Nullable
+                        @Override
+                        public MediaType contentType() {
+                            return null;
+                        }
+
+                        @Override
+                        public void writeTo(@NotNull BufferedSink bufferedSink) throws IOException {
+
+                        }
+                    })
                     .build();
         }
 

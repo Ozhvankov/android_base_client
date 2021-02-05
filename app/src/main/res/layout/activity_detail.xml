@@ -8,6 +8,23 @@
     tools:context=".Activities.Inbound.DetailActivity">
 
     <Button
+        android:id="@+id/copy_data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="copy data"
+        app:layout_constraintBottom_toTopOf="@+id/pager"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/insert_data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="insert data"
+        app:layout_constraintBottom_toTopOf="@+id/pager"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
         android:id="@+id/delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
