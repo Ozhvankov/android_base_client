@@ -134,7 +134,7 @@ public class AddPalletActivity extends AppCompatActivity implements AdapterView.
         mAddPalletBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mAddPalletBtn.setEnabled(false);
+
                 mDataRepo = new DataRepo.getData(new DataRepo.onDataListener() {
                     @Override
                     public void returnData(String data) {
@@ -171,6 +171,7 @@ public class AddPalletActivity extends AppCompatActivity implements AdapterView.
                     Toast.makeText(AddPalletActivity.this, "mPackagingWight is empty", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                mAddPalletBtn.setEnabled(false);
                 mProgressBar.setVisibility(View.VISIBLE);
                 String gross = mGrossEdit.getText().toString();
                 String pallet_wight = mPalletWight.getText().toString();

@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.test.test.Activities.Inbound.DetailAWAYActivity;
 import com.test.test.Activities.Inbound.DetailActivity;
 import com.test.test.Models.ListModel;
 import com.test.test.R;
@@ -53,9 +54,16 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
         holder.container.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(mContext, DetailActivity.class);
-                intent.putExtra("mListModel", mListModels.get(position));
-                mContext.startActivity(intent);
+                if(mListModels.get(position).status_id == ListModel.STATUS_INPUT_FACT) {
+                    Intent intent = new Intent(mContext, DetailActivity.class);
+                    intent.putExtra("mListModel", mListModels.get(position));
+                    mContext.startActivity(intent);
+                } else if(mListModels.get(position).status_id == ListModel.STATUS_PUT_AWAY) {
+
+                    Intent intent = new Intent(mContext, DetailAWAYActivity.class);
+                    intent.putExtra("mListModel", mListModels.get(position));
+                    mContext.startActivity(intent);
+                }
             }
         });
     }

@@ -21,6 +21,7 @@ import com.test.test.Activities.Inbound.ListActivity;
 import com.test.test.Activities.MainActivity;
 import com.test.test.Activities.Outbound.OutboundActivity;
 import com.test.test.Activities.Stock.StockActivity;
+import com.test.test.Activities.Stock.StockOperationActivity;
 import com.test.test.Models.PalletType;
 import com.test.test.R;
 import com.test.test.Repository.DataRepo;
@@ -81,7 +82,7 @@ public class MainFragment extends Fragment {
         mStockLay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getContext(), StockActivity.class));
+                startActivity(new Intent(getContext(), StockOperationActivity.class));
             }
         });
 

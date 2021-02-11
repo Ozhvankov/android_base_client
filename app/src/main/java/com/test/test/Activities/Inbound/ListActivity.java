@@ -127,7 +127,7 @@ public class ListActivity extends AppCompatActivity {
 
     public void setList(String data) {
         if (!data.isEmpty()) {
-            mProgressBar.setVisibility(View.GONE);
+            mProgressBar.setVisibility(View.INVISIBLE);
             try {
                 JSONObject jsonObject = new JSONObject(data);
                 mPages = jsonObject.getInt("total") / 10;
