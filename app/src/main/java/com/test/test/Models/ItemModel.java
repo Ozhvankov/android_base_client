@@ -9,12 +9,12 @@ public class ItemModel implements Serializable {
 
     public int  item_weight,
             item_box,
-            id, item_id, wrh_zone, Lot_number_batch, Transport_Equipment_Number,
+            id, item_id, wrh_zone,
             plan_item_weight,
-            plan_item_box, cell_id, fact_item_box, shelf_life_days;
+            plan_item_box, cell_id, fact_item_box, shelf_life_days, Pallet_Type;
     public String Initial_PRINTED_LPN,
             Inbound_shipment_number,
-            item_article,
+            item_article,Lot_number_batch, Transport_Equipment_Number,
             footprint_name,
             inventory_status,
             Implementation_period,
@@ -24,8 +24,13 @@ public class ItemModel implements Serializable {
             number_party,
             Manufacturing_Date,
             pallet_name,
-            inbound_date, Pallet_Type;
+            inbound_date;
     public double fact_item_weight, fact_weight_empty_box;
+
+    public ItemModel(int id, String Initial_PRINTED_LPN) {
+        this.Initial_PRINTED_LPN = Initial_PRINTED_LPN;
+        this.id = id;
+    }
 
     public ItemModel(
             String Initial_PRINTED_LPN,
@@ -49,9 +54,9 @@ public class ItemModel implements Serializable {
             int wrh_zone,
             String Manufacturing_Date,
             String inbound_date,
-            int Lot_number_batch,
-            int Transport_Equipment_Number,
-            String Pallet_Type,
+            String Lot_number_batch,
+            String Transport_Equipment_Number,
+            int Pallet_Type,
             String pallet_name,
             int plan_item_weight,
             int plan_item_box, int cell_id) {

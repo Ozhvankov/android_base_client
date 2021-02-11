@@ -151,15 +151,15 @@ public class InboundDetailsFragment extends Fragment {
                         break;
                     case R.id.num_lot_edit:
                         if (mEditText.getText().toString().length() == 0)
-                            mItemModel.Lot_number_batch = -1;
+                            mItemModel.Lot_number_batch = "";
                         else
-                            mItemModel.Lot_number_batch = Integer.valueOf(mEditText.getText().toString());
+                            mItemModel.Lot_number_batch = mEditText.getText().toString();
                         break;
                     case R.id.trans_num_edit:
                         if (mEditText.getText().toString().length() == 0)
-                            mItemModel.Transport_Equipment_Number = -1;
+                            mItemModel.Transport_Equipment_Number = "";
                         else
-                            mItemModel.Transport_Equipment_Number = Integer.valueOf(mEditText.getText().toString());
+                            mItemModel.Transport_Equipment_Number = mEditText.getText().toString();
                         break;
                 }
             } else {
@@ -226,7 +226,7 @@ public class InboundDetailsFragment extends Fragment {
         palletTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                mItemModel.Pallet_Type = String.valueOf(l);
+                mItemModel.Pallet_Type = (int)l;
             }
 
             @Override
@@ -302,8 +302,8 @@ public class InboundDetailsFragment extends Fragment {
         transEqNumEdit.setText(String.valueOf(mItemModel.Transport_Equipment_Number));
         for(int i1= 0; i1 < mPalleteType.size(); i1++) {
             int id = -1;
-            if(mItemModel.Pallet_Type.length() > 0)
-                id = Integer.valueOf(mItemModel.Pallet_Type);
+            if(mItemModel.Pallet_Type > 0)
+                id = mItemModel.Pallet_Type;
             if(mPalleteType.get(i1).id == id)
                 palletTypeSpinner.setSelection(i1);
         }
@@ -446,12 +446,12 @@ public class InboundDetailsFragment extends Fragment {
             mInboundDateEdit.setText(mItemModel.inbound_date);
         }
         numOfPartyEdit.setText(mItemModel.number_party);
-        lotNumEdit.setText(String.valueOf(mItemModel.Lot_number_batch));
-        transEqNumEdit.setText(String.valueOf(mItemModel.Transport_Equipment_Number));
+        lotNumEdit.setText(mItemModel.Lot_number_batch);
+        transEqNumEdit.setText(mItemModel.Transport_Equipment_Number);
         for(int i1= 0; i1 < mPalleteType.size(); i1++) {
             int id = -1;
-            if(mItemModel.Pallet_Type.length() > 0)
-                id = Integer.valueOf(mItemModel.Pallet_Type);
+            if(mItemModel.Pallet_Type !=-1)
+                id = mItemModel.Pallet_Type;
             if(mPalleteType.get(i1).id == id)
                 palletTypeSpinner.setSelection(i1);
         }

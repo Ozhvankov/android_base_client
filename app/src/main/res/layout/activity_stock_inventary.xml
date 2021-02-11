@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activities.Stock.StockInventaryActivity">
+
+    <EditText
+        android:id="@+id/box_current_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:digits="1234567890."
+        android:ems="4"
+        android:hint="input"
+        android:imeOptions="actionNext"
+        android:inputType="number"
+        android:selectAllOnFocus="true"
+        android:text=""
+        app:layout_constraintStart_toEndOf="@+id/textView18"
+        app:layout_constraintTop_toBottomOf="@+id/kg_current_edit" />
+
+    <TextView
+        android:id="@+id/textView18"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="box_current"
+        app:layout_constraintBottom_toBottomOf="@+id/box_current_edit"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/box_current_edit" />
+
+    <TextView
+        android:id="@+id/textView20"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="kg_current"
+        app:layout_constraintBottom_toBottomOf="@+id/kg_current_edit"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/kg_current_edit" />
+
+    <EditText
+        android:id="@+id/kg_current_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="4"
+        android:hint="input"
+        android:imeOptions="actionNext"
+        android:inputType="number"
+        android:selectAllOnFocus="true"
+        android:text=""
+        app:layout_constraintStart_toEndOf="@+id/textView20"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/save_btn3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/save"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

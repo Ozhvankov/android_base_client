@@ -87,6 +87,36 @@ public class DataRepo {
 
         }
 
+        public void setPalleteInCell(int list_id, int pallete_id, int cell_id) {
+            // https://wms2.madrocket.agency/engineapi/53?module=inboundshipmentlist&action=putaway&data[2461][cell_id]=1271
+            url = HttpUrl.parse(Stash.getString("domain") + "/engineapi")
+                    .newBuilder()
+                    .addPathSegment(String.valueOf(list_id))
+                    .addQueryParameter("module", "inboundshipmentlist")
+                    .addQueryParameter("action",
+                            "putaway")
+                    .addQueryParameter("data[" + pallete_id + "][cell_id]",
+                            String.valueOf(cell_id))
+                    .build();
+            Log.d("asdasd", url.toString());
+            request = new Request.Builder()
+                    .url(url).put(new RequestBody() {
+                        @Nullable
+                        @Override
+                        public MediaType contentType() {
+                            return null;
+                        }
+
+                        @Override
+                        public void writeTo(@NotNull BufferedSink bufferedSink) throws IOException {
+
+                        }
+                    })
+                    .header("User-Agent", System.getProperty("http.agent"))
+                    .header("Authorization", Credentials.basic(Stash.getString("email"), Stash.getString("api_key")))
+                    .build();
+        }
+
         public void getPalletType() {
             url = HttpUrl.parse(Stash.getString("domain") + "/engineapi")
                     .newBuilder()
@@ -106,6 +136,20 @@ public class DataRepo {
             url = HttpUrl.parse(Stash.getString("domain") + "/engineapi")
                     .newBuilder()
                     .addQueryParameter("module", "itemshipmentunittype")
+                    .build();
+            Log.d("asdasd", url.toString());
+            request = new Request.Builder()
+                    .url(url).get()
+                    .header("User-Agent", System.getProperty("http.agent"))
+                    .header("Authorization", Credentials.basic(Stash.getString("email"), Stash.getString("api_key")))
+                    .build();
+
+        }
+
+        public void getCells() {
+            url = HttpUrl.parse(Stash.getString("domain") + "/engineapi")
+                    .newBuilder()
+                    .addQueryParameter("module", "locations")
                     .build();
             Log.d("asdasd", url.toString());
             request = new Request.Builder()
@@ -149,6 +193,47 @@ public class DataRepo {
                     .build();
 
         }
+
+        public void modifyPallete(int id,
+                                  String inbound_date,
+                                  String Manufacturing_Date,
+                                  String Transport_Equipment_Number,
+                                  int Pallet_Type,
+                                  String Item_inventory_status,
+                                  String Lot_number_batch) {
+            //https://wms2.madrocket.agency/engineapi/2461?module=lpnmodify&inbound_date=2021-02-05&Manufacturing_Date=2021-02-05&Transport_Equipment_Number=312312&Pallet_Type=1&Item_inventory_status=2&cell_id=1272&Lot_number_batch=test
+            url = HttpUrl.parse(Stash.getString("domain") + "/engineapi")
+                    .newBuilder()
+                    .addPathSegment(String.valueOf(id))
+                    .addQueryParameter("module", "lpnmodify")
+                    .addQueryParameter("inbound_date", inbound_date)
+                    .addQueryParameter("Manufacturing_Date", Manufacturing_Date)
+                    .addQueryParameter("Transport_Equipment_Number", Transport_Equipment_Number)
+                    .addQueryParameter("Pallet_Type", String.valueOf(Pallet_Type))
+                    .addQueryParameter("Item_inventory_status", Item_inventory_status)
+                    .addQueryParameter("Lot_number_batch", Lot_number_batch)
+
+                    .build();
+            Log.d("asdasd", url.toString());
+            request = new Request.Builder()
+                    .url(url).put(new RequestBody() {
+                        @Nullable
+                        @Override
+                        public MediaType contentType() {
+                            return null;
+                        }
+
+                        @Override
+                        public void writeTo(@NotNull BufferedSink bufferedSink) throws IOException {
+
+                        }
+                    })
+                    .header("User-Agent", System.getProperty("http.agent"))
+                    .header("Authorization", Credentials.basic(Stash.getString("email"), Stash.getString("api_key")))
+                    .build();
+
+        }
+
 
 
         public void setWarehouse(String warehouse, String user_id) {
@@ -407,22 +492,21 @@ public class DataRepo {
         }
 
         public void getStockLpnList() {
-            url = HttpUrl.parse(Stash.getString("domain") + "/frameworkapi")
+            url = HttpUrl.parse(Stash.getString("domain") + "/engineapi")
                     .newBuilder()
                     .addQueryParameter("module", "inboundshipmentnewlist")
                     .build();
             request = new Request.Builder()
                     .url(url)
                     .header("User-Agent", System.getProperty("http.agent"))
-                    .header("Authorization",
-                            "Basic c3VwZXJhZG1pbkBtYWRyb2NrZXQuc3R1ZGlvOnVLZXBwci1XdUdMVC1TUjJ0RWUtZFdQYlU=")
+                    .header("Authorization", cred)
                     .get()
                     .build();
         }
 
         public void getStock(String lpn) {
             url = HttpUrl.parse(Stash.getString("domain") +
-                    "/frameworkapi/?module=inboundshipmentnew&search=Initial_PRINTED_LPN:equal:"
+                    "/engineapi/?module=inboundshipmentnew&search=Initial_PRINTED_LPN:equal:"
                     + lpn + "|cell_id:bigger:0")
                     .newBuilder()
                     .build();
@@ -511,10 +595,10 @@ public class DataRepo {
         }
 
         public void getItem(int id) {
-            url = HttpUrl.parse(Stash.getString("domain") + "/frameworkapi")
+            url = HttpUrl.parse(Stash.getString("domain") + "/engineapi")
                     .newBuilder()
                     .addPathSegment(String.valueOf(id))
-                    .addQueryParameter("module", "inboundshipmentlist")
+                    .addQueryParameter("module", "inboundshipment")
                     .build();
 
             request = new Request.Builder()

@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activities.Stock.StockModifyActivity">
+
+    <TextView
+        android:id="@+id/textView25"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="pallet status"
+        app:layout_constraintBottom_toBottomOf="@+id/pallet_status"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/pallet_status" />
+
+    <EditText
+        android:id="@+id/pallet_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="4"
+        android:hint="input"
+        android:imeOptions="actionNext"
+        android:inputType="number"
+        android:selectAllOnFocus="true"
+        android:text=""
+        app:layout_constraintStart_toEndOf="@+id/textView25"
+        app:layout_constraintTop_toBottomOf="@+id/trans_num_edit2" />
+
+    <TextView
+        android:id="@+id/textView24"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/pallet_type"
+        app:layout_constraintBottom_toBottomOf="@+id/pallet_type_spinner2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/pallet_type_spinner2" />
+
+    <TextView
+        android:id="@+id/textView23"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/transport_equipment_number"
+        app:layout_constraintBottom_toBottomOf="@+id/trans_num_edit2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/trans_num_edit2" />
+
+    <EditText
+        android:id="@+id/trans_num_edit2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="4"
+        android:hint="input"
+        android:imeOptions="actionNext"
+        android:inputType="number"
+        android:selectAllOnFocus="true"
+        android:text=""
+        app:layout_constraintStart_toEndOf="@+id/textView23"
+        app:layout_constraintTop_toBottomOf="@+id/num_lot_edit2" />
+
+    <TextView
+        android:id="@+id/textView21"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/pallet_type"
+        app:layout_constraintBottom_toBottomOf="@+id/pallet_type_spinner2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/pallet_type_spinner2" />
+
+    <Spinner
+        android:id="@+id/pallet_type_spinner2"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:ems="4"
+        android:hint="input"
+        android:imeOptions="actionDone"
+        android:inputType="number"
+        android:minWidth="150dp"
+        android:selectAllOnFocus="true"
+        app:layout_constraintStart_toEndOf="@+id/textView21"
+        app:layout_constraintTop_toBottomOf="@+id/pallet_status" />
+
+    <TextView
+        android:id="@+id/textView22"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/lot_number_batch"
+        app:layout_constraintBottom_toBottomOf="@+id/num_lot_edit2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/num_lot_edit2" />
+
+    <EditText
+        android:id="@+id/num_lot_edit2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="4"
+        android:hint="input"
+        android:imeOptions="actionNext"
+        android:inputType="number"
+        android:selectAllOnFocus="true"
+        android:text=""
+        app:layout_constraintStart_toEndOf="@+id/textView22"
+        app:layout_constraintTop_toBottomOf="@+id/manufact_date_edit2" />
+
+    <ProgressBar
+        android:id="@+id/progress4"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="4dp"
+        android:indeterminate="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView15"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/manufacturing_date"
+        app:layout_constraintBottom_toBottomOf="@+id/manufact_date_edit2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/manufact_date_edit2" />
+
+    <Button
+        android:id="@+id/manufact_date_edit2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:digits="1234567890-"
+        android:ems="6"
+        android:hint="input"
+        android:imeOptions="actionNext"
+        android:inputType="number"
+        android:text=""
+        app:layout_constraintStart_toEndOf="@+id/textView15"
+        app:layout_constraintTop_toBottomOf="@+id/inb_date_edit2"
+        tools:ignore="TextFields" />
+
+    <TextView
+        android:id="@+id/textView17"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/inbound_date"
+        app:layout_constraintBottom_toBottomOf="@+id/inb_date_edit2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/inb_date_edit2" />
+
+    <Button
+        android:id="@+id/inb_date_edit2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:digits="1234567890-"
+        android:ems="6"
+        android:hint="input"
+        android:imeOptions="actionNext"
+        android:inputType="number"
+        android:text=""
+        app:layout_constraintStart_toEndOf="@+id/textView17"
+
+        app:layout_constraintTop_toBottomOf="@+id/progress4"
+        tools:ignore="TextFields" />
+
+    <Button
+        android:id="@+id/save_btn2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/save"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

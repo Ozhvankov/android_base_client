@@ -14,7 +14,10 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
-        <activity android:name=".Activities.Inbound.AddPalletActivity"></activity>
+        <activity android:name=".Activities.Stock.StockInventaryActivity"></activity>
+        <activity android:name=".Activities.Stock.StockModifyActivity" />
+        <activity android:name=".Activities.Inbound.SelectCellActivity" />
+        <activity android:name=".Activities.Inbound.AddPalletActivity" />
         <activity android:name=".Activities.Outbound.StagingActivity" />
         <activity android:name=".Activities.Outbound.ReturnActivity" />
         <activity android:name=".Activities.Outbound.PartialActivity" />
@@ -25,8 +28,12 @@
         <activity android:name=".Activities.Stock.InventoryActivity" />
         <activity android:name=".Activities.Stock.ModifyActivity" />
         <activity android:name=".Activities.Stock.StockActivity" />
+        <activity android:name=".Activities.Stock.StockOperationActivity" />
         <activity
             android:name=".Activities.Inbound.DetailActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".Activities.Inbound.DetailAWAYActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity android:name=".Activities.Inbound.ListActivity" />
         <activity android:name=".Activities.MainActivity" />
