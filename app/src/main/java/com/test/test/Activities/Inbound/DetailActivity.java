@@ -75,7 +75,7 @@ public class DetailActivity extends AppCompatActivity {
         items.setText(mListModel.Item_articles);
         status.setText(String.valueOf(mListModel.status_id));
         mViewPager = findViewById(R.id.pager);
-        mItemPageAdapter = new ItemPageAdapter(getSupportFragmentManager(), mListModel.id, mItemModels, mPalletType);
+        mItemPageAdapter = new ItemPageAdapter(getSupportFragmentManager(), mListModel, mItemModels, mPalletType);
         mViewPager.setAdapter(mItemPageAdapter);
         mDelete = findViewById(R.id.delete);
         mAddPallete = findViewById(R.id.pallet_add);
@@ -112,7 +112,8 @@ public class DetailActivity extends AppCompatActivity {
                         i.pallet_name,
                         i.plan_item_weight,
                         i.plan_item_box,
-                        i.cell_id
+                        i.cell_id,
+                        i.netto
                 );
                 Toast.makeText(DetailActivity.this, "copy ok", Toast.LENGTH_SHORT).show();
             }
@@ -139,6 +140,7 @@ public class DetailActivity extends AppCompatActivity {
                                 im.Lot_number_batch= mCopyItem.Lot_number_batch;
                                 im.Pallet_Type= mCopyItem.Pallet_Type;
                                 im.Transport_Equipment_Number = mCopyItem.Transport_Equipment_Number;
+                                //im.netto = mCopyItem.netto;
                                 ((InboundDetailsFragment)mItemPageAdapter.getCurrentFragment()).setItemModel(im);
                             }
                         })
@@ -166,7 +168,7 @@ public class DetailActivity extends AppCompatActivity {
         mDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(mItemModels.size() == 1){
+                if(mItemModels.size() == 1) {
                     Toast.makeText(DetailActivity.this, "Don't delete last pallete!", Toast.LENGTH_LONG).show();
                     return;
                 }
@@ -256,7 +258,6 @@ public class DetailActivity extends AppCompatActivity {
         mAddPallete.setEnabled(false);
         mItems.clear();
         mLots.clear();
-        //mItemModels.clear();
         mItemPageAdapter.notifyDataSetChanged();
         mDataRepo = new DataRepo.getData(new DataRepo.onDataListener() {
             @Override
@@ -426,6 +427,9 @@ public class DetailActivity extends AppCompatActivity {
             int cell_id = -1;
             if(!varObj.isNull("cell_id"))
                 cell_id = varObj.getInt("cell_id");
+            double netto = -1.0;
+            if(!varObj.isNull("netto"))
+                netto = varObj.getDouble("netto");
             model = new ItemModel(
                     Initial_PRINTED_LPN,
                     Inbound_shipment_number,
@@ -454,7 +458,8 @@ public class DetailActivity extends AppCompatActivity {
                     pallet_name,
                     plan_item_weight,
                     plan_item_box,
-                    cell_id
+                    cell_id,
+                    netto
             );
         return model;
     }

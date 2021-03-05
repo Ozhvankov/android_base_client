@@ -128,6 +128,7 @@ public class MainActivity extends AppCompatActivity {
                             if (object.getString("data").equals("success")) {
                                 mDrawer.closeDrawer();
                                 Stash.put("warehouse", (String)drawerItem.getTag());
+                                Stash.put("warehouse_id", (int)(((PrimaryDrawerItem)drawerItem).getIdentifier() + 1));
                                 getSupportActionBar().setTitle(Stash.getString("warehouse"));
                                 mToolbar.setTitle(Stash.getString("warehouse"));
                             } else {

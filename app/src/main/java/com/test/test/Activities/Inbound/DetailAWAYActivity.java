@@ -52,6 +52,7 @@ public class DetailAWAYActivity extends AppCompatActivity {
         client = findViewById(R.id.client_text);
         items = findViewById(R.id.items_text);
         status = findViewById(R.id.status_text);
+
         mProgressBar = findViewById(R.id.progress);
         mSearch = findViewById(R.id.search_pallete);
 
@@ -78,7 +79,7 @@ public class DetailAWAYActivity extends AppCompatActivity {
         mPalletsList.addOnItemTouchListener(new RecyclerItemClickListener(this, mPalletsList ,new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, final int position) {
-                Intent intent = new Intent(DetailAWAYActivity.this, SelectCellActivity.class);
+                Intent intent = new Intent(DetailAWAYActivity.this, SetPalleteToSelectCellActivity.class);
                 intent.putExtra("mListModel", mListModel);
                 intent.putExtra("mPallete", ((AdapterPallets)mPalletsList.getAdapter()).getPallet(position));
                 DetailAWAYActivity.this.startActivityForResult(intent,3);
@@ -90,12 +91,16 @@ public class DetailAWAYActivity extends AppCompatActivity {
         supplier.setText(String.valueOf(mListModel.Supplier));
         items.setText(mListModel.Item_articles);
         status.setText(String.valueOf(mListModel.status_id));
+        setResult(1);
         load(-1);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if(requestCode == 3 && resultCode == 0){
+        if(requestCode == 3 && resultCode == 0) {
+            setResult(0);
+            finish();
+        }if(requestCode == 3 && resultCode == 1) {
             load(-1);
         } else {
             super.onActivityResult(requestCode, resultCode, data);
@@ -223,6 +228,9 @@ public class DetailAWAYActivity extends AppCompatActivity {
             int cell_id = -1;
             if(!varObj.isNull("cell_id"))
                 cell_id = varObj.getInt("cell_id");
+        int netto = -1;
+        if(!varObj.isNull("netto"))
+            netto = varObj.getInt("netto");
             model = new ItemModel(
                     Initial_PRINTED_LPN,
                     Inbound_shipment_number,
@@ -251,7 +259,8 @@ public class DetailAWAYActivity extends AppCompatActivity {
                     pallet_name,
                     plan_item_weight,
                     plan_item_box,
-                    cell_id
+                    cell_id,
+                    netto
             );
         return model;
     }

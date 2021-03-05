@@ -25,6 +25,7 @@ import androidx.fragment.app.Fragment;
 
 import com.test.test.Adapters.PalletTypeAdapter;
 import com.test.test.Models.ItemModel;
+import com.test.test.Models.ListModel;
 import com.test.test.Models.PalletType;
 import com.test.test.R;
 import com.test.test.Repository.DataRepo;
@@ -53,6 +54,7 @@ public class InboundDetailsFragment extends Fragment {
     private boolean mIsLoaded = false;
     private SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
     private Calendar mCalendar = Calendar.getInstance();
+    private ListModel mListModel;
 
     DataRepo.getData getData;
 
@@ -88,6 +90,8 @@ public class InboundDetailsFragment extends Fragment {
     private EditText transEqNumEdit;
     private Spinner palletTypeSpinner;
     private EditText factWeightEdit;
+    private EditText Fact_NETTO_weight;
+    private MyTextWatcher mMyTextWatcherFact_NETTO_weight;
     private MyTextWatcher mMyTextWatcherfactWeightEdit;
     private MyTextWatcher MyTextWatcherfactBoxEdit;
     private MyTextWatcher MyTextWatcherfactEmptyBoxEdit;
@@ -96,7 +100,6 @@ public class InboundDetailsFragment extends Fragment {
     private MyTextWatcher MyTextWatchermInboundDateEdit;
     private MyTextWatcher MyTextWatchernumOfPartyEdit;
     private MyTextWatcher MyTextWatcherlotNumEdit;
-    private MyTextWatcher MyTextWatcherpalletTypeEdit;
     private MyTextWatcher MyTextWatchertransEqNumEdit;
     private ArrayList<PalletType> mPalleteType;
     private DataRepo.getData mDataRepo;
@@ -161,6 +164,11 @@ public class InboundDetailsFragment extends Fragment {
                         else
                             mItemModel.Transport_Equipment_Number = mEditText.getText().toString();
                         break;
+                    case R.id.Fact_NETTO_weight:
+                        if (mEditText.getText().toString().length() == 0)
+                            mItemModel.netto = 1;
+                        else
+                            mItemModel.netto = Double.valueOf(mEditText.getText().toString());
                 }
             } else {
                 switch (mEditButton.getId()) {
@@ -189,7 +197,7 @@ public class InboundDetailsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         mItemModel = (ItemModel) getArguments().getSerializable("data");
         mPalleteType = getArguments().getParcelableArrayList("pallete_types");
-        mListId = getArguments().getInt("mListId");
+        mListModel = getArguments().getParcelable("mListModel");
     }
 
     @Override
@@ -221,6 +229,7 @@ public class InboundDetailsFragment extends Fragment {
         numOfPartyEdit = mBaseView.findViewById(R.id.num_party_edit);
         lotNumEdit = mBaseView.findViewById(R.id.num_lot_edit);
         transEqNumEdit = mBaseView.findViewById(R.id.trans_num_edit);
+        Fact_NETTO_weight = mBaseView.findViewById(R.id.Fact_NETTO_weight);
         palletTypeSpinner = mBaseView.findViewById(R.id.pallet_type_spinner);
         palletTypeSpinner.setAdapter(new PalletTypeAdapter(getActivity(),-1,mPalleteType));
         palletTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -283,8 +292,19 @@ public class InboundDetailsFragment extends Fragment {
         planBoxTxt.setText(String.valueOf(mItemModel.plan_item_box));
         factWeightEdit.setText(mItemModel.fact_item_weight == -1 ? "" : String.valueOf(mItemModel.fact_item_weight));
         factBoxEdit.setText(mItemModel.fact_item_box == -1 ? "" : String.valueOf(mItemModel.fact_item_box));
-        factEmptyBoxEdit.setText(mItemModel.fact_weight_empty_box == -1 ? "" : String.valueOf(mItemModel.fact_weight_empty_box));
-        factEmptyPalletEdit.setText(mItemModel.fact_weight_empty_pallet);
+        factEmptyBoxEdit.setText(mItemModel.fact_weight_empty_box == -1 ? "0" : String.valueOf(mItemModel.fact_weight_empty_box));
+        factEmptyPalletEdit.setText(mItemModel.fact_weight_empty_pallet.length() == 0 ? "0" : mItemModel.fact_weight_empty_pallet);
+        if(mListModel.netto_flag_insert == 0) {
+            Fact_NETTO_weight.setVisibility(View.GONE);
+            mBaseView.findViewById(R.id.textView63).setVisibility(View.GONE);
+        } else {
+            String n= "";
+            if(mListModel.netto_flag_insert == 1) {
+                if(mItemModel.netto != 0.0)
+                    n = String.valueOf(mItemModel.netto);
+            }
+            Fact_NETTO_weight.setText(n);
+        }
         Date Manufacturing_Date = new Date();
         if (mItemModel.Manufacturing_Date.equals("0000-00-00")) {
             mManufactDateEdit.setText(mSimpleDateFormat.format(Manufacturing_Date));
@@ -298,7 +318,11 @@ public class InboundDetailsFragment extends Fragment {
             mInboundDateEdit.setText(mItemModel.inbound_date);
         }
         numOfPartyEdit.setText(mItemModel.number_party);
-        lotNumEdit.setText(String.valueOf(mItemModel.Lot_number_batch));
+        lotNumEdit.setText(mItemModel.Lot_number_batch);
+        if(mItemModel.Lot_number_batch.length() != 0)
+            lotNumEdit.setEnabled(false);
+        else
+            lotNumEdit.setEnabled(true);
         transEqNumEdit.setText(String.valueOf(mItemModel.Transport_Equipment_Number));
         for(int i1= 0; i1 < mPalleteType.size(); i1++) {
             int id = -1;
@@ -315,22 +339,28 @@ public class InboundDetailsFragment extends Fragment {
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                if(factWeightEdit.getText().toString().length() == 0) {
+                if (factWeightEdit.getText().toString().length() == 0) {
                     Toast.makeText(getContext(), "fact_item_weight is empty", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if(factBoxEdit.getText().toString().length() == 0) {
+                if (factBoxEdit.getText().toString().length() == 0) {
                     Toast.makeText(getContext(), "fact_item_box is empty", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if(factEmptyBoxEdit.getText().toString().length() == 0) {
-                    Toast.makeText(getContext(), "fact_weight_empty_box is empty", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if(factEmptyPalletEdit.getText().toString().length() == 0) {
-                    Toast.makeText(getContext(), "fact_weight_empty_pallet is empty", Toast.LENGTH_SHORT).show();
-                    return;
+                if(mListModel.netto_flag_insert == 1) {
+                    if (Fact_NETTO_weight.getText().toString().length() == 0) {
+                        Toast.makeText(getContext(), "Fact_NETTO_weight is empty", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                } else {
+                    if(factEmptyBoxEdit.getText().toString().length() == 0) {
+                        Toast.makeText(getContext(), "fact_weight_empty_box is empty", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    if(factEmptyPalletEdit.getText().toString().length() == 0) {
+                        Toast.makeText(getContext(), "fact_weight_empty_pallet is empty", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                 }
                 if(mManufactDateEdit.getText().toString().length() == 0) {
                     Toast.makeText(getContext(), "Manufacturing_Date is empty", Toast.LENGTH_SHORT).show();
@@ -349,12 +379,25 @@ public class InboundDetailsFragment extends Fragment {
                     return;
                 }
                 HashMap<String, String> hashMap = new HashMap<>();
+                if(mListModel.netto_flag_insert == 1) {
+                        hashMap.put("data[" + mItemModel.id + "][netto]", Fact_NETTO_weight.getText().toString());
+                        String fact_empty_box = factEmptyBoxEdit.getText().toString();
+                        if (fact_empty_box.length() != 0)
+                            fact_empty_box = "0";
+                        hashMap.put("data[" + mItemModel.id + "][fact_weight_empty_box]", fact_empty_box);
+                        String fact_empty_pallet = factEmptyPalletEdit.getText().toString();
+                        if (fact_empty_pallet.length() == 0)
+                            fact_empty_pallet = "0";
+                        hashMap.put("data[" + mItemModel.id + "][fact_weight_empty_pallet]", fact_empty_pallet);
+                } else {
+                    hashMap.put("data[" + mItemModel.id + "][fact_weight_empty_box]",
+                            factEmptyBoxEdit.getText().toString());
+                    hashMap.put("data[" + mItemModel.id + "][fact_weight_empty_pallet]",
+                            factEmptyPalletEdit.getText().toString());
+
+                }
                 hashMap.put("data[" + mItemModel.id + "][fact_item_weight]", factWeightEdit.getText().toString());
                 hashMap.put("data[" + mItemModel.id + "][fact_item_box]", factBoxEdit.getText().toString());
-                hashMap.put("data[" + mItemModel.id + "][fact_weight_empty_box]",
-                        factEmptyBoxEdit.getText().toString());
-                hashMap.put("data[" + mItemModel.id + "][fact_weight_empty_pallet]",
-                        factEmptyPalletEdit.getText().toString());
                 hashMap.put("data[" + mItemModel.id + "][Manufacturing_Date]",
                         mManufactDateEdit.getText().toString());
                 hashMap.put("data[" + mItemModel.id + "][inbound_date]", mInboundDateEdit.getText().toString());
@@ -368,9 +411,16 @@ public class InboundDetailsFragment extends Fragment {
                     @Override
                     public void returnData(String data) {
                         if(data != null) {
-                            if(!data.isEmpty()) {
-                                saveBtn.setEnabled(true);
-                                Toast.makeText(getContext(), "SAVE OK", Toast.LENGTH_SHORT).show();
+                            //{"data":"success","message":{"11107":"update","fact_complete":0}}
+                            if(data.contains("success")) {
+                                if(data.contains("\"fact_complete\":0")) {
+                                    saveBtn.setEnabled(true);
+                                    Toast.makeText(getContext(), "SAVE OK", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(getContext(), "INPUT COMPLETE", Toast.LENGTH_SHORT).show();
+                                    getActivity().finish();
+                                    return;
+                                }
                             } else {
                                 Toast.makeText(getContext(), "SAVE error", Toast.LENGTH_SHORT).show();
                             }
@@ -380,11 +430,8 @@ public class InboundDetailsFragment extends Fragment {
                     }
                 });
                 saveBtn.setEnabled(false);
-                mDataRepo.setModify(mListId, hashMap);
+                mDataRepo.setModify(mListModel.id, hashMap);
                 mDataRepo.start();
-
-
-
             }
         });
 
@@ -400,7 +447,8 @@ public class InboundDetailsFragment extends Fragment {
         mInboundDateEdit.addTextChangedListener(MyTextWatchermInboundDateEdit = new MyTextWatcher(mInboundDateEdit, mItemModel));
         numOfPartyEdit.addTextChangedListener(MyTextWatchernumOfPartyEdit = new MyTextWatcher(numOfPartyEdit, mItemModel));
         lotNumEdit.addTextChangedListener(MyTextWatcherlotNumEdit = new MyTextWatcher(lotNumEdit, mItemModel));
-         transEqNumEdit.addTextChangedListener(MyTextWatchertransEqNumEdit = new MyTextWatcher(transEqNumEdit, mItemModel));
+        transEqNumEdit.addTextChangedListener(MyTextWatchertransEqNumEdit = new MyTextWatcher(transEqNumEdit, mItemModel));
+        Fact_NETTO_weight.addTextChangedListener(mMyTextWatcherFact_NETTO_weight = new MyTextWatcher(Fact_NETTO_weight, mItemModel));
     }
 
     private void removeTextWatchers() {
@@ -413,6 +461,7 @@ public class InboundDetailsFragment extends Fragment {
         numOfPartyEdit.removeTextChangedListener(MyTextWatchernumOfPartyEdit);
         lotNumEdit.removeTextChangedListener(MyTextWatcherlotNumEdit);
         transEqNumEdit.removeTextChangedListener(MyTextWatchertransEqNumEdit);
+        Fact_NETTO_weight.removeTextChangedListener(mMyTextWatcherFact_NETTO_weight);
     }
 
 
@@ -447,6 +496,7 @@ public class InboundDetailsFragment extends Fragment {
         }
         numOfPartyEdit.setText(mItemModel.number_party);
         lotNumEdit.setText(mItemModel.Lot_number_batch);
+        //Fact_NETTO_weight.setText(mItemModel.netto == -1 ? "" : String.valueOf(mItemModel.netto));
         transEqNumEdit.setText(mItemModel.Transport_Equipment_Number);
         for(int i1= 0; i1 < mPalleteType.size(); i1++) {
             int id = -1;

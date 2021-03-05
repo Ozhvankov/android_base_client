@@ -47,7 +47,7 @@
         android:id="@+id/textView13"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Search mask"
+        android:text="Lpn"
         app:layout_constraintBottom_toBottomOf="@+id/search_pallete"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/search_pallete" />

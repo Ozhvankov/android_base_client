@@ -258,7 +258,7 @@
             android:inputType="number"
             android:text=""
             app:layout_constraintStart_toEndOf="@+id/textView39"
-            app:layout_constraintTop_toBottomOf="@+id/fact_emptypallet_edit"
+            app:layout_constraintTop_toBottomOf="@+id/Fact_NETTO_weight"
             tools:ignore="TextFields" />
 
 
@@ -410,6 +410,29 @@
             android:text="@string/save"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:id="@+id/textView63"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Fact NETTO weight"
+            app:layout_constraintBottom_toBottomOf="@+id/Fact_NETTO_weight"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/fact_emptypallet_edit" />
+
+        <EditText
+            android:id="@+id/Fact_NETTO_weight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:digits="1234567890."
+            android:ems="4"
+            android:selectAllOnFocus="true"
+            android:imeOptions="actionNext"
+            android:inputType="number"
+            android:text=""
+            android:hint="input"
+            app:layout_constraintStart_toEndOf="@+id/textView63"
+            app:layout_constraintTop_toBottomOf="@+id/fact_emptypallet_edit" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

@@ -9,6 +9,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.test.test.Models.TaskListModel;
 import com.test.test.R;
@@ -52,54 +53,34 @@ public class TaskActivity extends AppCompatActivity {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                         if (action != null) {
-                            switch (action) {
-                                case "refill": {
-                                    Intent startIntent = new Intent(TaskActivity.this, RefillActivity.class);
-                                    startIntent.putExtra("id", mTaskListModels.get(i).id);
-                                    startIntent.putExtra("lpn", mTaskListModels.get(i).initialLPN);
-                                    startIntent.putExtra("action", action);
-                                    startActivityForResult(startIntent, 100);
-                                    break;
-                                }
-                                case "partial": {
-                                    Intent startIntent = new Intent(TaskActivity.this, PartialActivity.class);
-                                    startIntent.putExtra("id", mTaskListModels.get(i).id);
-                                    startIntent.putExtra("lpn", mTaskListModels.get(i).initialLPN);
-                                    startIntent.putExtra("action", action);
-                                    startActivityForResult(startIntent, 100);
-                                    break;
-                                }
-                                case "return": {
-                                    Intent startIntent = new Intent(TaskActivity.this, ReturnActivity.class);
-                                    startIntent.putExtra("id", mTaskListModels.get(i).id);
-                                    startIntent.putExtra("lpn", mTaskListModels.get(i).initialLPN);
-                                    startIntent.putExtra("action", action);
-                                    startActivityForResult(startIntent, 100);
-                                    break;
-                                }
-                                case "staging": {
-                                    Intent startIntent = new Intent(TaskActivity.this, StagingActivity.class);
-                                    startIntent.putExtra("id", mTaskListModels.get(i).id);
-                                    startIntent.putExtra("lpn", mTaskListModels.get(i).initialLPN);
-                                    startIntent.putExtra("action", action);
-                                    startActivityForResult(startIntent, 100);
-                                    break;
-                                }
-                            }
+                            Intent startIntent = new Intent(TaskActivity.this, OubboundRefillOrStagingActivity.class);
+                            startIntent.putExtra("id", mTaskListModels.get(i).id);
+                            startIntent.putExtra("lpn", mTaskListModels.get(i).initialLPN);
+                            startIntent.putExtra("action", action);
+                            startActivityForResult(startIntent, 100);
                         }
                     }
                 });
+                if(mTaskListModels.size() == 1)
+                {
+                    Intent startIntent = new Intent(TaskActivity.this, OubboundRefillOrStagingActivity.class);
+                    startIntent.putExtra("id", mTaskListModels.get(0).id);
+                    startIntent.putExtra("lpn", mTaskListModels.get(0).initialLPN);
+                    startIntent.putExtra("action", action);
+                    startActivityForResult(startIntent, 100);
+                }
             } catch (JSONException e) {
-                e.printStackTrace();
+                Toast.makeText(TaskActivity.this, "Error parse task: " + e.toString(), Toast.LENGTH_SHORT).show();
             }
         }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 100) {
+        if (requestCode == 100 && resultCode == 100) {
             setResult(100);
             finish();
+            return;
         }
         super.onActivityResult(requestCode, resultCode, data);
     }

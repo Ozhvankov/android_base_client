@@ -38,6 +38,10 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
         notifyDataSetChanged();
     }
 
+    public List<ListModel> getListModels() {
+        return mListModels;
+    }
+
     @NonNull
     @Override
     public ListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -51,21 +55,6 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
         holder.shipmentNmber.setText(mListModels.get(position).Inbound_shipment_number);
         holder.articles.setText("");//mListModels.get(position).Item_articles);
         holder.status.setText(String.valueOf(mListModels.get(position).status_id));
-        holder.container.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(mListModels.get(position).status_id == ListModel.STATUS_INPUT_FACT) {
-                    Intent intent = new Intent(mContext, DetailActivity.class);
-                    intent.putExtra("mListModel", mListModels.get(position));
-                    mContext.startActivity(intent);
-                } else if(mListModels.get(position).status_id == ListModel.STATUS_PUT_AWAY) {
-
-                    Intent intent = new Intent(mContext, DetailAWAYActivity.class);
-                    intent.putExtra("mListModel", mListModels.get(position));
-                    mContext.startActivity(intent);
-                }
-            }
-        });
     }
 
     @Override

@@ -9,15 +9,11 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.test.test.Activities.Inbound.SelectCellActivity;
-import com.test.test.Adapters.AdapterPallets;
 import com.test.test.Adapters.AdapterPalletsOperation;
 import com.test.test.Models.EditableItem;
 import com.test.test.Models.ItemModel;
-import com.test.test.Models.ListModel;
 import com.test.test.R;
 import com.test.test.Repository.DataRepo;
 import com.test.test.Utils.RecyclerItemClickListener;
@@ -74,10 +70,8 @@ public class StockOperationActivity extends AppCompatActivity {
             public void onItemClick(View view, final int position) {
                 // Initializing a new alert dialog
                 final AlertDialog.Builder builder = new AlertDialog.Builder(StockOperationActivity.this);
-
                 // Set the alert dialog title
-                builder.setTitle(mItemModels.get(position).Initial_PRINTED_LPN);
-
+                builder.setTitle(((AdapterPalletsOperation) mPalletsList.getAdapter()).getPallet(position).Initial_PRINTED_LPN);
                 // Initialize a new list of flowers
                 final List<String> flowers = new ArrayList<String>();
                 flowers.add("Modify");
@@ -119,6 +113,20 @@ public class StockOperationActivity extends AppCompatActivity {
                                                 item.inbound_date = jsonResponse.getString("inbound_date");
                                                 item.Manufacturing_Date = jsonResponse.getString("Manufacturing_Date");
                                                 item.kg_current = jsonResponse.getInt("kg_current");
+                                                item.Item_inventory_status = jsonResponse.getInt("Item_inventory_status");
+                                                item.Lot_number_batch = jsonResponse.getString("Lot_number_batch");
+                                                item.Transport_Equipment_Number = jsonResponse.getString("Transport_Equipment_Number");
+                                                item.cell_id = jsonResponse.getInt("cell_id");
+                                                item.cell_name = jsonResponse.getString("cell_name");
+                                                item.item_id = jsonResponse.getInt("item_id");
+                                                item.Pallet_Type = jsonResponse.getInt("Pallet_Type");
+                                                item.Supplier= jsonResponse.getString("Supplier");
+                                                item.Client= jsonResponse.getString("Client");
+                                                item.Item_No = jsonResponse.getInt("Item_No");
+                                                item.kg_avaible = jsonResponse.getInt("kg_avaible");
+                                                item.kg_reserved = jsonResponse.getInt("kg_reserved");
+                                                item.box_avaible = jsonResponse.getInt("box_avaible");
+                                                item.box_reserved = jsonResponse.getInt("box_reserved");
                                                 Intent intent;
                                                 if(i == 0) {
                                                     intent = new Intent(StockOperationActivity.this, StockModifyActivity.class);
@@ -135,7 +143,7 @@ public class StockOperationActivity extends AppCompatActivity {
                                         }
                                     }
                                 });
-                                mDataRepo.getItem(mItemModels.get(position).id);
+                                mDataRepo.getItem(((AdapterPalletsOperation) mPalletsList.getAdapter()).getPallet(position).id);
                                 mDataRepo.start();
                             }
                         });

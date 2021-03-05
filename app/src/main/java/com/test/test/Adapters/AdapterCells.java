@@ -25,10 +25,16 @@ public class AdapterCells extends RecyclerView.Adapter<AdapterCells.TypeTranspor
     private final ArrayList<Cell> mOriginalItemModels;
     private String mMask="";
     private Context mContext;
+    private int mSelectId;
+
+    public void setCurrent(int id){
+        mSelectId = id;
+    }
 
     public AdapterCells(Context context, ArrayList<Cell> myDataset) {
         mContext = context;
         mItemModels = myDataset;
+        mSelectId = -1;
         mOriginalItemModels = new ArrayList<>(myDataset.size());
         for(int i1 = 0, cnt1 = myDataset.size(); i1< cnt1; i1++){
             Cell i = myDataset.get(i1);
@@ -96,18 +102,24 @@ public class AdapterCells extends RecyclerView.Adapter<AdapterCells.TypeTranspor
     @Override
     public void onBindViewHolder(TypeTransportViewHolder holder, final int position) {
         String Location = mItemModels.get(position).Location;
-        holder.Location.setText(Location);
+        if(mItemModels.get(position).id == mSelectId){
+            holder.Location.setText(Location + " (CurrentSelected)");
+        } else
+            holder.Location.setText(Location);
         if(mMask.length() > 0) {
-            int start = Location.indexOf(mMask);
-            int end = start + mMask.length();
-            if(end > Location.length())
-                end = Location.length();
-            int flag = Spannable.SPAN_INCLUSIVE_INCLUSIVE;
-            holder.Location.getText().setSpan(new BackgroundColorSpan(Color.YELLOW), start, end, flag);
+            int start = -1;
+            int end = -1;
+                start = Location.lastIndexOf(mMask);
+                end = start + mMask.length();
+                if (end > Location.length())
+                    end = Location.length();
+                int flag = Spannable.SPAN_INCLUSIVE_INCLUSIVE;
+                holder.Location.getText().setSpan(new BackgroundColorSpan(Color.YELLOW), start, end, flag);
         }
         holder.Max_Width_cm.setText(String.valueOf(mItemModels.get(position).Max_Width_cm));
         holder.Max_Hight_cm.setText(String.valueOf(mItemModels.get(position).Max_Hight_cm));
         holder.Max_Weight_kg.setText(String.valueOf(mItemModels.get(position).Max_Weight_kg));
+
     }
 
     @Override
