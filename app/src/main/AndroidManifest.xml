@@ -16,18 +16,16 @@
         tools:targetApi="m">
         <activity android:name=".Activities.Stock.StockInventaryActivity"></activity>
         <activity android:name=".Activities.Stock.StockModifyActivity" />
-        <activity android:name=".Activities.Inbound.SelectCellActivity" />
+        <activity android:name=".Activities.Inbound.SetPalleteToSelectCellActivity" />
+        <activity android:name=".Activities.Stock.SelectCellActivity" />
         <activity android:name=".Activities.Inbound.AddPalletActivity" />
         <activity android:name=".Activities.Outbound.StagingActivity" />
         <activity android:name=".Activities.Outbound.ReturnActivity" />
         <activity android:name=".Activities.Outbound.PartialActivity" />
-        <activity android:name=".Activities.Outbound.RefillActivity" />
+        <activity android:name=".Activities.Outbound.OubboundRefillOrStagingActivity" />
         <activity android:name=".Activities.Outbound.TaskActivity" />
         <activity android:name=".Activities.Outbound.TasksActivity" />
         <activity android:name=".Activities.Outbound.OutboundActivity" />
-        <activity android:name=".Activities.Stock.InventoryActivity" />
-        <activity android:name=".Activities.Stock.ModifyActivity" />
-        <activity android:name=".Activities.Stock.StockActivity" />
         <activity android:name=".Activities.Stock.StockOperationActivity" />
         <activity
             android:name=".Activities.Inbound.DetailActivity"

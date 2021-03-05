@@ -25,6 +25,7 @@ public class TasksActivity extends AppCompatActivity {
     private TextView mNameTxt;
     private ProgressBar mProgressBar;
     private DataRepo.getData mDataRepo;
+    private int mId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,11 +37,109 @@ public class TasksActivity extends AppCompatActivity {
         mStagingBtn = findViewById(R.id.staging_btn);
         mNameTxt = findViewById(R.id.task_name_text);
         mProgressBar = findViewById(R.id.progress);
-        setBtns();
 
-        if (getIntent() != null) {
-            getInfo();
-        }
+        mRefillBtn.setEnabled(false);
+        mPartialBtn.setEnabled(false);
+        mReturnBtn.setEnabled(false);
+        mStagingBtn.setEnabled(false);
+
+        mId = getIntent().getIntExtra("id", -1);
+
+        mRefillBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getTask(mId,
+                        "refill",
+                        "1");
+            }
+        });
+        mPartialBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getTask(mId,
+                        "partial",
+                        "2");
+            }
+        });
+
+        mReturnBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getTask(mId,
+                        "return",
+                        "3");
+            }
+        });
+
+        mStagingBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getTask(mId,
+                        "staging",
+                        "4");
+            }
+        });
+
+        load();
+
+
+
+    }
+
+    private void load() {
+        mProgressBar.setVisibility(View.VISIBLE);
+        mRefillBtn.setEnabled(false);
+        mPartialBtn.setEnabled(false);
+        mReturnBtn.setEnabled(false);
+        mStagingBtn.setEnabled(false);
+        mDataRepo = new DataRepo.getData(new DataRepo.onDataListener() {
+            @Override
+            public void returnData(String data) {
+                mProgressBar.setVisibility(View.GONE);
+                mRefillBtn.setEnabled(false);
+                mRefillBtn.setText("Refill there are no tasks");
+                mRefillBtn.setEnabled(false);
+                mPartialBtn.setText("Partial there are no tasks");
+                mReturnBtn.setEnabled(false);
+                mReturnBtn.setText("Return there are no tasks");
+                mStagingBtn.setEnabled(false);
+                mStagingBtn.setText("Staging there are no tasks");
+                if (data != null && !data.isEmpty()) {
+                    JSONObject object = null;
+                    try {
+                        object = new JSONObject(data);
+                        mNameTxt.setText(object.getString("OutboundShipmentNumber"));
+                        JSONArray array = object.getJSONArray("tasks");
+                        for (int i = 0; i < array.length(); i++) {
+                            String code = array.getJSONObject(i).getString("code");
+                            int sum = array.getJSONObject(i).getInt("sum");
+                            if (code.equals("refill") && sum > 0) {
+                                mRefillBtn.setEnabled(true);
+                                mRefillBtn.setText("Refill" + " (" + sum + ")");
+                            }
+                            if (code.equals("partial") && sum > 0) {
+                                mPartialBtn.setEnabled(true);
+                                mPartialBtn.setText("Partial" + " (" + sum + ")");
+                            }
+                            if (code.equals("return") && sum > 0) {
+                                mReturnBtn.setEnabled(true);
+                                mReturnBtn.setText("Return" + " (" + sum + ")");
+                            }
+                            if (code.equals("staging") && sum > 0) {
+                                mStagingBtn.setEnabled(true);
+                                mStagingBtn.setText("Staging" + " (" + sum + ")");
+                            }
+                        }
+                    } catch (JSONException e) {
+                        Toast.makeText(TasksActivity.this, "Error parse tasks: " + e.toString(), Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(TasksActivity.this, "Empty tasks", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        mDataRepo.getOutbound(mId);
+        mDataRepo.start();
     }
 
     @Override
@@ -48,72 +147,8 @@ public class TasksActivity extends AppCompatActivity {
         super.onResume();
     }
 
-    public void getInfo() {
-        mDataRepo = new DataRepo.getData(new DataRepo.onDataListener() {
-            @Override
-            public void returnData(String data) {
-                if (data != null && !data.isEmpty()) {
-                    mProgressBar.setVisibility(View.GONE);
-                    try {
-                        JSONObject object = new JSONObject(data);
-                        mNameTxt.setText(object.getString("OutboundShipmentNumber"));
-                        JSONArray array = object.getJSONArray("tasks");
-                        for (int i = 0; i < array.length(); i++) {
-                            String code = array.getJSONObject(i).getString("code");
-                            int sum = array.getJSONObject(i).getInt("sum");
-                            if (code.equals("refill") && sum > 0) {
-                                mRefillBtn.setText("Refill" + " (" + sum + ")");
-                                mRefillBtn.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        getTask(getIntent().getStringExtra("id"),
-                                                "refill",
-                                                "1");
-                                    }
-                                });
-                            } else if (code.equals("partial") && sum > 0) {
-                                mPartialBtn.setText("Partial" + " (" + sum + ")");
-                                mPartialBtn.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        getTask(getIntent().getStringExtra("id"),
-                                                "partial",
-                                                "2");
-                                    }
-                                });
-                            } else if (code.equals("return") && sum > 0) {
-                                mReturnBtn.setText("Return" + " (" + sum + ")");
-                                mReturnBtn.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        getTask(getIntent().getStringExtra("id"),
-                                                "return",
-                                                "3");
-                                    }
-                                });
-                            } else if (code.equals("staging") && sum > 0) {
-                                mStagingBtn.setText("Staging" + " (" + sum + ")");
-                                mStagingBtn.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        getTask(getIntent().getStringExtra("id"),
-                                                "staging",
-                                                "4");
-                                    }
-                                });
-                            }
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-        mDataRepo.getOutbound(getIntent().getStringExtra("id"));
-        mDataRepo.start();
-    }
 
-    public void getTask(final String id, final String action, String filter) {
+    public void getTask(final int id, final String action, String filter) {
         DataRepo.getData getData = new DataRepo.getData(new DataRepo.onDataListener() {
             @Override
             public void returnData(String data) {
@@ -127,7 +162,6 @@ public class TasksActivity extends AppCompatActivity {
                         intent.putExtra("action", action);
                         intent.putExtra("data", array.toString());
                         intent.putExtra("outbound", object.getString("OutboundShipmentNumber"));
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivityForResult(intent, 100);
 
                     } catch (JSONException e) {
@@ -141,42 +175,13 @@ public class TasksActivity extends AppCompatActivity {
         getData.start();
     }
 
-    public void setBtns() {
-        mRefillBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(TasksActivity.this, "there are no tasks of this type", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        mPartialBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(TasksActivity.this, "there are no tasks of this type", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        mReturnBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(TasksActivity.this, "there are no tasks of this type", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        mStagingBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(TasksActivity.this, "there are no tasks of this type", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == 100) {
-            setResult(100);
-            finish();
-            super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 100 && resultCode == 100) {
+            load();
+            return;
         }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

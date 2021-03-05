@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -23,7 +22,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 
 public class ReturnActivity extends AppCompatActivity {
 
@@ -118,7 +116,7 @@ public class ReturnActivity extends AppCompatActivity {
 
             }
         });
-        mDataRepo.getCellsList(mWrh);
+       // mDataRepo.getCellsList(mWrh);
         mDataRepo.start();
     }
 
@@ -148,7 +146,7 @@ public class ReturnActivity extends AppCompatActivity {
                 Toast.makeText(ReturnActivity.this, data, Toast.LENGTH_SHORT).show();
             }
         });
-        mDataRepo.saveTask(mId, "3", cellId, lpnId);
+       // mDataRepo.saveRefillTask(mId, "3", cellId, lpnId);
         mDataRepo.start();
     }
 }

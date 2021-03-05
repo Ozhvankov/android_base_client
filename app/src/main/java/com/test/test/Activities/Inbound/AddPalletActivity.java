@@ -114,7 +114,6 @@ public class AddPalletActivity extends AppCompatActivity implements AdapterView.
                                 mProgressBar.setVisibility(View.GONE);
                                 setItemShipmentUnitType(data);
                                 mUnitsAdapter.notifyDataSetChanged();
-
                             } else {
                                 Toast.makeText(AddPalletActivity.this, "Error: item shipment unit type is empty!", Toast.LENGTH_SHORT).show();
                             }

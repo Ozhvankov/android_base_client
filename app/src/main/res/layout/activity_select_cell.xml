@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.Inbound.SelectCellActivity">
+    tools:context=".Activities.Inbound.SetPalleteToSelectCellActivity">
 
     <ProgressBar
         android:id="@+id/progress3"
@@ -23,7 +23,7 @@
         android:id="@+id/textView14"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Search mask"
+        android:text="Location"
         app:layout_constraintBottom_toBottomOf="@+id/search_cell"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/search_cell" />
@@ -51,8 +51,26 @@
         android:id="@+id/pallete"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
         android:text="TextView"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textView47"
+        app:layout_constraintTop_toBottomOf="@+id/progress3" />
+
+    <TextView
+        android:id="@+id/textView47"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Current pallete"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/progress3" />
+
+    <TextView
+        android:id="@+id/empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Not found! Please input min 2 chars to mask!"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/cells_list"
+        app:layout_constraintStart_toStartOf="@+id/cells_list"
+        app:layout_constraintTop_toTopOf="@+id/cells_list" />
 </androidx.constraintlayout.widget.ConstraintLayout>

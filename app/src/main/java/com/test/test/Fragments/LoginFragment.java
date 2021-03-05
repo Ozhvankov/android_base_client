@@ -73,7 +73,7 @@ public class LoginFragment extends Fragment {
                                         JSONArray array = tempObject.getJSONArray("rows");
                                         JSONObject userObject = array.getJSONObject(0);
                                         Stash.put("user_id", userObject.getString("id"));
-                                        Stash.put("warehouse", userObject.getString("warehouse"));
+                                        Stash.put("warehouse_id", userObject.getInt("warehouse_id"));
                                         Stash.put("email", mEmailEdit.getText().toString());
                                         Stash.put("pass", mPassEdit.getText().toString());
                                         Stash.put("api_key", userObject.getString("api_key"));

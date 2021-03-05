@@ -84,7 +84,7 @@ public class StagingActivity extends AppCompatActivity {
                     }
                 }
             });
-            mDataRepo.getTask(mId);
+     //       mDataRepo.getTask(mId);
             mDataRepo.start();
         }
     }
@@ -126,7 +126,7 @@ public class StagingActivity extends AppCompatActivity {
 
             }
         });
-        mDataRepo.getCellsList(mWrh);
+       // mDataRepo.getCellsList(mWrh);
         mDataRepo.start();
     }
 
@@ -156,7 +156,7 @@ public class StagingActivity extends AppCompatActivity {
                 Toast.makeText(StagingActivity.this, data, Toast.LENGTH_SHORT).show();
             }
         });
-        mDataRepo.saveStagingTask(mId, "4", cellId, lpnId, lpn_id_partial);
+    //    mDataRepo.saveStagingTask(mId, "4", cellId, lpnId, lpn_id_partial);
         mDataRepo.start();
     }
 }

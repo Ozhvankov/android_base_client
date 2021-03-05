@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,8 +15,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fxn.stash.Stash;
 import com.test.test.Adapters.AdapterCells;
-import com.test.test.Adapters.AdapterPallets;
 import com.test.test.Models.Cell;
 import com.test.test.Models.ItemModel;
 import com.test.test.Models.ListModel;
@@ -31,14 +30,14 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class SelectCellActivity extends AppCompatActivity {
+public class SetPalleteToSelectCellActivity extends AppCompatActivity {
 
     private DataRepo.getData mDataRepo;
 
     private ProgressBar mProgressBar;
     private RecyclerView mCellsList;
     private EditText mSearchCell;
-
+    private TextView empty;
     private ArrayList<Cell> mCells = new ArrayList<Cell>();
     private ListModel mListModel;
     private ItemModel mPallete;
@@ -52,10 +51,11 @@ public class SelectCellActivity extends AppCompatActivity {
         mCellsList = (RecyclerView)findViewById(R.id.cells_list);
         mListModel= (ListModel) getIntent().getParcelableExtra("mListModel");
         mPallete = (ItemModel)getIntent().getSerializableExtra("mPallete");
-
+        empty = findViewById(R.id.empty);
         ((TextView)findViewById(R.id.pallete)).setText(mListModel.Inbound_shipment_number + "." + mPallete.item_id + ". " + mPallete.Initial_PRINTED_LPN);
         mProgressBar = (ProgressBar)findViewById(R.id.progress3);
-        mSearchCell.setEnabled(false);
+        mSearchCell.setEnabled(true);
+        mProgressBar.setVisibility(View.INVISIBLE);
         mSearchCell.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -64,7 +64,11 @@ public class SelectCellActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                ((AdapterCells) mCellsList.getAdapter()).setMask(mSearchCell.getText().toString());
+                if(mSearchCell.getText().toString().length() == 2) {
+                    load(mSearchCell.getText().toString());
+                } else if(mSearchCell.getText().toString().length() > 2 && ((AdapterCells) mCellsList.getAdapter()) != null) {
+                    ((AdapterCells) mCellsList.getAdapter()).setMask(mSearchCell.getText().toString());
+                }
             }
 
             @Override
@@ -79,7 +83,7 @@ public class SelectCellActivity extends AppCompatActivity {
             @Override
             public void onItemClick(View view, final int position) {
                 final Cell cell = ((AdapterCells) mCellsList.getAdapter()).getCell(position);
-                new AlertDialog.Builder(SelectCellActivity.this)
+                new AlertDialog.Builder(SetPalleteToSelectCellActivity.this)
                         .setTitle("Are you sure?")
                         .setMessage("Pallete " + mPallete.Initial_PRINTED_LPN +" move in " + cell.Location)
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -92,16 +96,21 @@ public class SelectCellActivity extends AppCompatActivity {
                                         if(data != null) {
                                             if (!data.isEmpty()) {
                                                 if (data.indexOf("{\"data\":\"success\"") != -1) {
-                                                    setResult(0);
+                                                    if(data.contains("\"putaway_complete\":0")) {
+                                                        setResult(1);
+                                                        Toast.makeText(SetPalleteToSelectCellActivity.this, "Pallete " + mPallete.Initial_PRINTED_LPN +" added in cell " + cell.Location, Toast.LENGTH_SHORT).show();
+                                                    } else {
+                                                        Toast.makeText(SetPalleteToSelectCellActivity.this, "PUTAWAY COMPLETE", Toast.LENGTH_SHORT).show();
+                                                        setResult(0);
+                                                    }
                                                     finish();
-                                                    Toast.makeText(SelectCellActivity.this, "Pallete " + mPallete.Initial_PRINTED_LPN +" added in cell " + cell.Location, Toast.LENGTH_SHORT).show();
                                                     return;
                                                 }
                                             } else {
-                                                Toast.makeText(SelectCellActivity.this, "Error added pallete:" + data, Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(SetPalleteToSelectCellActivity.this, "Error added pallete:" + data, Toast.LENGTH_SHORT).show();
                                             }
                                         } else {
-                                            Toast.makeText(SelectCellActivity.this, "Error added pallete!", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(SetPalleteToSelectCellActivity.this, "Error added pallete!", Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                 });
@@ -119,16 +128,22 @@ public class SelectCellActivity extends AppCompatActivity {
                         .show();
             }
         }));
-        load(-1);
+        if(mCells.size() > 0)
+            empty.setVisibility(View.GONE);
+        else
+            empty.setVisibility(View.VISIBLE);
     }
 
-    private void load(final int index){
+    private void load(String like) {
+        mSearchCell.setEnabled(false);
         mCells.clear();
+        mProgressBar.setVisibility(View.VISIBLE);
+        empty.setVisibility(View.GONE);
         mDataRepo = new DataRepo.getData(new DataRepo.onDataListener() {
             @Override
             public void returnData(String data) {
+                mProgressBar.setVisibility(View.INVISIBLE);
                 if (!data.isEmpty()) {
-                    mProgressBar.setVisibility(View.INVISIBLE);
                     try {
                         JSONObject jsonResponse = new JSONObject(data);
                         JSONArray array = jsonResponse.getJSONArray("rows");
@@ -139,17 +154,25 @@ public class SelectCellActivity extends AppCompatActivity {
                                 mCells.add(model);
                             }
                         }
-                        AdapterCells adapter = new AdapterCells(SelectCellActivity.this, mCells);
+                        AdapterCells adapter = new AdapterCells(SetPalleteToSelectCellActivity.this, mCells);
                         mCellsList.setAdapter(adapter);
+                        adapter.setMask(mSearchCell.getText().toString());
                         mSearchCell.setEnabled(true);
+
                     } catch (JSONException e) {
-                        Toast.makeText(SelectCellActivity.this, "Error: not load cell list: " + e.toString(), Toast.LENGTH_LONG).show();
-                        return;
+                        Toast.makeText(SetPalleteToSelectCellActivity.this, "Error: not load cell list: " + e.toString(), Toast.LENGTH_LONG).show();
                     }
+                } else {
+                    Toast.makeText(SetPalleteToSelectCellActivity.this, "Error: load cell empty", Toast.LENGTH_LONG).show();
                 }
+                mSearchCell.setEnabled(true);
+                if(mCells.size() > 0)
+                    empty.setVisibility(View.GONE);
+                else
+                    empty.setVisibility(View.VISIBLE);
             }
         });
-        mDataRepo.getCells();
+        mDataRepo.getCells(1, mPallete.wrh_zone, 2, Stash.getInt("warehouse_id"), like);
         mDataRepo.start();
     }
 

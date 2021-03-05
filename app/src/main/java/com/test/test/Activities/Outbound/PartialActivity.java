@@ -21,7 +21,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 
 public class PartialActivity extends AppCompatActivity {
 
@@ -150,7 +149,7 @@ public class PartialActivity extends AppCompatActivity {
                 }
             }
         });
-        mDataRepo.saveTask(mItemId, "2", cellId, lpnId, lpn_id_partial);
+       // mDataRepo.saveRefillTask(mItemId, "2", cellId, lpnId, lpn_id_partial);
         mDataRepo.start();
     }
 }

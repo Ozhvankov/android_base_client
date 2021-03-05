@@ -5,8 +5,8 @@ import android.os.Parcelable;
 
 public class ListModel implements Parcelable {
     public int id;
-    public String Warehouse, Supplier, Inbound_shipment_number, created_at, Item_articles,updated_at;
-    public int Items_amount, Gate, Client, status_id;
+    public String Warehouse, Supplier, Client, Inbound_shipment_number, created_at, Item_articles,updated_at;
+    public int Items_amount, Gate, status_id, netto_flag_insert;
 
     public static final int STATUS_INPUT_FACT = 1;
     public static final int STATUS_PUT_AWAY = 2;
@@ -31,10 +31,10 @@ public class ListModel implements Parcelable {
                      String Item_articles,
                      String updated_at,
                      String Supplier,
-                     int Client,
+                     String Client,
                      String Warehouse,
                      String created_at,
-                     int status_id) {
+                     int status_id, int netto_flag_insert) {
         this.id = id;
         this.Inbound_shipment_number = Inbound_shipment_number;
         this.created_at = created_at;
@@ -46,6 +46,7 @@ public class ListModel implements Parcelable {
         this.Warehouse = Warehouse;
         this.Gate = Gate;
         this.status_id = status_id;
+        this.netto_flag_insert = netto_flag_insert;
     }
 
 
@@ -57,10 +58,11 @@ public class ListModel implements Parcelable {
         updated_at = in.readString();
         Items_amount = in.readInt();
         Supplier = in.readString();
-        Client = in.readInt();
+        Client = in.readString();
         Gate = in.readInt();
         status_id = in.readInt();
         Warehouse = in.readString();
+        netto_flag_insert = in.readInt();
     }
 
     @Override
@@ -72,10 +74,11 @@ public class ListModel implements Parcelable {
         dest.writeString(updated_at);
         dest.writeInt(Items_amount);
         dest.writeString(Supplier);
-        dest.writeInt(Client);
+        dest.writeString(Client);
         dest.writeInt(Gate);
         dest.writeInt(status_id);
         dest.writeString(Warehouse);
+        dest.writeInt(netto_flag_insert);
     }
 
     @Override
