@@ -1,13 +1,18 @@
 package com.test.test.Activities.Inbound;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.viewpager.widget.ViewPager;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -37,176 +42,39 @@ import java.util.Objects;
 
 public class DetailActivity extends AppCompatActivity {
 
-    private DataRepo.getData mDataRepo, mGetData;
+    public static final int REQUEST_ADD_PALLETE_CODE = 2;
 
+    private DataRepo.getData mDataRepo;
     private ViewPager mViewPager;
     private ProgressBar mProgressBar;
-    private TextView isn, supplier, client, items, status;
     private ListModel mListModel;
     private ArrayList<Item> mItems = new ArrayList<Item>();
     private ArrayList<Lot> mLots = new ArrayList<Lot>();
     private ArrayList<PalletType> mPalletType = new ArrayList<PalletType>();
     private ArrayList<ItemModel> mItemModels = new ArrayList<ItemModel>();
     private ItemPageAdapter mItemPageAdapter;
-    private Button mDelete;
-    private Button mAddPallete;
-    private Button mCopyData;
-
     private ItemModel mCopyItem;
-    private Button mInsertData;
+    private boolean mIsLoad;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mListModel = getIntent().getParcelableExtra("mListModel");
 
-        isn = findViewById(R.id.isn_text);
-        supplier = findViewById(R.id.supplier_text);
-        client = findViewById(R.id.client_text);
-        items = findViewById(R.id.items_text);
-        status = findViewById(R.id.status_text);
         mProgressBar = findViewById(R.id.progress);
 
-        isn.setText(mListModel.Inbound_shipment_number);
-        client.setText(String.valueOf(mListModel.Client));
-        supplier.setText(String.valueOf(mListModel.Supplier));
-        items.setText(mListModel.Item_articles);
-        status.setText(String.valueOf(mListModel.status_id));
+        getSupportActionBar().setTitle(mListModel.Inbound_shipment_number);
+        getSupportActionBar().setSubtitle("Inbound shipment number");
+
         mViewPager = findViewById(R.id.pager);
         mItemPageAdapter = new ItemPageAdapter(getSupportFragmentManager(), mListModel, mItemModels, mPalletType);
         mViewPager.setAdapter(mItemPageAdapter);
-        mDelete = findViewById(R.id.delete);
-        mAddPallete = findViewById(R.id.pallet_add);
-        mCopyData = findViewById(R.id.copy_data);
-        mCopyData.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ItemModel i = mItemModels.get(mViewPager.getCurrentItem());
-                mCopyItem = new ItemModel(
-                        i.Initial_PRINTED_LPN,
-                        i.Inbound_shipment_number,
-                        i.item_article,
-                        i.footprint_name,
-                        i.inventory_status,
-                        i.name,
-                        i.shelf_life_days,
-                        i.Implementation_period,
-                        i.item_weight,
-                        i.item_box,
-                        i.id,
-                        i.fact_item_weight,
-                        i.fact_item_box,
-                        i.fact_weight_empty_box,
-                        i.fact_weight_empty_pallet,
-                        i.production_date,
-                        i.number_party,
-                        i.item_id,
-                        i.wrh_zone,
-                        i.Manufacturing_Date,
-                        i.inbound_date,
-                        i.Lot_number_batch,
-                        i.Transport_Equipment_Number,
-                        i.Pallet_Type,
-                        i.pallet_name,
-                        i.plan_item_weight,
-                        i.plan_item_box,
-                        i.cell_id,
-                        i.netto
-                );
-                Toast.makeText(DetailActivity.this, "copy ok", Toast.LENGTH_SHORT).show();
-            }
-        });
-        mInsertData = findViewById(R.id.insert_data);
-        mInsertData.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new AlertDialog.Builder(DetailActivity.this)
-                        .setTitle("Are you sure insert?")
-                        .setMessage("Pallete " + mItemModels.get(mViewPager.getCurrentItem()).Initial_PRINTED_LPN)
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                dialogInterface.dismiss();
-                                ItemModel im = mItemModels.get(mViewPager.getCurrentItem());
-                                im.fact_item_weight = -1;
-                                im.fact_item_box= -1;
-                                im.fact_weight_empty_box= mCopyItem.fact_weight_empty_box;
-                                im.fact_weight_empty_pallet= mCopyItem.fact_weight_empty_pallet;
-                                im.number_party= mCopyItem.number_party;
-                                im.Manufacturing_Date= mCopyItem.Manufacturing_Date;
-                                im.inbound_date= mCopyItem.inbound_date;
-                                im.Lot_number_batch= mCopyItem.Lot_number_batch;
-                                im.Pallet_Type= mCopyItem.Pallet_Type;
-                                im.Transport_Equipment_Number = mCopyItem.Transport_Equipment_Number;
-                                //im.netto = mCopyItem.netto;
-                                ((InboundDetailsFragment)mItemPageAdapter.getCurrentFragment()).setItemModel(im);
-                            }
-                        })
-                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                dialogInterface.cancel();
-                            }
-                        })
-                        .show();
-            }
-        });
-
-        mAddPallete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(DetailActivity.this, AddPalletActivity.class);
-                intent.putExtra("items", mItems);
-                intent.putExtra("lots", mLots);
-                intent.putExtra("list_id", mListModel.id);
-                startActivityForResult(intent, 2);
-            }
-        });
         load(-1);
-        mDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(mItemModels.size() == 1) {
-                    Toast.makeText(DetailActivity.this, "Don't delete last pallete!", Toast.LENGTH_LONG).show();
-                    return;
-                }
-                new AlertDialog.Builder(DetailActivity.this)
-                        .setTitle("Are you sure?")
-                        .setMessage("Pallete " + mItemModels.get(mViewPager.getCurrentItem()).id + ". " + mItemModels.get(mViewPager.getCurrentItem()).Initial_PRINTED_LPN +" will be deleted")
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                dialogInterface.dismiss();
-                                mProgressBar.setVisibility(View.VISIBLE);
-                                mDelete.setEnabled(false);
-                                int id = mItemModels.get(mViewPager.getCurrentItem()).id;
-                                mDataRepo = new DataRepo.getData(new DataRepo.onDataListener() {
-
-                                    @Override
-                                    public void returnData(String data) {
-                                        if(data != null && data.equals("\"success\"")){
-                                            mItemModels.remove(mViewPager.getCurrentItem());
-                                            mItemPageAdapter.notifyDataSetChanged();
-                                        }
-                                        mProgressBar.setVisibility(View.INVISIBLE);
-                                        mDelete.setEnabled(true);
-                                    }
-                                });
-                                mDataRepo.deletePallet(id);
-                                mDataRepo.start();
-                            }
-                        })
-                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                dialogInterface.cancel();
-                            }
-                        })
-                        .show();
-            }
-        });
         mProgressBar.setVisibility(View.VISIBLE);
         mPalletType = Stash.getArrayList("PalletType", PalletType.class);
         if(mPalletType != null && mPalletType.size() != 0) {
@@ -251,11 +119,173 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("RestrictedApi")
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.detail_menu, menu);
+        if (menu instanceof MenuBuilder) {
+            ((MenuBuilder) menu).setOptionalIconsVisible(true);
+        }
+        menu.findItem(R.id.add).setEnabled(!mIsLoad);
+        menu.findItem(R.id.delete).setEnabled(!mIsLoad);
+        menu.findItem(R.id.copy).setEnabled(!mIsLoad);
+        menu.findItem(R.id.insert).setEnabled(!mIsLoad);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.add:
+                addPallete();
+                break;
+            case R.id.delete:
+                deletePallete();
+                break;
+            case R.id.copy:
+                copyCurrent();
+                break;
+            case R.id.insert:
+                insertInCurrent();
+                break;
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
+    private void addPallete() {
+        Intent intent = new Intent(DetailActivity.this, AddPalletActivity.class);
+        intent.putExtra("items", mItems);
+        intent.putExtra("lots", mLots);
+        intent.putExtra("list_id", mListModel.id);
+        startActivityForResult(intent, REQUEST_ADD_PALLETE_CODE);
+    }
+
+    private void deletePallete() {
+        if(mItemModels.size() == 1) {
+            Toast.makeText(DetailActivity.this, "Don't delete last pallete!", Toast.LENGTH_LONG).show();
+            return;
+        }
+        new AlertDialog.Builder(DetailActivity.this)
+                .setTitle("Are you sure?")
+                .setMessage("Pallete " + mItemModels.get(mViewPager.getCurrentItem()).id + ". " + mItemModels.get(mViewPager.getCurrentItem()).Initial_PRINTED_LPN +" will be deleted")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                        mProgressBar.setVisibility(View.VISIBLE);
+                        mIsLoad = true;
+                        invalidateOptionsMenu();
+                        int id = mItemModels.get(mViewPager.getCurrentItem()).id;
+                        mDataRepo = new DataRepo.getData(new DataRepo.onDataListener() {
+
+                            @Override
+                            public void returnData(String data) {
+                                if(data != null && data.equals("\"success\"")){
+                                    mItemModels.remove(mViewPager.getCurrentItem());
+                                    mItemPageAdapter.notifyChangeInPosition(mViewPager.getCurrentItem());
+                                    mItemPageAdapter.notifyDataSetChanged();
+                                }
+                                mProgressBar.setVisibility(View.INVISIBLE);
+                                mIsLoad = false;
+                                invalidateOptionsMenu();
+                            }
+                        });
+                        mDataRepo.deletePallet(id);
+                        mDataRepo.start();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                    }
+                })
+                .show();
+    }
+
+    private void copyCurrent() {
+        ItemModel i = mItemModels.get(mViewPager.getCurrentItem());
+        mCopyItem = new ItemModel(
+                i.Initial_PRINTED_LPN,
+                i.Inbound_shipment_number,
+                i.item_article,
+                i.footprint_name,
+                i.inventory_status,
+                i.name,
+                i.shelf_life_days,
+                i.Implementation_period,
+                i.item_weight,
+                i.item_box,
+                i.id,
+                i.fact_item_weight,
+                i.fact_item_box,
+                i.fact_weight_empty_box,
+                i.fact_weight_empty_pallet,
+                i.production_date,
+                i.number_party,
+                i.item_id,
+                i.wrh_zone,
+                i.Manufacturing_Date,
+                i.inbound_date,
+                i.Lot_number_batch,
+                i.Transport_Equipment_Number,
+                i.Pallet_Type,
+                i.pallet_name,
+                i.plan_item_weight,
+                i.plan_item_box,
+                i.cell_id,
+                i.netto,
+                i.staging_location,
+                i.item_no
+        );
+        Toast.makeText(DetailActivity.this, "copy ok", Toast.LENGTH_SHORT).show();
+    }
+
+
+    private void insertInCurrent() {
+        new AlertDialog.Builder(DetailActivity.this)
+                .setTitle("Are you sure insert?")
+                .setMessage("Pallete " + mItemModels.get(mViewPager.getCurrentItem()).Initial_PRINTED_LPN)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                        ItemModel im = mItemModels.get(mViewPager.getCurrentItem());
+                        im.fact_item_weight = -1;
+                        im.fact_item_box= -1;
+                        im.fact_weight_empty_box= mCopyItem.fact_weight_empty_box;
+                        im.fact_weight_empty_pallet= mCopyItem.fact_weight_empty_pallet;
+                        im.number_party= mCopyItem.number_party;
+                        im.Manufacturing_Date= mCopyItem.Manufacturing_Date;
+                        im.inbound_date= mCopyItem.inbound_date;
+                        //im.Lot_number_batch= mCopyItem.Lot_number_batch;
+                        im.Pallet_Type= mCopyItem.Pallet_Type;
+                        im.Transport_Equipment_Number = mCopyItem.Transport_Equipment_Number;
+                        //im.netto = mCopyItem.netto;
+                        ((InboundDetailsFragment)mItemPageAdapter.getCurrentFragment()).setItemModel(im);
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                    }
+                })
+                .show();
+    }
+
     private void load(final int index){
-        mCopyData.setEnabled(false);
-        mInsertData.setEnabled(false);
-        mDelete.setEnabled(false);
-        mAddPallete.setEnabled(false);
+        mIsLoad = true;
+        invalidateOptionsMenu();
         mItems.clear();
         mLots.clear();
         mItemPageAdapter.notifyDataSetChanged();
@@ -317,14 +347,14 @@ public class DetailActivity extends AppCompatActivity {
                             mViewPager.setCurrentItem(index);
 
                     } catch (JSONException e) {
+                        mIsLoad = false;
+                        invalidateOptionsMenu();
                         Toast.makeText(DetailActivity.this, "Error: not load pallet list: " + e.toString(), Toast.LENGTH_LONG).show();
                         return;
                     }
                 }
-                mDelete.setEnabled(true);
-                mAddPallete.setEnabled(true);
-                mCopyData.setEnabled(true);
-                mInsertData.setEnabled(true);
+                mIsLoad = false;
+                invalidateOptionsMenu();
             }
         });
         mDataRepo.getListById(String.valueOf(mListModel.id));
@@ -333,7 +363,7 @@ public class DetailActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if(requestCode == 2 && resultCode == 0) {
+        if(requestCode == REQUEST_ADD_PALLETE_CODE && resultCode == 0) {
             Toast.makeText(DetailActivity.this, "ADDED", Toast.LENGTH_SHORT).show();
             load(mItemModels.size());
         } else
@@ -350,8 +380,8 @@ public class DetailActivity extends AppCompatActivity {
             if(!varObj.isNull("Inbound_shipment_number"))
                 Inbound_shipment_number =varObj.getString("Inbound_shipment_number");
             String item_article= "";;
-            if(!varObj.isNull("Item_article"))
-                item_article =varObj.getString("Item_article");
+            if(!varObj.isNull("item_article"))
+                item_article =varObj.getString("item_article");
             String footprint_name= "";;
             if(!varObj.isNull("footprint_name"))
                 footprint_name =varObj.getString("footprint_name");
@@ -430,6 +460,12 @@ public class DetailActivity extends AppCompatActivity {
             double netto = -1.0;
             if(!varObj.isNull("netto"))
                 netto = varObj.getDouble("netto");
+            String staging_location = null;
+            if(!varObj.isNull("staging_location"))
+                staging_location = varObj.getString("staging_location");
+            String item_no = null;
+            if(!varObj.isNull("item_no"))
+                item_no = varObj.getString("item_no");
             model = new ItemModel(
                     Initial_PRINTED_LPN,
                     Inbound_shipment_number,
@@ -459,7 +495,9 @@ public class DetailActivity extends AppCompatActivity {
                     plan_item_weight,
                     plan_item_box,
                     cell_id,
-                    netto
+                    netto,
+                    staging_location,
+                    item_no
             );
         return model;
     }
@@ -467,9 +505,6 @@ public class DetailActivity extends AppCompatActivity {
 
     @Override
     public void onDestroy() {
-        if (mGetData != null) {
-            mGetData.release();
-        }
         super.onDestroy();
     }
 

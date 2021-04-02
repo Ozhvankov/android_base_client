@@ -12,6 +12,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.fxn.stash.Stash;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.test.test.Adapters.FootprintsrAdapter;
 import com.test.test.Adapters.ItemsAdapter;
 import com.test.test.Adapters.LotsAdapter;
@@ -44,7 +45,7 @@ public class AddPalletActivity extends AppCompatActivity implements AdapterView.
     private Spinner spinner_unit_id;
 
     private ProgressBar mProgressBar;
-    private Button mAddPalletBtn;
+    private FloatingActionButton mAddPalletBtn;
     private DataRepo.getData mDataRepo;
     private FootprintsrAdapter mFootprintAdapter;
     private UnitsAdapter mUnitsAdapter;
@@ -98,7 +99,8 @@ public class AddPalletActivity extends AppCompatActivity implements AdapterView.
         findViewById(R.id.footprint_refresh).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AddPalletActivity.this.onItemSelected(null, null,  spinner_items.getSelectedItemPosition(), Long.valueOf(mItems.get(spinner_items.getSelectedItemPosition()).id));
+                if(spinner_items.getSelectedItemPosition() > 0)
+                    AddPalletActivity.this.onItemSelected(null, null,  spinner_items.getSelectedItemPosition(), Long.valueOf(mItems.get(spinner_items.getSelectedItemPosition()).id));
             }
         });
         findViewById(R.id.unit_refresh).setOnClickListener(new View.OnClickListener() {
@@ -144,6 +146,8 @@ public class AddPalletActivity extends AppCompatActivity implements AdapterView.
                                     setResult(0);
                                     finish();
                                     return;
+                                } else {
+                                    Toast.makeText(AddPalletActivity.this, "Error added pallete:" + data, Toast.LENGTH_SHORT).show();
                                 }
                             } else {
                                 Toast.makeText(AddPalletActivity.this, "Error added pallete:" + data, Toast.LENGTH_SHORT).show();

@@ -3,6 +3,7 @@ package com.test.test.Activities.Inbound;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -120,6 +121,11 @@ public class ListActivity extends AppCompatActivity {
                 super.onScrollStateChanged(recyclerView, newState);
             }
         });
+        LinearLayoutManager layoutManager;
+        mRecyclerView.setLayoutManager(layoutManager = new LinearLayoutManager(this));
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
+                layoutManager.getOrientation());
+        mRecyclerView.addItemDecoration(dividerItemDecoration);
         mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, mRecyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, final int position) {
@@ -133,6 +139,9 @@ public class ListActivity extends AppCompatActivity {
                     intent.putExtra("mListModel", listModel);
                     ListActivity.this.startActivityForResult(intent, 1);
                 }
+                ListAdapter l = ((ListAdapter)mRecyclerView.getAdapter());
+                // Redraw the old selection and the new
+                l.redrawCursor(position);
             }
         }));
     }

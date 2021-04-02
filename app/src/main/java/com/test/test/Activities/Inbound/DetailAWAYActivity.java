@@ -34,7 +34,7 @@ public class DetailAWAYActivity extends AppCompatActivity {
 
     private DataRepo.getData mDataRepo, mGetData;
     private ProgressBar mProgressBar;
-    private TextView isn, supplier, client, items, status;
+    private TextView isn;
     private ListModel mListModel;
     private ArrayList<ItemModel> mItemModels = new ArrayList<ItemModel>();
     private RecyclerView mPalletsList;
@@ -48,10 +48,6 @@ public class DetailAWAYActivity extends AppCompatActivity {
         mListModel = getIntent().getParcelableExtra("mListModel");
 
         isn = findViewById(R.id.isn_text);
-        supplier = findViewById(R.id.supplier_text);
-        client = findViewById(R.id.client_text);
-        items = findViewById(R.id.items_text);
-        status = findViewById(R.id.status_text);
 
         mProgressBar = findViewById(R.id.progress);
         mSearch = findViewById(R.id.search_pallete);
@@ -87,10 +83,6 @@ public class DetailAWAYActivity extends AppCompatActivity {
         }));
 
         isn.setText(mListModel.Inbound_shipment_number);
-        client.setText(String.valueOf(mListModel.Client));
-        supplier.setText(String.valueOf(mListModel.Supplier));
-        items.setText(mListModel.Item_articles);
-        status.setText(String.valueOf(mListModel.status_id));
         setResult(1);
         load(-1);
     }
@@ -231,7 +223,13 @@ public class DetailAWAYActivity extends AppCompatActivity {
         int netto = -1;
         if(!varObj.isNull("netto"))
             netto = varObj.getInt("netto");
-            model = new ItemModel(
+        String staging_location = "";
+        if(!varObj.isNull("staging_location"))
+            staging_location = varObj.getString("staging_location");
+        String item_no = null;
+        if(!varObj.isNull("item_no"))
+            item_no = varObj.getString("item_no");
+        model = new ItemModel(
                     Initial_PRINTED_LPN,
                     Inbound_shipment_number,
                     item_article,
@@ -260,7 +258,9 @@ public class DetailAWAYActivity extends AppCompatActivity {
                     plan_item_weight,
                     plan_item_box,
                     cell_id,
-                    netto
+                    netto,
+                    staging_location,
+                    item_no
             );
         return model;
     }

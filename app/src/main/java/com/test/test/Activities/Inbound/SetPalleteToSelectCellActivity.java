@@ -9,7 +9,9 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -53,6 +55,7 @@ public class SetPalleteToSelectCellActivity extends AppCompatActivity {
         mPallete = (ItemModel)getIntent().getSerializableExtra("mPallete");
         empty = findViewById(R.id.empty);
         ((TextView)findViewById(R.id.pallete)).setText(mListModel.Inbound_shipment_number + "." + mPallete.item_id + ". " + mPallete.Initial_PRINTED_LPN);
+        ((TextView)findViewById(R.id.staging_location)).setText(mPallete.staging_location);
         mProgressBar = (ProgressBar)findViewById(R.id.progress3);
         mSearchCell.setEnabled(true);
         mProgressBar.setVisibility(View.INVISIBLE);
@@ -74,6 +77,18 @@ public class SetPalleteToSelectCellActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable editable) {
 
+            }
+        });
+        mSearchCell.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    if(mCellsList.getAdapter().getItemCount() > 0)
+                        mCellsList.scrollToPosition(0);
+                    mCellsList.requestFocus();
+                    return true;
+                }
+                return false;
             }
         });
         mCellsList.setHasFixedSize(true);
@@ -172,7 +187,7 @@ public class SetPalleteToSelectCellActivity extends AppCompatActivity {
                     empty.setVisibility(View.VISIBLE);
             }
         });
-        mDataRepo.getCells(1, mPallete.wrh_zone, 2, Stash.getInt("warehouse_id"), like);
+        mDataRepo.getCells(1, mPallete.wrh_zone, 2, Stash.getInt("warehouse_id"), like, (int)Math.ceil(mPallete.fact_item_weight));
         mDataRepo.start();
     }
 

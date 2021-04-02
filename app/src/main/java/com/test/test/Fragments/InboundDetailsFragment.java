@@ -6,9 +6,11 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -104,6 +106,7 @@ public class InboundDetailsFragment extends Fragment {
     private ArrayList<PalletType> mPalleteType;
     private DataRepo.getData mDataRepo;
     private int mListId;
+    private EditText staging_location;
 
     public static class MyTextWatcher implements TextWatcher {
         private Button mEditButton;
@@ -169,6 +172,8 @@ public class InboundDetailsFragment extends Fragment {
                             mItemModel.netto = 1;
                         else
                             mItemModel.netto = Double.valueOf(mEditText.getText().toString());
+                    case R.id.staging_location:
+                        mItemModel.staging_location = mEditText.getText().toString();
                 }
             } else {
                 switch (mEditButton.getId()) {
@@ -205,15 +210,14 @@ public class InboundDetailsFragment extends Fragment {
             Bundle savedInstanceState) {
 
         mBaseView = inflater.inflate(R.layout.layout_input_fact, container, false);
+        TextView items = mBaseView.findViewById(R.id.items_text);
         TextView footprintTxt = mBaseView.findViewById(R.id.footprint_text);
         TextView print_lpn_text = mBaseView.findViewById(R.id.print_lpn_text);
-        TextView lifedaysTxt = mBaseView.findViewById(R.id.lifedays_text);
-        TextView implementPeriodTxt = mBaseView.findViewById(R.id.impl_period_text);
         TextView planWeightTxt = mBaseView.findViewById(R.id.plan_weight_text);
         TextView planBoxTxt = mBaseView.findViewById(R.id.plan_box_text);
         TextView pageTxt = mBaseView.findViewById(R.id.page_text);
         TextView ariclesTxt = mBaseView.findViewById(R.id.articles_text);
-
+        final Button saveBtn = mBaseView.findViewById(R.id.save_btn);
 
         factWeightEdit = mBaseView.findViewById(R.id.gross_edit);
         InputMethodManager imm = (InputMethodManager) Objects.requireNonNull(getActivity()).getSystemService(
@@ -231,11 +235,14 @@ public class InboundDetailsFragment extends Fragment {
         transEqNumEdit = mBaseView.findViewById(R.id.trans_num_edit);
         Fact_NETTO_weight = mBaseView.findViewById(R.id.Fact_NETTO_weight);
         palletTypeSpinner = mBaseView.findViewById(R.id.pallet_type_spinner);
+        staging_location = (EditText)mBaseView.findViewById(R.id.staging_location);
+
         palletTypeSpinner.setAdapter(new PalletTypeAdapter(getActivity(),-1,mPalleteType));
         palletTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 mItemModel.Pallet_Type = (int)l;
+                saveBtn.requestFocus();
             }
 
             @Override
@@ -280,14 +287,10 @@ public class InboundDetailsFragment extends Fragment {
                         .show();
             }
         });
-
-
-        final Button saveBtn = mBaseView.findViewById(R.id.save_btn);
+        items.setText(mItemModel.item_no);
         ariclesTxt.setText(mItemModel.item_article);
-        lifedaysTxt.setText(mItemModel.shelf_life_days == -1 ? "-" : String.valueOf(mItemModel.shelf_life_days));
         footprintTxt.setText(mItemModel.footprint_name);
         print_lpn_text.setText(mItemModel.Initial_PRINTED_LPN);
-        implementPeriodTxt.setText(String.valueOf(mItemModel.Implementation_period));
         planWeightTxt.setText(mItemModel.plan_item_weight == -1 ? "" : String.valueOf(mItemModel.plan_item_weight));
         planBoxTxt.setText(String.valueOf(mItemModel.plan_item_box));
         factWeightEdit.setText(mItemModel.fact_item_weight == -1 ? "" : String.valueOf(mItemModel.fact_item_weight));
@@ -319,10 +322,58 @@ public class InboundDetailsFragment extends Fragment {
         }
         numOfPartyEdit.setText(mItemModel.number_party);
         lotNumEdit.setText(mItemModel.Lot_number_batch);
-        if(mItemModel.Lot_number_batch.length() != 0)
+        if(mItemModel.staging_location.length() != 0){
+            staging_location.setEnabled(false);
+            if(mItemModel.Lot_number_batch.length() != 0) {
+                transEqNumEdit.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                    @Override
+                    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                        if (actionId == EditorInfo.IME_ACTION_DONE) {
+                            transEqNumEdit.clearFocus();
+                            InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                            palletTypeSpinner.performClick();
+                            return true;
+                        }
+                        return false;
+                    }
+                });
+            }
+        } else {
+            staging_location.setEnabled(true);
+            staging_location.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    if (actionId == EditorInfo.IME_ACTION_DONE) {
+                        staging_location.clearFocus();
+                        InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                        palletTypeSpinner.performClick();
+                        return true;
+                    }
+                    return false;
+                }
+            });
+        }
+        staging_location.setText(mItemModel.staging_location);
+        if(mItemModel.Lot_number_batch.length() != 0) {
             lotNumEdit.setEnabled(false);
-        else
+        } else {
             lotNumEdit.setEnabled(true);
+            lotNumEdit.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    if (actionId == EditorInfo.IME_ACTION_DONE) {
+                        lotNumEdit.clearFocus();
+                        InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                        palletTypeSpinner.performClick();
+                        return true;
+                    }
+                    return false;
+                }
+            });
+        }
         transEqNumEdit.setText(String.valueOf(mItemModel.Transport_Equipment_Number));
         for(int i1= 0; i1 < mPalleteType.size(); i1++) {
             int id = -1;
@@ -334,7 +385,7 @@ public class InboundDetailsFragment extends Fragment {
 
         addTextWatchers();
 
-        pageTxt.setText(String.valueOf(getArguments().getInt("page") + 1));
+        pageTxt.setText(String.valueOf(getArguments().getInt("page") + 1) + " of " + String.valueOf(getArguments().getInt("count")));
 
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -378,6 +429,10 @@ public class InboundDetailsFragment extends Fragment {
                     Toast.makeText(getContext(), "Transport_Equipment_Number is empty", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                if(staging_location.getText().toString().length() == 0) {
+                    Toast.makeText(getContext(), "staging_location is empty", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 HashMap<String, String> hashMap = new HashMap<>();
                 if(mListModel.netto_flag_insert == 1) {
                         hashMap.put("data[" + mItemModel.id + "][netto]", Fact_NETTO_weight.getText().toString());
@@ -406,6 +461,8 @@ public class InboundDetailsFragment extends Fragment {
                 hashMap.put("data[" + mItemModel.id + "][Transport_Equipment_Number]",
                         transEqNumEdit.getText().toString());
                 hashMap.put("data[" + mItemModel.id + "][Pallet_Type]", String.valueOf(palletTypeSpinner.getSelectedItemId()));
+                hashMap.put("data[" + mItemModel.id + "][staging_location]", staging_location.getText().toString());
+
 
                 mDataRepo = new DataRepo.getData(new DataRepo.onDataListener() {
                     @Override
@@ -414,7 +471,7 @@ public class InboundDetailsFragment extends Fragment {
                             //{"data":"success","message":{"11107":"update","fact_complete":0}}
                             if(data.contains("success")) {
                                 if(data.contains("\"fact_complete\":0")) {
-                                    saveBtn.setEnabled(true);
+
                                     Toast.makeText(getContext(), "SAVE OK", Toast.LENGTH_SHORT).show();
                                 } else {
                                     Toast.makeText(getContext(), "INPUT COMPLETE", Toast.LENGTH_SHORT).show();
@@ -427,6 +484,7 @@ public class InboundDetailsFragment extends Fragment {
                         } else {
                             Toast.makeText(getContext(), "SAVE error", Toast.LENGTH_SHORT).show();
                         }
+                        saveBtn.setEnabled(true);
                     }
                 });
                 saveBtn.setEnabled(false);

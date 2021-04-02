@@ -58,7 +58,9 @@ public class AdapterPallets extends RecyclerView.Adapter<AdapterPallets.TypeTran
                     i.plan_item_weight,
                     i.plan_item_box,
                     i.cell_id,
-                    i.netto
+                    i.netto,
+                    i.staging_location,
+                    i.item_no
             );
             mOriginalItemModels.add(item);
         }
@@ -99,7 +101,9 @@ public class AdapterPallets extends RecyclerView.Adapter<AdapterPallets.TypeTran
                         i.plan_item_weight,
                         i.plan_item_box,
                         i.cell_id,
-                        i.netto
+                        i.netto,
+                        i.staging_location,
+                        i.item_no
                 );
                 mItemModelsWithMask.add(item);
             }
