@@ -13,6 +13,24 @@
 
 
         <TextView
+            android:id="@+id/textView68"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/items"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/print_lpn_text" />
+
+        <TextView
+            android:id="@+id/items_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text=""
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textView68"
+            app:layout_constraintTop_toTopOf="@+id/textView68" />
+
+        <TextView
             android:id="@+id/textView26"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -54,7 +72,7 @@
             android:layout_height="wrap_content"
             android:text="@string/articles"
             app:layout_constraintStart_toStartOf="@+id/textView28"
-            app:layout_constraintTop_toBottomOf="@+id/textView28" />
+            app:layout_constraintTop_toBottomOf="@+id/items_text" />
 
         <TextView
             android:id="@+id/articles_text"
@@ -63,44 +81,7 @@
             android:layout_marginStart="12dp"
             android:text="1111"
             app:layout_constraintStart_toEndOf="@+id/textView29"
-            app:layout_constraintTop_toBottomOf="@+id/textView28" />
-
-
-        <TextView
-            android:id="@+id/textView31"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/shelf_lifedays"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView29" />
-
-        <TextView
-            android:id="@+id/lifedays_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:text="1111"
-            app:layout_constraintStart_toEndOf="@+id/textView31"
-            app:layout_constraintTop_toTopOf="@+id/textView31" />
-
-
-        <TextView
-            android:id="@+id/textView32"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/implementation_period"
-            app:layout_constraintEnd_toEndOf="@+id/textView33"
-            app:layout_constraintStart_toEndOf="@+id/textView33"
-            app:layout_constraintTop_toBottomOf="@+id/textView31" />
-
-        <TextView
-            android:id="@+id/impl_period_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:text="1111"
-            app:layout_constraintBaseline_toBaselineOf="@+id/textView32"
-            app:layout_constraintStart_toEndOf="@+id/textView32" />
+            app:layout_constraintTop_toBottomOf="@+id/textView68" />
 
 
         <TextView
@@ -109,7 +90,7 @@
             android:layout_height="wrap_content"
             android:text="@string/plan_weight"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView32" />
+            app:layout_constraintTop_toBottomOf="@+id/articles_text" />
 
         <TextView
             android:id="@+id/plan_weight_text"
@@ -118,7 +99,7 @@
             android:layout_marginStart="12dp"
             android:text="1111"
             app:layout_constraintStart_toEndOf="@+id/textView33"
-            app:layout_constraintTop_toBottomOf="@+id/textView32" />
+            app:layout_constraintTop_toTopOf="@+id/textView33" />
 
 
         <TextView
@@ -325,13 +306,13 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:ems="4"
-            android:selectAllOnFocus="true"
+            android:hint="input"
             android:imeOptions="actionNext"
             android:inputType="number"
+            android:selectAllOnFocus="true"
             android:text=""
-            android:hint="input"
             app:layout_constraintStart_toEndOf="@+id/textView42"
-            app:layout_constraintTop_toBottomOf="@+id/num_party_edit" />
+            app:layout_constraintTop_toBottomOf="@+id/trans_num_edit" />
 
 
         <TextView
@@ -349,13 +330,13 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:ems="4"
-            android:selectAllOnFocus="true"
+            android:hint="input"
             android:imeOptions="actionNext"
             android:inputType="number"
+            android:selectAllOnFocus="true"
             android:text=""
-            android:hint="input"
             app:layout_constraintStart_toEndOf="@+id/textView43"
-            app:layout_constraintTop_toBottomOf="@+id/num_lot_edit" />
+            app:layout_constraintTop_toBottomOf="@+id/num_party_edit" />
 
 
         <TextView
@@ -371,26 +352,24 @@
             android:id="@+id/pallet_type_spinner"
             android:layout_width="wrap_content"
             android:layout_height="48dp"
-            android:minWidth="50dp"
             android:layout_marginStart="12dp"
             android:ems="4"
-            android:selectAllOnFocus="true"
+            android:hint="input"
             android:imeOptions="actionDone"
             android:inputType="number"
-            android:hint="input"
+            android:minWidth="50dp"
+            android:selectAllOnFocus="true"
             app:layout_constraintStart_toEndOf="@+id/textView44"
-            app:layout_constraintTop_toBottomOf="@+id/trans_num_edit" />
+            app:layout_constraintTop_toBottomOf="@+id/staging_location" />
 
 
         <TextView
             android:id="@+id/textView45"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="23dp"
-            android:layout_marginLeft="23dp"
             android:text="@string/page"
-            app:layout_constraintBottom_toTopOf="@+id/save_btn"
-            app:layout_constraintStart_toStartOf="@+id/save_btn" />
+            app:layout_constraintBottom_toTopOf="@+id/page_text"
+            app:layout_constraintEnd_toEndOf="@+id/page_text" />
 
         <TextView
             android:id="@+id/page_text"
@@ -433,6 +412,26 @@
             android:hint="input"
             app:layout_constraintStart_toEndOf="@+id/textView63"
             app:layout_constraintTop_toBottomOf="@+id/fact_emptypallet_edit" />
+
+        <TextView
+            android:id="@+id/textView65"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="staging_location"
+            app:layout_constraintBottom_toBottomOf="@+id/staging_location"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/staging_location" />
+
+        <EditText
+            android:id="@+id/staging_location"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="input"
+            android:inputType="text"
+            app:layout_constraintEnd_toStartOf="@+id/save_btn"
+            app:layout_constraintStart_toEndOf="@+id/textView65"
+            app:layout_constraintTop_toBottomOf="@+id/num_lot_edit" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

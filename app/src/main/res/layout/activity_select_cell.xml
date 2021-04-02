@@ -37,7 +37,7 @@
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textView14"
-        app:layout_constraintTop_toBottomOf="@+id/pallete" />
+        app:layout_constraintTop_toBottomOf="@+id/textView67" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/cells_list"
@@ -73,4 +73,21 @@
         app:layout_constraintEnd_toEndOf="@+id/cells_list"
         app:layout_constraintStart_toStartOf="@+id/cells_list"
         app:layout_constraintTop_toTopOf="@+id/cells_list" />
+
+    <TextView
+        android:id="@+id/textView67"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="staging_location"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView47" />
+
+    <TextView
+        android:id="@+id/staging_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView67"
+        app:layout_constraintStart_toEndOf="@+id/textView67"
+        app:layout_constraintTop_toTopOf="@+id/textView67" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -197,10 +197,10 @@ public class DataRepo {
                     .build();
         }
 
-        public void getCells(int Status, int WrhZone, int Cell_Type, int Warehouse, String Location) {
+        public void getCells(int Status, int WrhZone, int Cell_Type, int Warehouse, String Location, int Max_Weight_kg) {
 
             //https://wms2.madrocket.agency/engineapi?module=locationscells&search=Status:equal:1|WrhZone:equal:1|Cell_Type:equal:2|Warehouse:equal:1|Location:like:07|&limit=all
-            String s = String.format("Status:equal:%s|WrhZone:equal:%s|Cell_Type:equal:%s|Warehouse:equal:%s|Location:like:%s|", String.valueOf(Status), String.valueOf(WrhZone), String.valueOf(Cell_Type), String.valueOf(Warehouse), Location);
+            String s = String.format("Status:equal:%s|WrhZone:equal:%s|Cell_Type:equal:%s|Warehouse:equal:%s|Location:like:%s|Max_Weight_kg:bigger_equal:%s", String.valueOf(Status), String.valueOf(WrhZone), String.valueOf(Cell_Type), String.valueOf(Warehouse), Location, String.valueOf(Max_Weight_kg));
 
             url = HttpUrl.parse(Stash.getString("domain") + "/engineapi")
                     .newBuilder()
@@ -251,10 +251,10 @@ public class DataRepo {
                     .newBuilder()
                     .addQueryParameter("module", "inboundshipment")
                     .addQueryParameter("item_id", item_id)
-                    .addQueryParameter("footprint_id", item_id)
-                    .addQueryParameter("unit_id", item_id)
-                    .addQueryParameter("gross", item_id)
-                    .addQueryParameter("pallet_wight", item_id)
+                    .addQueryParameter("footprint_id", footprint_id)
+                    .addQueryParameter("unit_id", unit_id)
+                    .addQueryParameter("gross", gross)
+                    .addQueryParameter("pallet_wight", pallet_wight)
                     .addQueryParameter("packaging_wight", packaging_wight)
                     .addQueryParameter("list_id", list_id)
                     .addQueryParameter("lot_id", lot_id)

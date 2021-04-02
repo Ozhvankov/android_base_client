@@ -17,10 +17,11 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.PagerAdapter;
 
-public class ItemPageAdapter extends FixedFragmentStatePagerAdapter {
+public class ItemPageAdapter extends FragmentPagerAdapter  {
     private final ListModel mListModel;
     private ArrayList<PalletType> mPalletType;
     private ArrayList<ItemModel> mItemModels;
+    private long baseId = 0;
 
     public ItemPageAdapter(@NonNull FragmentManager fm, ListModel listModel, ArrayList<ItemModel> itemModels, ArrayList<PalletType> palletType) {
         super(fm);
@@ -37,6 +38,7 @@ public class ItemPageAdapter extends FixedFragmentStatePagerAdapter {
         bundle.putSerializable("data", mItemModels.get(position));
         bundle.putParcelableArrayList("pallete_types", mPalletType);
         bundle.putInt("page", position);
+        bundle.putInt("count", mItemModels.size());
         bundle.putParcelable("mListModel", mListModel);
         detailsFragment.setArguments(bundle);
         return detailsFragment;
@@ -65,23 +67,23 @@ public class ItemPageAdapter extends FixedFragmentStatePagerAdapter {
     }
 
     @Override
-    public void destroyItem(ViewGroup container, int position, Object object) {
-        super.destroyItem(container, position, object);
-
-        if (position == getCount() - 1 && position >= 0) {
-            Bundle state = (Bundle) saveState();
-            Fragment.SavedState[] states = (Fragment.SavedState[]) state.getParcelableArray("states");
-            if (states != null)
-                states[position] = null;
-            position = -1;
-            restoreState(state, ClassLoader.getSystemClassLoader());
-        }
+    public long getItemId(int position) {
+        // give an ID different from position when position has been changed
+        return baseId + position;
     }
-
 
     public void setPallettypes(ArrayList<PalletType> palletType) {
         this.mPalletType = palletType;
         this.notifyDataSetChanged();
+    }
+    /**
+     * Notify that the position of a fragment has been changed.
+     * Create a new ID for each position to force recreation of the fragment
+     * @param n number of items which have been changed
+     */
+    public void notifyChangeInPosition(int n) {
+        // shift the ID returned by getItemId outside the range of all previous fragments
+        baseId += getCount() + n;
     }
 }
 

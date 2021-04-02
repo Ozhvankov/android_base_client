@@ -18,7 +18,8 @@
         <activity android:name=".Activities.Stock.StockModifyActivity" />
         <activity android:name=".Activities.Inbound.SetPalleteToSelectCellActivity" />
         <activity android:name=".Activities.Stock.SelectCellActivity" />
-        <activity android:name=".Activities.Inbound.AddPalletActivity" />
+        <activity android:name=".Activities.Inbound.AddPalletActivity"
+            android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".Activities.Outbound.StagingActivity" />
         <activity android:name=".Activities.Outbound.ReturnActivity" />
         <activity android:name=".Activities.Outbound.PartialActivity" />
@@ -29,7 +30,8 @@
         <activity android:name=".Activities.Stock.StockOperationActivity" />
         <activity
             android:name=".Activities.Inbound.DetailActivity"
-            android:windowSoftInputMode="adjustResize" />
+            android:theme="@style/AppTheme2"
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".Activities.Inbound.DetailAWAYActivity"
             android:windowSoftInputMode="adjustResize" />

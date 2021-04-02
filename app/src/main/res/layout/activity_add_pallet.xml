@@ -14,12 +14,13 @@
         app:layout_constraintBottom_toBottomOf="@+id/spinner_unit_id"
         app:layout_constraintStart_toEndOf="@+id/textView7"
         app:layout_constraintTop_toTopOf="@+id/spinner_unit_id"
-        app:srcCompat="@drawable/ic_refresh" />
+        android:src="@drawable/ic_refresh" />
 
     <TextView
         android:id="@+id/textView12"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:text="footprint_id"
         app:layout_constraintBottom_toBottomOf="@+id/spinner_footprint"
         app:layout_constraintStart_toStartOf="parent"
@@ -27,11 +28,11 @@
 
     <Spinner
         android:id="@+id/spinner_unit_id"
-        android:layout_width="0dp"
+        android:layout_width="140dp"
         android:layout_height="48dp"
         android:layout_marginStart="12dp"
         android:layout_marginTop="12dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@drawable/spinner"
         app:layout_constraintStart_toEndOf="@+id/unit_refresh"
         app:layout_constraintTop_toBottomOf="@+id/spinner_lots" />
 
@@ -39,6 +40,7 @@
         android:id="@+id/textView10"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:text="item_id"
         app:layout_constraintBottom_toBottomOf="@+id/spinner_items"
         app:layout_constraintStart_toStartOf="parent"
@@ -50,7 +52,8 @@
         android:layout_height="48dp"
         android:layout_marginStart="12dp"
         android:layout_marginTop="12dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@drawable/spinner"
+        app:layout_constraintEnd_toEndOf="@+id/spinner_unit_id"
         app:layout_constraintStart_toEndOf="@+id/textView6"
         app:layout_constraintTop_toBottomOf="@+id/packaging_wight_edit" />
 
@@ -69,7 +72,7 @@
 
     <EditText
         android:id="@+id/packaging_wight_edit"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:layout_marginTop="12dp"
@@ -79,14 +82,14 @@
         android:imeOptions="actionNext"
         android:inputType="number"
         android:text=""
+        app:layout_constraintEnd_toEndOf="@+id/spinner_lots"
         app:layout_constraintStart_toEndOf="@+id/textView11"
         app:layout_constraintTop_toBottomOf="@+id/pallet_wight_edit" />
 
     <EditText
         android:id="@+id/pallet_wight_edit"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
         android:layout_marginTop="12dp"
         android:digits="1234567890."
         android:ems="4"
@@ -94,13 +97,15 @@
         android:imeOptions="actionNext"
         android:inputType="number"
         android:text=""
-        app:layout_constraintStart_toEndOf="@+id/textView9"
+        app:layout_constraintEnd_toEndOf="@+id/packaging_wight_edit"
+        app:layout_constraintStart_toStartOf="@+id/packaging_wight_edit"
         app:layout_constraintTop_toBottomOf="@+id/gross_edit" />
 
     <TextView
         android:id="@+id/textView6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:text="lot_id"
         app:layout_constraintBottom_toBottomOf="@+id/spinner_lots"
         app:layout_constraintStart_toStartOf="parent"
@@ -109,16 +114,20 @@
     <Spinner
         android:id="@+id/spinner_items"
         android:layout_width="0dp"
-        android:layout_height="48dp"
+        android:layout_height="70dp"
         android:layout_marginStart="12dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/spinner"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textView6"
+        app:layout_constraintStart_toEndOf="@+id/textView10"
         app:layout_constraintTop_toBottomOf="@+id/progress2" />
 
     <TextView
         android:id="@+id/textView7"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:text="unit_id"
         app:layout_constraintBottom_toBottomOf="@+id/spinner_unit_id"
         app:layout_constraintStart_toStartOf="parent"
@@ -130,15 +139,16 @@
         android:layout_height="48dp"
         android:layout_marginStart="12dp"
         android:layout_marginTop="15dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/spinner"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/footprint_refresh"
         app:layout_constraintTop_toBottomOf="@+id/spinner_items" />
 
     <EditText
         android:id="@+id/gross_edit"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
         android:layout_marginTop="12dp"
         android:digits="1234567890."
         android:ems="4"
@@ -146,13 +156,15 @@
         android:imeOptions="actionNext"
         android:inputType="number"
         android:text=""
-        app:layout_constraintStart_toEndOf="@+id/textView8"
+        app:layout_constraintEnd_toEndOf="@+id/pallet_wight_edit"
+        app:layout_constraintStart_toStartOf="@+id/pallet_wight_edit"
         app:layout_constraintTop_toBottomOf="@+id/spinner_footprint" />
 
     <TextView
         android:id="@+id/textView8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:text="gross"
         app:layout_constraintBottom_toBottomOf="@+id/gross_edit"
         app:layout_constraintStart_toStartOf="parent"
@@ -162,6 +174,7 @@
         android:id="@+id/textView9"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:text="pallet_wight"
         app:layout_constraintBottom_toBottomOf="@+id/pallet_wight_edit"
         app:layout_constraintStart_toStartOf="parent"
@@ -171,19 +184,11 @@
         android:id="@+id/textView11"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:text="packaging_wight"
         app:layout_constraintBottom_toBottomOf="@+id/packaging_wight_edit"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/packaging_wight_edit" />
-
-    <Button
-        android:id="@+id/add_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="ADD"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageButton
         android:id="@+id/footprint_refresh"
@@ -193,6 +198,20 @@
         app:layout_constraintBottom_toBottomOf="@+id/spinner_footprint"
         app:layout_constraintStart_toEndOf="@+id/textView12"
         app:layout_constraintTop_toTopOf="@+id/spinner_footprint"
-        app:srcCompat="@drawable/ic_refresh" />
+        android:src="@drawable/ic_refresh" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/add_btn"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginEnd="2dp"
+        android:layout_marginBottom="20dp"
+        android:clickable="true"
+        android:src="@drawable/ic_add"
+        app:elevation="0dp"
+        app:fabCustomSize="70dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:maxImageSize="50dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
