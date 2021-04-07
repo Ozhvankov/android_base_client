@@ -16,7 +16,7 @@ import com.test.test.R;
 
 import java.util.ArrayList;
 
-public class AdapterPallets extends RecyclerView.Adapter<AdapterPallets.TypeTransportViewHolder>{
+public class AdapterPallets extends AbstractDpadAdapter<AdapterPallets.TypeTransportViewHolder>{
 
     private ArrayList<ItemModel> mItemModels;
     private final ArrayList<ItemModel> mOriginalItemModels;

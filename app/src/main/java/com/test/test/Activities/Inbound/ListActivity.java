@@ -66,6 +66,7 @@ public class ListActivity extends AppCompatActivity {
                         mRecyclerView.setOnScrollListener(null);
                         setBackgroundColorButton(mPlanFactBtn, true);
                         setBackgroundColorButton(mPutAwayBtn, false);
+                        mRecyclerView.requestFocus();
                     }
                 });
                 getData.getListByStatus(ListModel.STATUS_INPUT_FACT);
@@ -87,6 +88,7 @@ public class ListActivity extends AppCompatActivity {
                         mRecyclerView.setOnScrollListener(null);
                         setBackgroundColorButton(mPlanFactBtn, false);
                         setBackgroundColorButton(mPutAwayBtn, true);
+                        mRecyclerView.requestFocus();
                     }
                 });
                 getData.getListByStatus(ListModel.STATUS_PUT_AWAY);

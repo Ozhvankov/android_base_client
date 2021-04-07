@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-public class AdapterPalletsOperation extends RecyclerView.Adapter<AdapterPalletsOperation.TypeTransportViewHolder>{
+public class AdapterPalletsOperation extends AbstractDpadAdapter<AdapterPalletsOperation.TypeTransportViewHolder>{
 
     private ArrayList<ItemModel> mItemModels;
     private final ArrayList<ItemModel> mOriginalItemModels;

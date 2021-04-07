@@ -37,7 +37,7 @@
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textView14"
-        app:layout_constraintTop_toBottomOf="@+id/textView67" />
+        app:layout_constraintTop_toBottomOf="@+id/staging_location" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/cells_list"
@@ -53,16 +53,18 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:text="TextView"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textView47"
-        app:layout_constraintTop_toBottomOf="@+id/progress3" />
+        app:layout_constraintTop_toBottomOf="@+id/Inbound_shipment_number"
+        tools:text="1111111111111111111111111111111111111111111111111111111111111111111111111" />
 
     <TextView
         android:id="@+id/textView47"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Current pallete"
+        android:text="Current LPN"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/progress3" />
+        app:layout_constraintTop_toBottomOf="@+id/Inbound_shipment_number" />
 
     <TextView
         android:id="@+id/empty"
@@ -79,15 +81,36 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="staging_location"
+        app:layout_constraintBottom_toBottomOf="@+id/staging_location"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView47" />
+        app:layout_constraintTop_toBottomOf="@+id/pallete" />
 
     <TextView
         android:id="@+id/staging_location"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView67"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textView67"
-        app:layout_constraintTop_toTopOf="@+id/textView67" />
+        app:layout_constraintTop_toBottomOf="@+id/pallete"
+        tools:text="1111111111111111111111111111111111111111111111111111111111111111111111" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Inbound_shipment_number"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/progress3" />
+
+    <TextView
+        android:id="@+id/Inbound_shipment_number"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textView2"
+        app:layout_constraintTop_toBottomOf="@+id/progress3"
+        tools:text="1111111111111111111111111111111" />
 </androidx.constraintlayout.widget.ConstraintLayout>
