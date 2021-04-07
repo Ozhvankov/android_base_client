@@ -33,9 +33,9 @@
     <string name="password">Password</string>
     <string name="change_server">Change server</string>
     <string name="login">Login</string>
-    <string name="refill">Refill</string>
-    <string name="partial">Partial</string>
-    <string name="stagging">Stagging</string>
+    <string name="refill">REPLENISHMENT</string>
+    <string name="partial">CASES PICKING</string>
+    <string name="stagging">TRANSFER TO STAGING</string>
     <string name="task">Task:</string>
     <string name="enter_the_lpn">Enter the LPN</string>
     <string name="lpn_modify">LPN Modify</string>
@@ -69,7 +69,7 @@
     <string name="test_save">Test/Save</string>
 
     <string name="pallet">Pallet</string>
-    <string name="returntask">Return</string>
+    <string name="returntask">PALLET RETURN</string>
     <string name="warehouse">Warehouse</string>
     <string name="conn_err">Connection Err</string>
     <string name="wrong_cred_err">Wrong email or password</string>

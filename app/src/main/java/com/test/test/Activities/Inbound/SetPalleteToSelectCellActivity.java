@@ -54,7 +54,8 @@ public class SetPalleteToSelectCellActivity extends AppCompatActivity {
         mListModel= (ListModel) getIntent().getParcelableExtra("mListModel");
         mPallete = (ItemModel)getIntent().getSerializableExtra("mPallete");
         empty = findViewById(R.id.empty);
-        ((TextView)findViewById(R.id.pallete)).setText(mListModel.Inbound_shipment_number + "." + mPallete.item_id + ". " + mPallete.Initial_PRINTED_LPN);
+        ((TextView)findViewById(R.id.pallete)).setText(mPallete.Initial_PRINTED_LPN);
+        ((TextView)findViewById(R.id.Inbound_shipment_number)).setText(mListModel.Inbound_shipment_number);
         ((TextView)findViewById(R.id.staging_location)).setText(mPallete.staging_location);
         mProgressBar = (ProgressBar)findViewById(R.id.progress3);
         mSearchCell.setEnabled(true);
@@ -147,6 +148,7 @@ public class SetPalleteToSelectCellActivity extends AppCompatActivity {
             empty.setVisibility(View.GONE);
         else
             empty.setVisibility(View.VISIBLE);
+        mSearchCell.requestFocus();
     }
 
     private void load(String like) {

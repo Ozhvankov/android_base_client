@@ -437,7 +437,7 @@ public class InboundDetailsFragment extends Fragment {
                 if(mListModel.netto_flag_insert == 1) {
                         hashMap.put("data[" + mItemModel.id + "][netto]", Fact_NETTO_weight.getText().toString());
                         String fact_empty_box = factEmptyBoxEdit.getText().toString();
-                        if (fact_empty_box.length() != 0)
+                        if (fact_empty_box.length() == 0)
                             fact_empty_box = "0";
                         hashMap.put("data[" + mItemModel.id + "][fact_weight_empty_box]", fact_empty_box);
                         String fact_empty_pallet = factEmptyPalletEdit.getText().toString();

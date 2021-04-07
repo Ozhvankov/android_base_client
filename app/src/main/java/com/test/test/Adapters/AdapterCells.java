@@ -19,7 +19,7 @@ import java.util.ArrayList;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-public class AdapterCells extends RecyclerView.Adapter<AdapterCells.TypeTransportViewHolder>{
+public class AdapterCells extends AbstractDpadAdapter<AdapterCells.TypeTransportViewHolder>{
 
     private ArrayList<Cell> mItemModels;
     private final ArrayList<Cell> mOriginalItemModels;

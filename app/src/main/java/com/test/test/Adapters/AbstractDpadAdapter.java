@@ -3,16 +3,19 @@ package com.test.test.Adapters;
 import android.view.KeyEvent;
 import android.view.View;
 
+import java.util.List;
+
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public abstract class TrackSelectionAdapter<VH extends TrackSelectionAdapter.ViewHolder> extends RecyclerView.Adapter<VH> {
+public abstract class AbstractDpadAdapter<VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
     // Start with first item selected
     private int focusedItem = 0;
-
+    private RecyclerView recyclerView;
     @Override
     public void onAttachedToRecyclerView(final RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
-
+        this.recyclerView = recyclerView;
         // Handle key up and key down and attempt to move selection
         recyclerView.setOnKeyListener(new View.OnKeyListener() {
             @Override
@@ -31,9 +34,22 @@ public abstract class TrackSelectionAdapter<VH extends TrackSelectionAdapter.Vie
                 return false;
             }
         });
+        recyclerView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                notifyItemChanged(focusedItem);
+            }
+        });
     }
 
-    private boolean tryMoveSelection(RecyclerView.LayoutManager lm, int direction) {
+    @Override
+    public void onBindViewHolder(@NonNull VH holder, int position, @NonNull List<Object> payloads) {
+        super.onBindViewHolder(holder, position, payloads);
+        // Set selected state; use a state list drawable to style the view
+        holder.itemView.setSelected(focusedItem == position && recyclerView.isFocused());
+    }
+
+    protected boolean tryMoveSelection(RecyclerView.LayoutManager lm, int direction) {
         int tryFocusItem = focusedItem + direction;
 
         // If still within valid bounds, move the selection, notify to redraw, and scroll
@@ -48,26 +64,10 @@ public abstract class TrackSelectionAdapter<VH extends TrackSelectionAdapter.Vie
         return false;
     }
 
-    @Override
-    public void onBindViewHolder(VH viewHolder, int i) {
-        // Set selected state; use a state list drawable to style the view
-        viewHolder.itemView.setSelected(focusedItem == i);
-    }
-
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        public ViewHolder(View itemView) {
-            super(itemView);
-
-            // Handle item click and set the selection
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // Redraw the old selection and the new
-                    notifyItemChanged(focusedItem);
-                    focusedItem = getLayoutPosition();
-                    notifyItemChanged(focusedItem);
-                }
-            });
-        }
+    public void redrawCursor(int position) {
+        // Redraw the old selection and the new
+        notifyItemChanged(focusedItem);
+        focusedItem = position;
+        notifyItemChanged(focusedItem);
     }
 }

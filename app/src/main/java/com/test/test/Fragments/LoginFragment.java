@@ -87,6 +87,7 @@ public class LoginFragment extends Fragment {
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
+                                Toast.makeText(getContext(),"Wrong server answer: " + e.toString(), Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
