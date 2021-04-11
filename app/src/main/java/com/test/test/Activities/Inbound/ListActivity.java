@@ -17,6 +17,8 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.bosphere.filelogger.FL;
+import com.fxn.stash.Stash;
 import com.google.gson.JsonArray;
 import com.google.gson.annotations.JsonAdapter;
 import com.test.test.Adapters.ListAdapter;
@@ -193,6 +195,9 @@ public class ListActivity extends AppCompatActivity {
 
             } catch (JSONException e) {
                 e.printStackTrace();
+                if(Stash.getBoolean("logger")) {
+                    FL.d( e.toString());
+                }
                 Toast.makeText(ListActivity.this, "Error parse list: " + e.toString(), Toast.LENGTH_SHORT).show();
             }
         }

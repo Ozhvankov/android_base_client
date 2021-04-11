@@ -70,7 +70,8 @@ public class MainFragment extends Fragment {
                 startActivity(new Intent(getContext(), StockOperationActivity.class));
             }
         });
-
+        mOutboundListLay.setVisibility(View.INVISIBLE);
+        mStockLay.setVisibility(View.INVISIBLE);
         return mBaseView;
     }
 }

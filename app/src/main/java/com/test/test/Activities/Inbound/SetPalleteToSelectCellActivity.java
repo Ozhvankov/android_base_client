@@ -17,6 +17,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bosphere.filelogger.FL;
 import com.fxn.stash.Stash;
 import com.test.test.Adapters.AdapterCells;
 import com.test.test.Models.Cell;
@@ -124,9 +125,15 @@ public class SetPalleteToSelectCellActivity extends AppCompatActivity {
                                                 }
                                             } else {
                                                 Toast.makeText(SetPalleteToSelectCellActivity.this, "Error added pallete:" + data, Toast.LENGTH_SHORT).show();
+                                                if(Stash.getBoolean("logger")) {
+                                                    FL.d("Error added pallete:" + data);
+                                                }
                                             }
                                         } else {
                                             Toast.makeText(SetPalleteToSelectCellActivity.this, "Error added pallete!", Toast.LENGTH_SHORT).show();
+                                            if(Stash.getBoolean("logger")) {
+                                                FL.d("Error added pallete!");
+                                            }
                                         }
                                     }
                                 });
@@ -177,9 +184,15 @@ public class SetPalleteToSelectCellActivity extends AppCompatActivity {
                         mSearchCell.setEnabled(true);
 
                     } catch (JSONException e) {
+                        if(Stash.getBoolean("logger")) {
+                            FL.d("Error: not load cell list: " + e.toString());
+                        }
                         Toast.makeText(SetPalleteToSelectCellActivity.this, "Error: not load cell list: " + e.toString(), Toast.LENGTH_LONG).show();
                     }
                 } else {
+                    if(Stash.getBoolean("logger")) {
+                        FL.d("Error: load cell empty");
+                    }
                     Toast.makeText(SetPalleteToSelectCellActivity.this, "Error: load cell empty", Toast.LENGTH_LONG).show();
                 }
                 mSearchCell.setEnabled(true);

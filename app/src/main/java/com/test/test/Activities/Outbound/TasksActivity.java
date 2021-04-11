@@ -11,6 +11,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bosphere.filelogger.FL;
+import com.fxn.stash.Stash;
 import com.test.test.R;
 import com.test.test.Repository.DataRepo;
 
@@ -97,43 +99,57 @@ public class TasksActivity extends AppCompatActivity {
             public void returnData(String data) {
                 mProgressBar.setVisibility(View.GONE);
                 mRefillBtn.setEnabled(false);
-                mRefillBtn.setText("Refill there are no tasks");
+                mRefillBtn.setText("REPLENISHMENT there are no tasks");
                 mRefillBtn.setEnabled(false);
-                mPartialBtn.setText("Partial there are no tasks");
+                mPartialBtn.setText("CASES PICKING there are no tasks");
                 mReturnBtn.setEnabled(false);
-                mReturnBtn.setText("Return there are no tasks");
+                mReturnBtn.setText("PALLET RETURN there are no tasks");
                 mStagingBtn.setEnabled(false);
-                mStagingBtn.setText("Staging there are no tasks");
+                mStagingBtn.setText("TRANSFER TO STAGING there are no tasks");
                 if (data != null && !data.isEmpty()) {
                     JSONObject object = null;
                     try {
                         object = new JSONObject(data);
                         mNameTxt.setText(object.getString("OutboundShipmentNumber"));
                         JSONArray array = object.getJSONArray("tasks");
+                        int sumRefill = 0;
+                        int sumPartial = 0;
+                        int sumReturn = 0;
+                        int sumStaging = 0;
                         for (int i = 0; i < array.length(); i++) {
                             String code = array.getJSONObject(i).getString("code");
                             int sum = array.getJSONObject(i).getInt("sum");
                             if (code.equals("refill") && sum > 0) {
                                 mRefillBtn.setEnabled(true);
-                                mRefillBtn.setText("Refill" + " (" + sum + ")");
+                                sumRefill += sum;
+                                mRefillBtn.setText("REPLENISHMENT" + " (" + sumRefill + ")");
                             }
                             if (code.equals("partial") && sum > 0) {
                                 mPartialBtn.setEnabled(true);
-                                mPartialBtn.setText("Partial" + " (" + sum + ")");
+                                sumPartial += sum;
+                                mPartialBtn.setText("CASES PICKING" + " (" + sumPartial + ")");
                             }
                             if (code.equals("return") && sum > 0) {
                                 mReturnBtn.setEnabled(true);
-                                mReturnBtn.setText("Return" + " (" + sum + ")");
+                                sumReturn += sum;
+                                mReturnBtn.setText("PALLET RETURN" + " (" + sumReturn + ")");
                             }
                             if (code.equals("staging") && sum > 0) {
                                 mStagingBtn.setEnabled(true);
-                                mStagingBtn.setText("Staging" + " (" + sum + ")");
+                                sumStaging += sum;
+                                mStagingBtn.setText("TRANSFER TO STAGING" + " (" + sumStaging + ")");
                             }
                         }
                     } catch (JSONException e) {
+                        if(Stash.getBoolean("logger")) {
+                            FL.d("Error parse tasks: " + e.toString());
+                        }
                         Toast.makeText(TasksActivity.this, "Error parse tasks: " + e.toString(), Toast.LENGTH_SHORT).show();
                     }
                 } else {
+                    if(Stash.getBoolean("logger")) {
+                        FL.d("Empty tasks");
+                    }
                     Toast.makeText(TasksActivity.this, "Empty tasks", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -165,7 +181,9 @@ public class TasksActivity extends AppCompatActivity {
                         startActivityForResult(intent, 100);
 
                     } catch (JSONException e) {
-                        e.printStackTrace();
+                        if(Stash.getBoolean("logger")) {
+                            FL.d(e.toString());
+                        }
                     }
 
                 }

@@ -14,6 +14,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bosphere.filelogger.FL;
+import com.fxn.stash.Stash;
 import com.test.test.Adapters.AdapterPalletsOperation;
 import com.test.test.Models.EditableItem;
 import com.test.test.Models.ItemModel;
@@ -96,7 +98,12 @@ public class StockOperationActivity extends AppCompatActivity {
                         android.R.layout.simple_list_item_single_choice, // Layout
                         flowers // List
                 );
-
+                builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                        @Override
+                        public void onCancel(DialogInterface dialogInterface) {
+                            dialogInterface.dismiss();
+                        }
+                });
                 // Set a single choice items list for alert dialog
                 builder.setSingleChoiceItems(
                         arrayAdapter, // Items list
@@ -122,6 +129,7 @@ public class StockOperationActivity extends AppCompatActivity {
                                                 JSONObject jsonResponse = new JSONObject(data);
                                                 EditableItem item = new EditableItem();
                                                 item.id = jsonResponse.getInt("id");
+                                                item.Inbound_shipment_number = jsonResponse.getString("Inbound_shipment_number");
                                                 item.box_current = jsonResponse.getInt("box_current");
                                                 item.inbound_date = jsonResponse.getString("inbound_date");
                                                 item.Manufacturing_Date = jsonResponse.getString("Manufacturing_Date");
@@ -140,6 +148,7 @@ public class StockOperationActivity extends AppCompatActivity {
                                                 item.kg_reserved = jsonResponse.getInt("kg_reserved");
                                                 item.box_avaible = jsonResponse.getInt("box_avaible");
                                                 item.box_reserved = jsonResponse.getInt("box_reserved");
+                                                item.fact_item_weight = jsonResponse.getString("fact_item_weight");
                                                 Intent intent;
                                                 if(i == 0) {
                                                     intent = new Intent(StockOperationActivity.this, StockModifyActivity.class);
@@ -147,9 +156,12 @@ public class StockOperationActivity extends AppCompatActivity {
                                                     intent = new Intent(StockOperationActivity.this, StockInventaryActivity.class);
                                                 }
                                                 intent.putExtra("item", item);
-                                                intent.putExtra("mItemModel", mItemModels.get(position));
+                                                intent.putExtra("mItemModel", ((AdapterPalletsOperation) mPalletsList.getAdapter()).getPallet(position));
                                                 startActivity(intent);
                                             } catch (JSONException e) {
+                                                if(Stash.getBoolean("logger")) {
+                                                    FL.d("Wrong load pallete: " + e.toString());
+                                                }
                                                 Toast.makeText(StockOperationActivity.this, "Wrong load pallete: " + e.toString(), Toast.LENGTH_LONG).show();
                                                 return;
                                             }
@@ -205,6 +217,9 @@ public class StockOperationActivity extends AppCompatActivity {
                         mSearch.setEnabled(true);
                         ((AdapterPalletsOperation) mPalletsList.getAdapter()).setMask(mSearch.getText().toString());
                     } catch (JSONException e) {
+                        if(Stash.getBoolean("logger")) {
+                            FL.d("Error: not load pallet list: " + e.toString());
+                        }
                         Toast.makeText(StockOperationActivity.this, "Error: not load pallet list: " + e.toString(), Toast.LENGTH_LONG).show();
                         return;
                     }

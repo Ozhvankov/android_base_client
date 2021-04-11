@@ -13,6 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bosphere.filelogger.FL;
 import com.fxn.stash.Stash;
 import com.test.test.R;
 import com.test.test.Repository.DataRepo;
@@ -116,7 +117,7 @@ public class OubboundRefillOrStagingActivity extends AppCompatActivity {
                         int Pallet_Type = infoObject.getInt("Pallet_Type");
                         int fact_item_weight = infoObject.getInt("fact_item_weight");
                         mItemIdTxt.setText(infoObject.getString("item_article"));
-                        mArticleTaskTxt.setText(infoObject.getString("item_article"));
+                        mArticleTaskTxt.setText(infoObject.getString("item_no"));
                         mNameTaskTxt.setText(infoObject.getString("name"));
                         mLpnIdPartial = infoObject.getString("lpn_id_partial");
                         mKgTaskTxt.setText(infoObject.getString("kg"));
@@ -136,6 +137,9 @@ public class OubboundRefillOrStagingActivity extends AppCompatActivity {
                         }
                     } catch (JSONException e) {
                         Toast.makeText(OubboundRefillOrStagingActivity.this, "Wrong parse info " + e.toString(), Toast.LENGTH_SHORT).show();
+                        if(Stash.getBoolean("logger")) {
+                            FL.d(e.toString());
+                        }
                     }
                 }
             }
@@ -176,8 +180,17 @@ public class OubboundRefillOrStagingActivity extends AppCompatActivity {
                         }
                     } catch (JSONException e) {
                         Toast.makeText(OubboundRefillOrStagingActivity.this, "Wrong parse lpn list " + e.toString(), Toast.LENGTH_SHORT).show();
-                        e.printStackTrace();
+                        if(Stash.getBoolean("logger")) {
+                            FL.d("Wrong parse lpn list " + e.toString());
+                        }
+                        mProgressBar.setVisibility(View.GONE);
                     }
+                } else {
+                    if(Stash.getBoolean("logger")) {
+                        FL.d("data from server wrong ");
+                    }
+                    Toast.makeText(OubboundRefillOrStagingActivity.this, "data from server wrong ", Toast.LENGTH_SHORT).show();
+                    mProgressBar.setVisibility(View.GONE);
                 }
             }
         });
@@ -208,6 +221,8 @@ public class OubboundRefillOrStagingActivity extends AppCompatActivity {
                     mCellsAutocomplete.setAdapter(arrayAdapter);
                     if(cellLocs.size() == 0){
                         Toast.makeText(OubboundRefillOrStagingActivity.this, "Cells list is empty", Toast.LENGTH_SHORT).show();
+                        mProgressBar.setVisibility(View.GONE);
+                        mSaveBtn.setEnabled(false);
                         return;
                     }
                     mCellsAutocomplete.setEnabled(true);
@@ -222,8 +237,12 @@ public class OubboundRefillOrStagingActivity extends AppCompatActivity {
                         mSaveBtn.setEnabled(true);
                     }
                 } catch (JSONException e) {
+                    mProgressBar.setVisibility(View.GONE);
+                    mSaveBtn.setEnabled(false);
                     Toast.makeText(OubboundRefillOrStagingActivity.this, "Wrong parse cells list " + e.toString(), Toast.LENGTH_SHORT).show();
-                    e.printStackTrace();
+                    if(Stash.getBoolean("logger")) {
+                        FL.d(e.toString());
+                    }
                 }
             }
         });
@@ -248,9 +267,15 @@ public class OubboundRefillOrStagingActivity extends AppCompatActivity {
                             }
                         }
                     } catch (JSONException e) {
+                        if(Stash.getBoolean("logger")) {
+                            FL.d("Wrong parse: cellId=" + cellId + " lpnId=" + lpnId);
+                        }
                         Toast.makeText(OubboundRefillOrStagingActivity.this, "Wrong parse: cellId=" + cellId + " lpnId=" + lpnId, Toast.LENGTH_SHORT).show();
                         e.printStackTrace();
                     }
+                }
+                if(Stash.getBoolean("logger")) {
+                    FL.d("Wrong save: cellId=" + cellId + " lpnId=" + lpnId);
                 }
                 Toast.makeText(OubboundRefillOrStagingActivity.this, "Wrong save: cellId=" + cellId + " lpnId=" + lpnId, Toast.LENGTH_SHORT).show();
             }

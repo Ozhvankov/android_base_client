@@ -30,6 +30,7 @@ public class EditableItem implements Parcelable {
     public int kg_reserved;
     public int box_avaible;
     public int box_reserved;
+    public String fact_item_weight;
 
     public EditableItem(Parcel in) {
         id = in.readInt();
@@ -52,6 +53,8 @@ public class EditableItem implements Parcelable {
         kg_reserved= in.readInt();
         box_avaible= in.readInt();
         box_reserved= in.readInt();
+        fact_item_weight = in.readString();
+        Inbound_shipment_number = in.readString();
     }
 
     public EditableItem() {
@@ -81,6 +84,8 @@ public class EditableItem implements Parcelable {
         dest.writeInt(kg_reserved);
         dest.writeInt(box_avaible);
         dest.writeInt(box_reserved);
+        dest.writeString(fact_item_weight);
+        dest.writeString(Inbound_shipment_number);
     }
 
     @Override

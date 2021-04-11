@@ -19,6 +19,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bosphere.filelogger.FL;
 import com.fxn.stash.Stash;
 import com.google.gson.JsonArray;
 import com.test.test.Adapters.ItemPageAdapter;
@@ -101,14 +102,23 @@ public class DetailActivity extends AppCompatActivity {
                                 Stash.put("PalletType", mPalletType);
                             } catch (JSONException e) {
                                 Toast.makeText(DetailActivity.this, "Error: not parse PalletType list!", Toast.LENGTH_LONG).show();
+                                if(Stash.getBoolean("logger")) {
+                                    FL.d(e.toString());
+                                }
                                 finish();
                             }
 
                         } else {
+                            if(Stash.getBoolean("logger")) {
+                                FL.d("Error: PalletType list is empty!");
+                            }
                             Toast.makeText(DetailActivity.this, "Error: PalletType list is empty!", Toast.LENGTH_LONG).show();
                             finish();
                         }
                     } else {
+                        if(Stash.getBoolean("logger")) {
+                            FL.d("Error: not load PalletType list!");
+                        }
                         Toast.makeText(DetailActivity.this, "Error: not load PalletType list!", Toast.LENGTH_LONG).show();
                         finish();
                     }
@@ -347,6 +357,9 @@ public class DetailActivity extends AppCompatActivity {
                             mViewPager.setCurrentItem(index);
 
                     } catch (JSONException e) {
+                        if(Stash.getBoolean("logger")) {
+                            FL.d("Error: not load pallet list: " + e.toString());
+                        }
                         mIsLoad = false;
                         invalidateOptionsMenu();
                         Toast.makeText(DetailActivity.this, "Error: not load pallet list: " + e.toString(), Toast.LENGTH_LONG).show();

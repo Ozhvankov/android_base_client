@@ -13,6 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bosphere.filelogger.FL;
 import com.fxn.stash.Stash;
 import com.test.test.Adapters.AdapterCells;
 import com.test.test.Models.Cell;
@@ -56,6 +57,7 @@ public class SelectCellActivity extends AppCompatActivity {
         item = (EditableItem)getIntent().getParcelableExtra("item");
         model = (ItemModel)getIntent().getSerializableExtra("model");
         empty = findViewById(R.id.empty);
+        ((TextView)findViewById(R.id.Inbound_shipment_number)).setText(item.Inbound_shipment_number);
         ((TextView)findViewById(R.id.pallete)).setText(model.Initial_PRINTED_LPN + " current cell " + item.cell_name);
         mProgressBar = (ProgressBar)findViewById(R.id.progress3);
         mProgressBar.setVisibility(View.INVISIBLE);
@@ -162,9 +164,15 @@ public class SelectCellActivity extends AppCompatActivity {
                         adapter.setMask(mSearchCell.getText().toString());
                         mSearchCell.setEnabled(true);
                     } catch (JSONException e) {
+                        if(Stash.getBoolean("logger")) {
+                            FL.d("Error: not load cell list: " + e.toString());
+                        }
                         Toast.makeText(SelectCellActivity.this, "Error: not load cell list: " + e.toString(), Toast.LENGTH_LONG).show();
                     }
                 } else {
+                    if(Stash.getBoolean("logger")) {
+                        FL.d("Error: load cell list empty");
+                    }
                     Toast.makeText(SelectCellActivity.this, "Error: load cell list empty", Toast.LENGTH_LONG).show();
                 }
                 mSearchCell.setEnabled(true);
@@ -174,7 +182,8 @@ public class SelectCellActivity extends AppCompatActivity {
                     empty.setVisibility(View.VISIBLE);
             }
         });
-        mDataRepo.getCells(1, item.wrh_zone, Stash.getInt("warehouse_id"), like);
+        Double fact_item_weight = Double.parseDouble(item.fact_item_weight);
+        mDataRepo.getCells(1, item.wrh_zone, 2,  Stash.getInt("warehouse_id"), like, (int)Math.ceil(fact_item_weight));
         mDataRepo.start();
     }
 

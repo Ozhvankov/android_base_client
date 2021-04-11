@@ -11,6 +11,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bosphere.filelogger.FL;
+import com.fxn.stash.Stash;
 import com.test.test.Adapters.AdapterPallets;
 import com.test.test.Models.ItemModel;
 import com.test.test.Models.ListModel;
@@ -123,6 +125,9 @@ public class DetailAWAYActivity extends AppCompatActivity {
                         mSearch.setEnabled(true);
                         ((AdapterPallets) mPalletsList.getAdapter()).setMask(mSearch.getText().toString());
                     } catch (JSONException e) {
+                        if(Stash.getBoolean("logger")) {
+                            FL.d("Error: not load pallet list: " + e.toString());
+                        }
                         Toast.makeText(DetailAWAYActivity.this, "Error: not load pallet list: " + e.toString(), Toast.LENGTH_LONG).show();
                         return;
                     }

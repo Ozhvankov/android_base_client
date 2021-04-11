@@ -11,6 +11,7 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.bosphere.filelogger.FL;
 import com.fxn.stash.Stash;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.test.test.Adapters.FootprintsrAdapter;
@@ -118,8 +119,14 @@ public class AddPalletActivity extends AppCompatActivity implements AdapterView.
                                 mUnitsAdapter.notifyDataSetChanged();
                             } else {
                                 Toast.makeText(AddPalletActivity.this, "Error: item shipment unit type is empty!", Toast.LENGTH_SHORT).show();
+                                if(Stash.getBoolean("logger")) {
+                                    FL.d("Error: item shipment unit type is empty!");
+                                }
                             }
                         } else {
+                            if(Stash.getBoolean("logger")) {
+                                FL.d("Error: get item shipment unit type!");
+                            }
                             Toast.makeText(AddPalletActivity.this, "Error: get item shipment unit type!", Toast.LENGTH_SHORT).show();
                         }
                         allowToAddPallete();
@@ -148,12 +155,21 @@ public class AddPalletActivity extends AppCompatActivity implements AdapterView.
                                     return;
                                 } else {
                                     Toast.makeText(AddPalletActivity.this, "Error added pallete:" + data, Toast.LENGTH_SHORT).show();
+                                    if(Stash.getBoolean("logger")) {
+                                        FL.d("Error added pallete:" + data);
+                                    }
                                 }
                             } else {
                                 Toast.makeText(AddPalletActivity.this, "Error added pallete:" + data, Toast.LENGTH_SHORT).show();
+                                if(Stash.getBoolean("logger")) {
+                                    FL.d("Error added pallete:" + data);
+                                }
                             }
                         } else {
                             Toast.makeText(AddPalletActivity.this, "Error added pallete!", Toast.LENGTH_SHORT).show();
+                            if(Stash.getBoolean("logger")) {
+                                FL.d("Error added pallete!");
+                            }
                         }
                         allowToAddPallete();
                     }
@@ -198,9 +214,15 @@ public class AddPalletActivity extends AppCompatActivity implements AdapterView.
                         }
                         allowToAddPallete();
                     } else {
+                        if(Stash.getBoolean("logger")) {
+                            FL.d("Error: item shipment unit type is empty!");
+                        }
                         Toast.makeText(AddPalletActivity.this, "Error: item shipment unit type is empty!", Toast.LENGTH_SHORT).show();
                     }
                 } else {
+                    if(Stash.getBoolean("logger")) {
+                        FL.d("Error: get item shipment unit type!");
+                    }
                     Toast.makeText(AddPalletActivity.this, "Error: get item shipment unit type!", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -238,6 +260,9 @@ public class AddPalletActivity extends AppCompatActivity implements AdapterView.
             Stash.put("itemShipmentUnitType", mItemShipmentUnitType);
         } catch (JSONException e) {
             Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show();
+            if(Stash.getBoolean("logger")) {
+                FL.d(e.toString());
+            }
             return;
         }
     }
@@ -272,13 +297,22 @@ public class AddPalletActivity extends AppCompatActivity implements AdapterView.
 
                         } catch (JSONException e) {
                             e.printStackTrace();
+                            if(Stash.getBoolean("logger")) {
+                                FL.d(e.toString());
+                            }
                             return;
                         }
 
                     } else {
+                        if(Stash.getBoolean("logger")) {
+                            FL.d("Error: footprints is empty!");
+                        }
                         Toast.makeText(AddPalletActivity.this, "Error: footprints is empty!", Toast.LENGTH_SHORT).show();
                     }
                 } else {
+                    if(Stash.getBoolean("logger")) {
+                        FL.d("Error: get footprints!");
+                    }
                     Toast.makeText(AddPalletActivity.this, "Error: get footprints!", Toast.LENGTH_SHORT).show();
                 }
                 allowToAddPallete();

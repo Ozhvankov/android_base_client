@@ -12,6 +12,8 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.bosphere.filelogger.FL;
+import com.fxn.stash.Stash;
 import com.test.test.Activities.Inbound.ListActivity;
 import com.test.test.Models.OutboundListModel;
 import com.test.test.R;
@@ -63,8 +65,10 @@ public class OutboundActivity extends AppCompatActivity {
                     mOutboundAutocomplete.setAdapter(adapterAutocomplete);
                     mOutboundAutocomplete.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                            startItem(outboundList, i);
+                        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                            String selected = (String) adapterView.getItemAtPosition(position);
+                            int pos = outboundList.indexOf(selected);
+                            startItem(outboundList, pos);
                         }
                     });
                     mOutboundListView.setAdapter(adapter);
@@ -75,6 +79,9 @@ public class OutboundActivity extends AppCompatActivity {
                         }
                     });
                 } catch (JSONException e) {
+                    if(Stash.getBoolean("logger")) {
+                        FL.d("Error parse list: " + e.toString());
+                    }
                     Toast.makeText(OutboundActivity.this, "Error parse list: " + e.toString(), Toast.LENGTH_SHORT).show();
                 }
             }
