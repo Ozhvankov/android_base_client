@@ -1,20 +1,29 @@
 package com.test.test.Activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.Toast;
 
+import com.bosphere.filelogger.FL;
 import com.fxn.stash.Stash;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
+import com.mikepenz.materialdrawer.interfaces.OnCheckedChangeListener;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
+import com.mikepenz.materialdrawer.model.SwitchDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.test.test.Fragments.MainFragment;
 import com.test.test.R;
@@ -30,10 +39,12 @@ import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final int REQ_PERMISSION = 45;
     Drawer mDrawer;
     Toolbar mToolbar;
     MainFragment mMainFragment;
     toolbarChangeListener mToolbarChangeListener;
+    boolean isLogger;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,19 +78,34 @@ public class MainActivity extends AppCompatActivity {
 
         PrimaryDrawerItem mainWarehouseItem = new PrimaryDrawerItem().withIdentifier(0).withName("Main").withTag("Main ");
         PrimaryDrawerItem fishWarehouseItem = new PrimaryDrawerItem().withIdentifier(1).withName("Fish").withTag("Fish ");
-
-
-
         PrimaryDrawerItem exitAccountItem = new PrimaryDrawerItem().withIdentifier(2).withName("Exit Account");
         PrimaryDrawerItem exitAppItem = new PrimaryDrawerItem().withIdentifier(3).withName("Exit App");
+        isLogger = Stash.getBoolean("logger");
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
+                PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQ_PERMISSION);
+        } else {
+            FL.setEnabled(isLogger);
+        }
 
+        final SwitchDrawerItem logAppItem = new SwitchDrawerItem().withIdentifier(3).withName("Logger");
+        logAppItem.withChecked(isLogger);
+        logAppItem.withCheckable(true);
+        logAppItem.withOnCheckedChangeListener(new OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(IDrawerItem drawerItem, CompoundButton buttonView, boolean isChecked) {
+                isLogger = logAppItem.isChecked();
+                Stash.put("logger", isLogger);
+                FL.setEnabled(isLogger);
+            }
+        });
         mDrawer = new DrawerBuilder()
                 .withActivity(this)
                 .withToolbar(mToolbar)
                 .withCloseOnClick(false)
                 .withMultiSelect(false)
                 .withAccountHeader(header)
-                .addDrawerItems(mainWarehouseItem, fishWarehouseItem, exitAccountItem, exitAppItem)
+                .addDrawerItems(mainWarehouseItem, fishWarehouseItem, exitAccountItem, exitAppItem, logAppItem)
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
@@ -98,7 +124,8 @@ public class MainActivity extends AppCompatActivity {
                                 mDrawer.closeDrawer();
                                 System.exit(0);
                                 return true;
-
+                            case 5:
+                                return true;
                             default:
                                 return false;
                         }
@@ -115,6 +142,18 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
 
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQ_PERMISSION) {
+            if (grantResults.length > 0 || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                FL.setEnabled(false);
+            } else
+                FL.setEnabled(isLogger);
+        }
     }
 
     private void setWareHouse(final IDrawerItem drawerItem) {

@@ -11,6 +11,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bosphere.filelogger.FL;
+import com.fxn.stash.Stash;
 import com.test.test.Models.TaskListModel;
 import com.test.test.R;
 
@@ -70,6 +72,9 @@ public class TaskActivity extends AppCompatActivity {
                     startActivityForResult(startIntent, 100);
                 }
             } catch (JSONException e) {
+                if(Stash.getBoolean("logger")) {
+                    FL.d("Error parse task: " + e.toString());
+                }
                 Toast.makeText(TaskActivity.this, "Error parse task: " + e.toString(), Toast.LENGTH_SHORT).show();
             }
         }

@@ -18,6 +18,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bosphere.filelogger.FL;
 import com.fxn.stash.Stash;
 import com.test.test.Activities.Inbound.AddPalletActivity;
 import com.test.test.Activities.Inbound.DetailActivity;
@@ -178,10 +179,17 @@ public class StockModifyActivity extends AppCompatActivity {
                         if (!data.isEmpty()) {
                             if(data.contains("[{\"error\":true")) {
                                 Toast.makeText(StockModifyActivity.this, "Wrong modify: " + data, Toast.LENGTH_LONG).show();
+                                if(Stash.getBoolean("logger")) {
+                                    FL.d("Wrong modify: " + data);
+                                }
                                 return;
                             } else if(data.contains("{\"data\":\"success\",\"message\":\"Update\"}")) {
                                 Toast.makeText(StockModifyActivity.this, "Modify saved: " + model.Initial_PRINTED_LPN, Toast.LENGTH_LONG).show();
                                 finish();
+                            }
+                        } else {
+                            if(Stash.getBoolean("logger")) {
+                                FL.d("Wrong modify!");
                             }
                         }
                     }
@@ -243,15 +251,24 @@ public class StockModifyActivity extends AppCompatActivity {
                                 palletTypeSpinner.setAdapter(new PalletTypeAdapter(StockModifyActivity.this,-1,mPalletType));
                                 Stash.put("PalletType", mPalletType);
                             } catch (JSONException e) {
+                                if(Stash.getBoolean("logger")) {
+                                    FL.d("Wrong modify!");
+                                }
                                 Toast.makeText(StockModifyActivity.this, "Error: not parse PalletType list!", Toast.LENGTH_LONG).show();
                                 finish();
                             }
 
                         } else {
+                            if(Stash.getBoolean("logger")) {
+                                FL.d("Error: PalletType list is empty!");
+                            }
                             Toast.makeText(StockModifyActivity.this, "Error: PalletType list is empty!", Toast.LENGTH_LONG).show();
                             finish();
                         }
                     } else {
+                        if(Stash.getBoolean("logger")) {
+                            FL.d("Error: not load PalletType list!");
+                        }
                         Toast.makeText(StockModifyActivity.this, "Error: not load PalletType list!", Toast.LENGTH_LONG).show();
                         finish();
                     }
@@ -297,15 +314,24 @@ public class StockModifyActivity extends AppCompatActivity {
                                 spinner_inventory_status.setAdapter(new InventoryStatusAdapter(StockModifyActivity.this,-1, mInventoryStatus));
                                 Stash.put("InventoryStatus2", mInventoryStatus);
                             } catch (JSONException e) {
+                                if(Stash.getBoolean("logger")) {
+                                    FL.d("Error: not parse InventoryStatus list: " + e.toString());
+                                }
                                 Toast.makeText(StockModifyActivity.this, "Error: not parse InventoryStatus list!", Toast.LENGTH_LONG).show();
                                 finish();
                             }
 
                         } else {
+                            if(Stash.getBoolean("logger")) {
+                                FL.d("Error: InventoryStatus list is empty!");
+                            }
                             Toast.makeText(StockModifyActivity.this, "Error: InventoryStatus list is empty!", Toast.LENGTH_LONG).show();
                             finish();
                         }
                     } else {
+                        if(Stash.getBoolean("logger")) {
+                            FL.d("Error: not load InventoryStatus list!");
+                        }
                         Toast.makeText(StockModifyActivity.this, "Error: not load InventoryStatus list!", Toast.LENGTH_LONG).show();
                         finish();
                     }
@@ -346,6 +372,9 @@ public class StockModifyActivity extends AppCompatActivity {
                         item.wrh_zone = jsonResponse.getInt("wrh_zone");
                         mLocation.setEnabled(true);
                     } catch (JSONException e) {
+                        if(Stash.getBoolean("logger")) {
+                            FL.d("Error: not load wrh_zone " + e.toString());
+                        }
                         Toast.makeText(StockModifyActivity.this, "Error: not load wrh_zone " + e.toString(), Toast.LENGTH_LONG).show();
                         return;
                     }

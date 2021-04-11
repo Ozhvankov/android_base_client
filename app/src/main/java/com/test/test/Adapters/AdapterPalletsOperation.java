@@ -67,11 +67,11 @@ public class AdapterPalletsOperation extends AbstractDpadAdapter<AdapterPalletsO
     }
 
     public void setMask(String mask){
-        mMask = mask;
+        mMask = mask.toUpperCase();
         ArrayList<ItemModel> mItemModelsWithMask = new ArrayList<>();
         for (int i1 = 0,cnt1=mOriginalItemModels.size();i1<cnt1;i1++){
             ItemModel i = mOriginalItemModels.get(i1);
-            if(i.Initial_PRINTED_LPN.indexOf(mask) != -1){
+            if(i.Initial_PRINTED_LPN.toUpperCase().indexOf(mMask) != -1){
                 ItemModel item = new ItemModel(
                         i.Initial_PRINTED_LPN,
                         i.Inbound_shipment_number,

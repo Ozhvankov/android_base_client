@@ -12,6 +12,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bosphere.filelogger.FL;
+import com.fxn.stash.Stash;
 import com.test.test.Models.EditableItem;
 import com.test.test.Models.ItemModel;
 import com.test.test.R;
@@ -96,10 +98,17 @@ public class StockInventaryActivity extends AppCompatActivity {
                         if (!data.isEmpty()) {
                             if(data.contains("[{\"error\":true")) {
                                 Toast.makeText(StockInventaryActivity.this, "Wrong inventary: " + data, Toast.LENGTH_LONG).show();
+                                if(Stash.getBoolean("logger")) {
+                                    FL.d("Wrong inventary: " + data);
+                                }
                                 return;
                             } else if(data.contains("{\"data\":\"success\",\"message\":\"Update\"}")) {
                                 Toast.makeText(StockInventaryActivity.this, "Inventary saved: " + model.Initial_PRINTED_LPN, Toast.LENGTH_LONG).show();
                                 finish();
+                            }
+                        } else {
+                            if(Stash.getBoolean("logger")) {
+                                FL.d("Wrong inventary!");
                             }
                         }
                     }

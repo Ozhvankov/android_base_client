@@ -4,6 +4,7 @@
     package="com.test.test">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
         android:name=".App"
@@ -20,9 +21,6 @@
         <activity android:name=".Activities.Stock.SelectCellActivity" />
         <activity android:name=".Activities.Inbound.AddPalletActivity"
             android:windowSoftInputMode="adjustResize"/>
-        <activity android:name=".Activities.Outbound.StagingActivity" />
-        <activity android:name=".Activities.Outbound.ReturnActivity" />
-        <activity android:name=".Activities.Outbound.PartialActivity" />
         <activity android:name=".Activities.Outbound.OubboundRefillOrStagingActivity" />
         <activity android:name=".Activities.Outbound.TaskActivity" />
         <activity android:name=".Activities.Outbound.TasksActivity" />

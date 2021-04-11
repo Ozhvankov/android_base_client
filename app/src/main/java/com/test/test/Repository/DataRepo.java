@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.util.Base64;
 import android.util.Log;
 
+import com.bosphere.filelogger.FL;
 import com.fxn.stash.Stash;
 
 import org.jetbrains.annotations.NotNull;
@@ -32,6 +33,7 @@ public class DataRepo {
 
     public static class getData extends AsyncTask<String, String, String> {
 
+        private final boolean isLogger;
         onDataListener listener;
         private HttpUrl url;
         Request request;
@@ -40,11 +42,9 @@ public class DataRepo {
 
         public getData(onDataListener listener) {
             this.listener = listener;
+            isLogger = Stash.getBoolean("logger");
         }
 
-        public getData(onDataListener listener, String query, int page) {
-            this.listener = listener;
-        }
         public void deletePallet(int id) {
             url = HttpUrl.parse(Stash.getString("domain") + "/engineapi")
                     .newBuilder()
@@ -200,7 +200,7 @@ public class DataRepo {
         public void getCells(int Status, int WrhZone, int Cell_Type, int Warehouse, String Location, int Max_Weight_kg) {
 
             //https://wms2.madrocket.agency/engineapi?module=locationscells&search=Status:equal:1|WrhZone:equal:1|Cell_Type:equal:2|Warehouse:equal:1|Location:like:07|&limit=all
-            String s = String.format("Status:equal:%s|WrhZone:equal:%s|Cell_Type:equal:%s|Warehouse:equal:%s|Location:like:%s|Max_Weight_kg:bigger_equal:%s", String.valueOf(Status), String.valueOf(WrhZone), String.valueOf(Cell_Type), String.valueOf(Warehouse), Location, String.valueOf(Max_Weight_kg));
+            String s = String.format("Status:equal:%s|WrhZone:equal:%s|Cell_Type:equal:%s|Warehouse:equal:%s|Location:like:%s|Max_Weight_kg:bigger_equal:%s", String.valueOf(Status), String.valueOf(WrhZone), String.valueOf(Cell_Type), String.valueOf(Warehouse), Location.toUpperCase(), String.valueOf(Max_Weight_kg));
 
             url = HttpUrl.parse(Stash.getString("domain") + "/engineapi")
                     .newBuilder()
@@ -223,27 +223,6 @@ public class DataRepo {
                     .build();
 
         }
-
-        public void getCells(int Status, int WrhZone, int Warehouse, String Location) {
-
-            //https://wms2.madrocket.agency/engineapi?module=locationscells&search=Status:equal:1|WrhZone:equal:1|Cell_Type:equal:2|Warehouse:equal:1|Location:like:07|&limit=all
-            String s = String.format("Status:equal:%s|WrhZone:equal:%s|Warehouse:equal:%s|Location:like:%s|", String.valueOf(Status), String.valueOf(WrhZone), String.valueOf(Warehouse), Location);
-
-            url = HttpUrl.parse(Stash.getString("domain") + "/engineapi")
-                    .newBuilder()
-                    .addQueryParameter("module", "locationscells")
-                    .addQueryParameter("search", s)
-                    .addQueryParameter("limit", "all")
-                    .build();
-            Log.d("asdasd", url.toString());
-            request = new Request.Builder()
-                    .url(url).get()
-                    .header("User-Agent", System.getProperty("http.agent"))
-                    .header("Authorization", Credentials.basic(Stash.getString("email"), Stash.getString("api_key")))
-                    .build();
-
-        }
-
 
         public void addPallete(String item_id, String footprint_id, String unit_id, String gross, String pallet_wight
                 , String packaging_wight, String list_id, String lot_id) {
@@ -778,13 +757,23 @@ public class DataRepo {
 
         @Override
         protected String doInBackground(String... strings) {
+
             OkHttpClient client = new OkHttpClient();
 
             try {
+                if(isLogger) {
+                    FL.d(request.toString());
+                }
                 Response response = client.newCall(request).execute();
-                return response.body().string();
+                String r  =response.body().string();
+                if(isLogger) {
+                    FL.d(r);
+                }
+                return r;
             } catch (IOException e) {
-                e.printStackTrace();
+                if(isLogger) {
+                    FL.d(e.toString());
+                }
                 return null;
             }
         }
@@ -795,7 +784,6 @@ public class DataRepo {
             if (s == null) {
                 listener.returnData("");
             } else {
-                Log.d("asd", s);
                 listener.returnData(s);
             }
         }

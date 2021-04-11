@@ -61,11 +61,11 @@ public class AdapterCells extends AbstractDpadAdapter<AdapterCells.TypeTransport
     }
 
     public void setMask(String mask){
-        mMask = mask;
+        mMask = mask.toUpperCase();
         ArrayList<Cell> mItemModelsWithMask = new ArrayList<>();
         for (int i1 = 0,cnt1=mOriginalItemModels.size();i1<cnt1;i1++){
             Cell i = mOriginalItemModels.get(i1);
-            if(i.Location.indexOf(mask) != -1){
+            if(i.Location.toUpperCase().indexOf(mMask) != -1){
                 Cell item = new Cell(
                         i.id,
                         i.Location,
