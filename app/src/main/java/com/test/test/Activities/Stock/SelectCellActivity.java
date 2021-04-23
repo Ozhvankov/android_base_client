@@ -183,7 +183,7 @@ public class SelectCellActivity extends AppCompatActivity {
             }
         });
         Double fact_item_weight = Double.parseDouble(item.fact_item_weight);
-        mDataRepo.getCells(1, item.wrh_zone, 2,  Stash.getInt("warehouse_id"), like, (int)Math.ceil(fact_item_weight));
+        mDataRepo.getCells(1, item.wrh_zone,   Stash.getInt("warehouse_id"), like, (int)Math.ceil(fact_item_weight));
         mDataRepo.start();
     }
 
