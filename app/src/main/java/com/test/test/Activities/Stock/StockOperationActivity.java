@@ -83,6 +83,7 @@ public class StockOperationActivity extends AppCompatActivity {
         mPalletsList.addOnItemTouchListener(new RecyclerItemClickListener(this, mPalletsList ,new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, final int position) {
+
                 // Initializing a new alert dialog
                 final AlertDialog.Builder builder = new AlertDialog.Builder(StockOperationActivity.this);
                 // Set the alert dialog title

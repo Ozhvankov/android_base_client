@@ -679,11 +679,13 @@ public class DataRepo {
                     .build();
         }
 
-        public void getListByStatus(int status_id) {
+        public void getListByStatus(int status_id, int page, int pageLimit) {
             url = HttpUrl.parse(Stash.getString("domain") + "/engineapi")
                     .newBuilder()
                     .addQueryParameter("module", "inboundshipmentlist")
                     .addQueryParameter("search", "status_id:equal:" + status_id)
+                    .addQueryParameter("page", String.valueOf(page))
+                    .addQueryParameter("limit", String.valueOf(pageLimit))
                     .build();
 
             request = new Request.Builder()
