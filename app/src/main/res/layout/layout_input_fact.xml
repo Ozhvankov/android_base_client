@@ -41,10 +41,11 @@
 
         <TextView
             android:id="@+id/footprint_text"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:text="11111"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/textView26"
             app:layout_constraintTop_toTopOf="@+id/textView26" />
 
@@ -54,15 +55,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/printed_lpn"
-            app:layout_constraintTop_toBottomOf="@+id/textView26" />
+            app:layout_constraintTop_toBottomOf="@+id/footprint_text" />
 
         <TextView
             android:id="@+id/print_lpn_text"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:text="1111"
             app:layout_constraintBaseline_toBaselineOf="@+id/textView28"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/textView28" />
 
 
@@ -76,10 +78,11 @@
 
         <TextView
             android:id="@+id/articles_text"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:text="1111"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/textView29"
             app:layout_constraintTop_toBottomOf="@+id/textView68" />
 
@@ -94,10 +97,11 @@
 
         <TextView
             android:id="@+id/plan_weight_text"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:text="1111"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/textView33"
             app:layout_constraintTop_toTopOf="@+id/textView33" />
 
@@ -108,14 +112,15 @@
             android:layout_height="wrap_content"
             android:text="@string/plan_box"
             app:layout_constraintStart_toStartOf="@+id/textView33"
-            app:layout_constraintTop_toBottomOf="@+id/textView33" />
+            app:layout_constraintTop_toBottomOf="@+id/plan_weight_text" />
 
         <TextView
             android:id="@+id/plan_box_text"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:text="1111"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/textView34"
             app:layout_constraintTop_toBottomOf="@+id/textView33" />
 
@@ -208,13 +213,13 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:digits="1234567890."
-            android:selectAllOnFocus="true"
             android:ems="4"
+            android:hint="input"
             android:imeOptions="actionNext"
             android:inputType="number"
+            android:selectAllOnFocus="true"
             android:text=""
-            android:hint="input"
-            app:layout_constraintStart_toStartOf="@+id/fact_emptybox_edit"
+            app:layout_constraintStart_toEndOf="@+id/textView38"
             app:layout_constraintTop_toBottomOf="@+id/fact_emptybox_edit" />
 
 
@@ -403,13 +408,14 @@
             android:id="@+id/Fact_NETTO_weight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
             android:digits="1234567890."
             android:ems="4"
-            android:selectAllOnFocus="true"
+            android:hint="input"
             android:imeOptions="actionNext"
             android:inputType="number"
+            android:selectAllOnFocus="true"
             android:text=""
-            android:hint="input"
             app:layout_constraintStart_toEndOf="@+id/textView63"
             app:layout_constraintTop_toBottomOf="@+id/fact_emptypallet_edit" />
 
@@ -426,6 +432,7 @@
             android:id="@+id/staging_location"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
             android:ems="10"
             android:hint="input"
             android:inputType="text"
