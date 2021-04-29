@@ -71,7 +71,6 @@ public class MainFragment extends Fragment {
             }
         });
         mOutboundListLay.setVisibility(View.INVISIBLE);
-        mStockLay.setVisibility(View.INVISIBLE);
         return mBaseView;
     }
 }

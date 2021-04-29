@@ -197,6 +197,33 @@ public class DataRepo {
                     .build();
         }
 
+        public void getCells(int Status, int WrhZone, int Warehouse, String Location, int Max_Weight_kg) {
+
+            //https://wms2.madrocket.agency/engineapi?module=locationscells&search=Status:equal:1|WrhZone:equal:1|Cell_Type:equal:2|Warehouse:equal:1|Location:like:07|&limit=all
+            String s = String.format("Status:equal:%s|WrhZone:equal:%s|Warehouse:equal:%s|Location:like:%s|Max_Weight_kg:bigger_equal:%s", String.valueOf(Status), String.valueOf(WrhZone), String.valueOf(Warehouse), Location.toUpperCase(), String.valueOf(Max_Weight_kg));
+
+            url = HttpUrl.parse(Stash.getString("domain") + "/engineapi")
+                    .newBuilder()
+                    .addQueryParameter("module", "locationscells")
+                    //.addEncodedQueryParameter("search", s)
+                    .addQueryParameter("search", s)
+                    .addQueryParameter("limit", "all")
+                    .build();
+            // https://wms2.madrocket.agency/engineapi?module=locationscells&search=Status%3Aequal%3A1%7CWrhZone%3Aequal%3A1%7CCell_Type%3Aequal%3A2%7CWarehouse%3Aequal%3A0%7CLocation%3Alike%3A07%7C&limit=all
+
+            //https://wms2.madrocket.agency/engineapi?module=locationscells&search=Status:equal:1%7CWrhZone:equal:1%7CCell_Type:equal:2%7CWarehouse:equal:1%7CLocation:like:07%7C&limit=all
+            // https://wms2.madrocket.agency/engineapi?module=locationscells&search=Status:equal:1|WrhZone:equal:1|Cell_Type:equal:2|Warehouse:equal:1|Location:like:07|&limit=all
+
+            // https://wms2.madrocket.agency/engineapi?module=locationscells&search=Status:equal:1|WrhZone:equal:1|Cell_Type:equal:2|Warehouse:equal:0|Location:like:07|&limit=all
+            Log.d("asdasd", url.toString());
+            request = new Request.Builder()
+                    .url(url).get()
+                    .header("User-Agent", System.getProperty("http.agent"))
+                    .header("Authorization", Credentials.basic(Stash.getString("email"), Stash.getString("api_key")))
+                    .build();
+
+        }
+
         public void getCells(int Status, int WrhZone, int Cell_Type, int Warehouse, String Location, int Max_Weight_kg) {
 
             //https://wms2.madrocket.agency/engineapi?module=locationscells&search=Status:equal:1|WrhZone:equal:1|Cell_Type:equal:2|Warehouse:equal:1|Location:like:07|&limit=all
@@ -679,11 +706,13 @@ public class DataRepo {
                     .build();
         }
 
-        public void getListByStatus(int status_id) {
+        public void getListByStatus(int status_id, int page, int pageLimit) {
             url = HttpUrl.parse(Stash.getString("domain") + "/engineapi")
                     .newBuilder()
                     .addQueryParameter("module", "inboundshipmentlist")
                     .addQueryParameter("search", "status_id:equal:" + status_id)
+                    .addQueryParameter("page", String.valueOf(page))
+                    .addQueryParameter("limit", String.valueOf(pageLimit))
                     .build();
 
             request = new Request.Builder()

@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bosphere.filelogger.FL;
@@ -43,8 +44,10 @@ public class ListActivity extends AppCompatActivity {
     private ListAdapter mListAdapter;
     private int mPages = 0;
     int mPage = 0;
-
+    int mSelectStatus;
+    int PAGE_LIMIT = 6;
     DataRepo.getData getData;
+    private TextView mTotal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +58,7 @@ public class ListActivity extends AppCompatActivity {
         mRecyclerView = findViewById(R.id.list);
         mPlanFactBtn = findViewById(R.id.planFactBtn);
         mPutAwayBtn = findViewById(R.id.putAwayBtn);
+        mTotal = findViewById(R.id.total);
 
         mPlanFactBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,7 +75,7 @@ public class ListActivity extends AppCompatActivity {
                         mRecyclerView.requestFocus();
                     }
                 });
-                getData.getListByStatus(ListModel.STATUS_INPUT_FACT);
+                getData.getListByStatus(mSelectStatus = ListModel.STATUS_INPUT_FACT, mPage = 0, PAGE_LIMIT);
                 getData.start();
 
             }
@@ -93,7 +97,7 @@ public class ListActivity extends AppCompatActivity {
                         mRecyclerView.requestFocus();
                     }
                 });
-                getData.getListByStatus(ListModel.STATUS_PUT_AWAY);
+                getData.getListByStatus(mSelectStatus = ListModel.STATUS_PUT_AWAY, mPage = 0, PAGE_LIMIT);
                 getData.start();
             }
         });
@@ -101,6 +105,10 @@ public class ListActivity extends AppCompatActivity {
        // getList();
         setBackgroundColorButton(mPlanFactBtn, true);
         setBackgroundColorButton(mPutAwayBtn, false);
+
+        mListAdapter = new ListAdapter(ListActivity.this, mListModels);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(ListActivity.this));
+        mRecyclerView.setAdapter(mListAdapter);
 
         mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -117,7 +125,7 @@ public class ListActivity extends AppCompatActivity {
                                 setList(data);
                             }
                         });
-                        getData.getList(mPage);
+                        getData.getListByStatus(mSelectStatus, mPage, PAGE_LIMIT);
                         getData.start();
                     }
 
@@ -171,8 +179,9 @@ public class ListActivity extends AppCompatActivity {
             mProgressBar.setVisibility(View.INVISIBLE);
             try {
                 JSONObject jsonObject = new JSONObject(data);
-                mPages = jsonObject.getInt("total") / 10;
-
+                int total = jsonObject.getInt("total");
+                mPages =  total/ PAGE_LIMIT;
+                mTotal.setText("Total: " + total);
                 JSONArray array = jsonObject.getJSONArray("rows");
                 for (int i = 0; i < array.length(); i++) {
                     JSONObject o = array.getJSONObject(i);
@@ -189,10 +198,7 @@ public class ListActivity extends AppCompatActivity {
                             o.getString("created_at"),
                             o.getInt("status_id"), o.getInt("netto_flag_insert")));
                 }
-                mListAdapter = new ListAdapter(ListActivity.this, mListModels);
-                mRecyclerView.setLayoutManager(new LinearLayoutManager(ListActivity.this));
-                mRecyclerView.setAdapter(mListAdapter);
-
+                mListAdapter.notifyDataSetChanged();
             } catch (JSONException e) {
                 e.printStackTrace();
                 if(Stash.getBoolean("logger")) {

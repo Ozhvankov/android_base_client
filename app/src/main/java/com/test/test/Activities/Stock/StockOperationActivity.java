@@ -83,102 +83,59 @@ public class StockOperationActivity extends AppCompatActivity {
         mPalletsList.addOnItemTouchListener(new RecyclerItemClickListener(this, mPalletsList ,new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, final int position) {
-                // Initializing a new alert dialog
-                final AlertDialog.Builder builder = new AlertDialog.Builder(StockOperationActivity.this);
-                // Set the alert dialog title
-                builder.setTitle(((AdapterPalletsOperation) mPalletsList.getAdapter()).getPallet(position).Initial_PRINTED_LPN);
-                // Initialize a new list of flowers
-                final List<String> flowers = new ArrayList<String>();
-                flowers.add("Modify");
-                flowers.add("Inventory");
-
-                // Initialize a new array adapter instance
-                ArrayAdapter arrayAdapter = new ArrayAdapter<String>(
-                        StockOperationActivity.this, // Context
-                        android.R.layout.simple_list_item_single_choice, // Layout
-                        flowers // List
-                );
-                builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                        @Override
-                        public void onCancel(DialogInterface dialogInterface) {
-                            dialogInterface.dismiss();
-                        }
-                });
-                // Set a single choice items list for alert dialog
-                builder.setSingleChoiceItems(
-                        arrayAdapter, // Items list
-                        -1, // Index of checked item (-1 = no selection)
-                        new DialogInterface.OnClickListener() // Item click listener
-                        {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, final int i) {
-                                dialogInterface.dismiss();
-                                mProgressBar.setVisibility(View.VISIBLE);
-                                mSearch.setEnabled(false);
-                                mDataRepo = new DataRepo.getData(new DataRepo.onDataListener() {
-                                    @Override
-                                    public void returnData(String data) {
-                                        mProgressBar.setVisibility(View.INVISIBLE);
-                                        mSearch.setEnabled(true);
-                                        if (!data.isEmpty()) {
-                                                if(data.contains("[{\"error\":true")) {
-                                                    Toast.makeText(StockOperationActivity.this, "Wrong select pallete: " + mItemModels.get(position).id +". " + mItemModels.get(position).Initial_PRINTED_LPN, Toast.LENGTH_LONG).show();
-                                                    return;
-                                                }
-                                            try {
-                                                JSONObject jsonResponse = new JSONObject(data);
-                                                EditableItem item = new EditableItem();
-                                                item.id = jsonResponse.getInt("id");
-                                                item.Inbound_shipment_number = jsonResponse.getString("Inbound_shipment_number");
-                                                item.box_current = jsonResponse.getInt("box_current");
-                                                item.inbound_date = jsonResponse.getString("inbound_date");
-                                                item.Manufacturing_Date = jsonResponse.getString("Manufacturing_Date");
-                                                item.kg_current = jsonResponse.getInt("kg_current");
-                                                item.Item_inventory_status = jsonResponse.getInt("Item_inventory_status");
-                                                item.Lot_number_batch = jsonResponse.getString("Lot_number_batch");
-                                                item.Transport_Equipment_Number = jsonResponse.getString("Transport_Equipment_Number");
-                                                item.cell_id = jsonResponse.getInt("cell_id");
-                                                item.cell_name = jsonResponse.getString("cell_name");
-                                                item.item_id = jsonResponse.getInt("item_id");
-                                                item.Pallet_Type = jsonResponse.getInt("Pallet_Type");
-                                                item.Supplier= jsonResponse.getString("Supplier");
-                                                item.Client= jsonResponse.getString("Client");
-                                                item.Item_No = jsonResponse.getInt("Item_No");
-                                                item.kg_avaible = jsonResponse.getInt("kg_avaible");
-                                                item.kg_reserved = jsonResponse.getInt("kg_reserved");
-                                                item.box_avaible = jsonResponse.getInt("box_avaible");
-                                                item.box_reserved = jsonResponse.getInt("box_reserved");
-                                                item.fact_item_weight = jsonResponse.getString("fact_item_weight");
-                                                Intent intent;
-                                                if(i == 0) {
-                                                    intent = new Intent(StockOperationActivity.this, StockModifyActivity.class);
-                                                } else {
-                                                    intent = new Intent(StockOperationActivity.this, StockInventaryActivity.class);
-                                                }
-                                                intent.putExtra("item", item);
-                                                intent.putExtra("mItemModel", ((AdapterPalletsOperation) mPalletsList.getAdapter()).getPallet(position));
-                                                startActivity(intent);
-                                            } catch (JSONException e) {
-                                                if(Stash.getBoolean("logger")) {
-                                                    FL.d("Wrong load pallete: " + e.toString());
-                                                }
-                                                Toast.makeText(StockOperationActivity.this, "Wrong load pallete: " + e.toString(), Toast.LENGTH_LONG).show();
-                                                return;
-                                            }
-                                        }
-                                    }
-                                });
-                                mDataRepo.getItem(((AdapterPalletsOperation) mPalletsList.getAdapter()).getPallet(position).id);
-                                mDataRepo.start();
+                mProgressBar.setVisibility(View.VISIBLE);
+                mSearch.setEnabled(false);
+                mDataRepo = new DataRepo.getData(new DataRepo.onDataListener() {
+                    @Override
+                    public void returnData(String data) {
+                        mProgressBar.setVisibility(View.INVISIBLE);
+                        mSearch.setEnabled(true);
+                        if (!data.isEmpty()) {
+                            if(data.contains("[{\"error\":true")) {
+                                Toast.makeText(StockOperationActivity.this, "Wrong select pallete: " + mItemModels.get(position).id +". " + mItemModels.get(position).Initial_PRINTED_LPN, Toast.LENGTH_LONG).show();
+                                return;
                             }
-                        });
-
-                // Create the alert dialog
-                AlertDialog dialog = builder.create();
-                // Finally, display the alert dialog
-                dialog.show();
-
-
+                            try {
+                                JSONObject jsonResponse = new JSONObject(data);
+                                EditableItem item = new EditableItem();
+                                item.id = jsonResponse.getInt("id");
+                                item.Inbound_shipment_number = jsonResponse.getString("Inbound_shipment_number");
+                                item.box_current = jsonResponse.getInt("box_current");
+                                item.inbound_date = jsonResponse.getString("inbound_date");
+                                item.Manufacturing_Date = jsonResponse.getString("Manufacturing_Date");
+                                item.kg_current = jsonResponse.getInt("kg_current");
+                                item.Item_inventory_status = jsonResponse.getInt("Item_inventory_status");
+                                item.Lot_number_batch = jsonResponse.getString("Lot_number_batch");
+                                item.Transport_Equipment_Number = jsonResponse.getString("Transport_Equipment_Number");
+                                item.cell_id = jsonResponse.getInt("cell_id");
+                                item.cell_name = jsonResponse.getString("cell_name");
+                                item.item_id = jsonResponse.getInt("item_id");
+                                item.Pallet_Type = jsonResponse.getInt("Pallet_Type");
+                                item.Supplier= jsonResponse.getString("Supplier");
+                                item.Client= jsonResponse.getString("Client");
+                                item.Item_No = jsonResponse.getInt("Item_No");
+                                item.kg_avaible = jsonResponse.getInt("kg_avaible");
+                                item.kg_reserved = jsonResponse.getInt("kg_reserved");
+                                item.box_avaible = jsonResponse.getInt("box_avaible");
+                                item.box_reserved = jsonResponse.getInt("box_reserved");
+                                item.fact_item_weight = jsonResponse.getString("fact_item_weight");
+                                Intent intent;
+                                intent = new Intent(StockOperationActivity.this, StockModifyActivity.class);
+                                intent.putExtra("item", item);
+                                intent.putExtra("mItemModel", ((AdapterPalletsOperation) mPalletsList.getAdapter()).getPallet(position));
+                                startActivity(intent);
+                            } catch (JSONException e) {
+                                if(Stash.getBoolean("logger")) {
+                                    FL.d("Wrong load pallete: " + e.toString());
+                                }
+                                Toast.makeText(StockOperationActivity.this, "Wrong load pallete: " + e.toString(), Toast.LENGTH_LONG).show();
+                                return;
+                            }
+                        }
+                    }
+                });
+                mDataRepo.getItem(((AdapterPalletsOperation) mPalletsList.getAdapter()).getPallet(position).id);
+                mDataRepo.start();
             }
         }));
         load(-1);
