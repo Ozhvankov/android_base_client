@@ -487,13 +487,16 @@ public class DataRepo {
                     .build();
         }
 
-        public void savePartialTask(String id, String cellId, String lpnId, String lpnIdPartial) {
+        public void savePartialTask(String id, String cellId, String lpnId, String lpnIdPartial, String factBox) {
+
+
             url = HttpUrl.parse(Stash.getString("domain") + "/engineapi")
                     .newBuilder()
                     .addPathSegment(id)
                     .addQueryParameter("module", "outbounditemtasks")
                     .addQueryParameter("task_type_id", "2")
                     .addQueryParameter("data[cell_id]", cellId)
+                    .addQueryParameter("data[fact_box]", factBox)
                     .addQueryParameter("lpn_id", lpnId)
                     .addQueryParameter("data[lpn_id_partial]", lpnIdPartial)
                     .build();

@@ -38,10 +38,11 @@ public class TaskActivity extends AppCompatActivity {
 
         final Intent intent = getIntent();
         if (intent != null) {
-            final String action = intent.getStringExtra("action");
+            final String name = intent.getStringExtra("name");
+            final String code = intent.getStringExtra("code");
             mTaskListModels = new ArrayList<>();
             mOutboundNumberTxt.setText(intent.getStringExtra("outbound"));
-            mTaskNameTxt.setText(intent.getStringExtra("action"));
+            mTaskNameTxt.setText(intent.getStringExtra("name"));
             try {
                 JSONArray array = new JSONArray(intent.getStringExtra("data"));
                 for (int i = 0; i < array.length(); i++) {
@@ -54,11 +55,12 @@ public class TaskActivity extends AppCompatActivity {
                 mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                        if (action != null) {
+                        if (name != null) {
                             Intent startIntent = new Intent(TaskActivity.this, OubboundRefillOrStagingActivity.class);
                             startIntent.putExtra("id", mTaskListModels.get(i).id);
                             startIntent.putExtra("lpn", mTaskListModels.get(i).initialLPN);
-                            startIntent.putExtra("action", action);
+                            startIntent.putExtra("code", code);
+                            startIntent.putExtra("name", name);
                             startActivityForResult(startIntent, 100);
                         }
                     }
@@ -68,7 +70,8 @@ public class TaskActivity extends AppCompatActivity {
                     Intent startIntent = new Intent(TaskActivity.this, OubboundRefillOrStagingActivity.class);
                     startIntent.putExtra("id", mTaskListModels.get(0).id);
                     startIntent.putExtra("lpn", mTaskListModels.get(0).initialLPN);
-                    startIntent.putExtra("action", action);
+                    startIntent.putExtra("code", code);
+                    startIntent.putExtra("name", name);
                     startActivityForResult(startIntent, 100);
                 }
             } catch (JSONException e) {
