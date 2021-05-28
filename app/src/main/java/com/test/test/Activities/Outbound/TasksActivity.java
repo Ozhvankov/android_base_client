@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.bosphere.filelogger.FL;
 import com.fxn.stash.Stash;
+import com.google.gson.JsonObject;
 import com.test.test.R;
 import com.test.test.Repository.DataRepo;
 
@@ -20,7 +21,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class TasksActivity extends AppCompatActivity {
+public class TasksActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Button mRefillBtn, mPartialBtn,
             mReturnBtn, mStagingBtn;
@@ -47,45 +48,26 @@ public class TasksActivity extends AppCompatActivity {
 
         mId = getIntent().getIntExtra("id", -1);
 
-        mRefillBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getTask(mId,
-                        "refill",
-                        "1");
-            }
-        });
-        mPartialBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getTask(mId,
-                        "partial",
-                        "2");
-            }
-        });
-
-        mReturnBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getTask(mId,
-                        "return",
-                        "3");
-            }
-        });
-
-        mStagingBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getTask(mId,
-                        "staging",
-                        "4");
-            }
-        });
+        mRefillBtn.setOnClickListener(this);
+        mPartialBtn.setOnClickListener(this);
+        mReturnBtn.setOnClickListener(this);
+        mStagingBtn.setOnClickListener(this);
 
         load();
+    }
 
+    @Override
+    public void onClick(View view) {
+        taskInfo t = (taskInfo) view.getTag();
+        getTask(mId,
+                t.code,
+                t.id, t.name);
+    }
 
-
+    class taskInfo {
+        public String code;
+        public String name;
+        public int id;
     }
 
     private void load() {
@@ -117,27 +99,44 @@ public class TasksActivity extends AppCompatActivity {
                         int sumReturn = 0;
                         int sumStaging = 0;
                         for (int i = 0; i < array.length(); i++) {
+                            int id = array.getJSONObject(i).getInt("id");
                             String code = array.getJSONObject(i).getString("code");
                             int sum = array.getJSONObject(i).getInt("sum");
+                            JSONArray j = array.getJSONObject(i).getJSONArray("flags");
+                            boolean req_cells = false;
+                            boolean req_lpns = false;
+                            for(int i2 = 0; i2 < j.length();i2++) {
+                                req_cells |= j.getString(i2).equals("req_cells");
+                                req_lpns |= j.getString(i2).equals("req_lpns");
+                            }
+                            String name = array.getJSONObject(i).getString("name");
+                            taskInfo t = new taskInfo();
+                            t.code = code;
+                            t.name = name;
+                            t.id = id;
                             if (code.equals("refill") && sum > 0) {
                                 mRefillBtn.setEnabled(true);
                                 sumRefill += sum;
-                                mRefillBtn.setText("REPLENISHMENT" + " (" + sumRefill + ")");
+                                mRefillBtn.setText(name + " (" + sumRefill + ")");
+                                mRefillBtn.setTag(t);
                             }
                             if (code.equals("partial") && sum > 0) {
                                 mPartialBtn.setEnabled(true);
                                 sumPartial += sum;
-                                mPartialBtn.setText("CASES PICKING" + " (" + sumPartial + ")");
+                                mPartialBtn.setText(name + " (" + sumPartial + ")");
+                                mPartialBtn.setTag(t);
                             }
                             if (code.equals("return") && sum > 0) {
                                 mReturnBtn.setEnabled(true);
                                 sumReturn += sum;
-                                mReturnBtn.setText("PALLET RETURN" + " (" + sumReturn + ")");
+                                mReturnBtn.setText(name + " (" + sumReturn + ")");
+                                mReturnBtn.setTag(t);
                             }
                             if (code.equals("staging") && sum > 0) {
                                 mStagingBtn.setEnabled(true);
                                 sumStaging += sum;
-                                mStagingBtn.setText("TRANSFER TO STAGING" + " (" + sumStaging + ")");
+                                mStagingBtn.setText(name + " (" + sumStaging + ")");
+                                mStagingBtn.setTag(t);
                             }
                         }
                     } catch (JSONException e) {
@@ -164,7 +163,7 @@ public class TasksActivity extends AppCompatActivity {
     }
 
 
-    public void getTask(final int id, final String action, String filter) {
+    public void getTask(final int id, final String code, int filter, final String name) {
         DataRepo.getData getData = new DataRepo.getData(new DataRepo.onDataListener() {
             @Override
             public void returnData(String data) {
@@ -175,7 +174,8 @@ public class TasksActivity extends AppCompatActivity {
                         JSONArray array = object.getJSONArray("tasks");
                         Intent intent = new Intent(TasksActivity.this, TaskActivity.class);
                         intent.putExtra("id", id);
-                        intent.putExtra("action", action);
+                        intent.putExtra("code", code);
+                        intent.putExtra("name", name);
                         intent.putExtra("data", array.toString());
                         intent.putExtra("outbound", object.getString("OutboundShipmentNumber"));
                         startActivityForResult(intent, 100);
@@ -189,7 +189,7 @@ public class TasksActivity extends AppCompatActivity {
                 }
             }
         });
-        getData.getOutboundData(id, filter);
+        getData.getOutboundData(id, String.valueOf(filter));
         getData.start();
     }
 
@@ -202,4 +202,6 @@ public class TasksActivity extends AppCompatActivity {
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
+
+
 }

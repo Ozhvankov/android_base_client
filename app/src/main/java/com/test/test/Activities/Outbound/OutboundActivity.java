@@ -56,7 +56,8 @@ public class OutboundActivity extends AppCompatActivity {
                                 p.getString("Items"),
                                 p.getString("Supplier"),
                                 p.getString("Client"),
-                                p.getInt("status_id")));
+                                p.getInt("status_id"),
+                                p.getInt("task_count")));
                     }
                     ArrayAdapter<OutboundListModel> adapter = new ArrayAdapter<>(OutboundActivity.this,
                             android.R.layout.simple_list_item_1, outboundList);
