@@ -9,7 +9,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bosphere.filelogger.FL;
+import com.fxn.stash.Stash;
 import com.test.test.Models.TaskListModel;
 import com.test.test.R;
 
@@ -35,10 +38,11 @@ public class TaskActivity extends AppCompatActivity {
 
         final Intent intent = getIntent();
         if (intent != null) {
-            final String action = intent.getStringExtra("action");
+            final String name = intent.getStringExtra("name");
+            final String code = intent.getStringExtra("code");
             mTaskListModels = new ArrayList<>();
             mOutboundNumberTxt.setText(intent.getStringExtra("outbound"));
-            mTaskNameTxt.setText(intent.getStringExtra("action"));
+            mTaskNameTxt.setText(intent.getStringExtra("name"));
             try {
                 JSONArray array = new JSONArray(intent.getStringExtra("data"));
                 for (int i = 0; i < array.length(); i++) {
@@ -51,55 +55,40 @@ public class TaskActivity extends AppCompatActivity {
                 mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                        if (action != null) {
-                            switch (action) {
-                                case "refill": {
-                                    Intent startIntent = new Intent(TaskActivity.this, RefillActivity.class);
-                                    startIntent.putExtra("id", mTaskListModels.get(i).id);
-                                    startIntent.putExtra("lpn", mTaskListModels.get(i).initialLPN);
-                                    startIntent.putExtra("action", action);
-                                    startActivityForResult(startIntent, 100);
-                                    break;
-                                }
-                                case "partial": {
-                                    Intent startIntent = new Intent(TaskActivity.this, PartialActivity.class);
-                                    startIntent.putExtra("id", mTaskListModels.get(i).id);
-                                    startIntent.putExtra("lpn", mTaskListModels.get(i).initialLPN);
-                                    startIntent.putExtra("action", action);
-                                    startActivityForResult(startIntent, 100);
-                                    break;
-                                }
-                                case "return": {
-                                    Intent startIntent = new Intent(TaskActivity.this, ReturnActivity.class);
-                                    startIntent.putExtra("id", mTaskListModels.get(i).id);
-                                    startIntent.putExtra("lpn", mTaskListModels.get(i).initialLPN);
-                                    startIntent.putExtra("action", action);
-                                    startActivityForResult(startIntent, 100);
-                                    break;
-                                }
-                                case "staging": {
-                                    Intent startIntent = new Intent(TaskActivity.this, StagingActivity.class);
-                                    startIntent.putExtra("id", mTaskListModels.get(i).id);
-                                    startIntent.putExtra("lpn", mTaskListModels.get(i).initialLPN);
-                                    startIntent.putExtra("action", action);
-                                    startActivityForResult(startIntent, 100);
-                                    break;
-                                }
-                            }
+                        if (name != null) {
+                            Intent startIntent = new Intent(TaskActivity.this, OubboundRefillOrStagingActivity.class);
+                            startIntent.putExtra("id", mTaskListModels.get(i).id);
+                            startIntent.putExtra("lpn", mTaskListModels.get(i).initialLPN);
+                            startIntent.putExtra("code", code);
+                            startIntent.putExtra("name", name);
+                            startActivityForResult(startIntent, 100);
                         }
                     }
                 });
+                if(mTaskListModels.size() == 1)
+                {
+                    Intent startIntent = new Intent(TaskActivity.this, OubboundRefillOrStagingActivity.class);
+                    startIntent.putExtra("id", mTaskListModels.get(0).id);
+                    startIntent.putExtra("lpn", mTaskListModels.get(0).initialLPN);
+                    startIntent.putExtra("code", code);
+                    startIntent.putExtra("name", name);
+                    startActivityForResult(startIntent, 100);
+                }
             } catch (JSONException e) {
-                e.printStackTrace();
+                if(Stash.getBoolean("logger")) {
+                    FL.d("Error parse task: " + e.toString());
+                }
+                Toast.makeText(TaskActivity.this, "Error parse task: " + e.toString(), Toast.LENGTH_SHORT).show();
             }
         }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 100) {
+        if (requestCode == 100 && resultCode == 100) {
             setResult(100);
             finish();
+            return;
         }
         super.onActivityResult(requestCode, resultCode, data);
     }

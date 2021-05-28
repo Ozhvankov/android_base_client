@@ -5,33 +5,33 @@ import androidx.annotation.NonNull;
 import java.io.Serializable;
 
 public class ItemModel implements Serializable {
-    public String initial_PRINTED_LPN,
+
+
+    public int  item_weight,
+            item_box,
+            id, item_id, wrh_zone,
+            plan_item_weight,
+            plan_item_box, cell_id, fact_item_box, shelf_life_days, Pallet_Type ;
+    public String Initial_PRINTED_LPN,
             Inbound_shipment_number,
-            item_article,
+            item_article,Lot_number_batch, Transport_Equipment_Number,
             footprint_name,
             inventory_status,
+            Implementation_period,
             name,
-            shelf_life_days,
-            implementation_period,
-            item_weight,
-            item_box,
-            id,
-            fact_item_weight,
-            fact_item_box,
-            fact_weight_empty_box,
             fact_weight_empty_pallet,
             production_date,
             number_party,
-            item_id,
-            wrh_zone,
-            manufacturing_Date,
-            inbound_date,
-            lot_number_batch,
-            transport_Equipment_Number,
-            pallet_Type,
+            Manufacturing_Date,
             pallet_name,
-            plan_item_weight,
-            plan_item_box;
+            inbound_date;
+    public String staging_location, item_no;
+    public double fact_item_weight, fact_weight_empty_box, netto;
+
+    public ItemModel(int id, String Initial_PRINTED_LPN) {
+        this.Initial_PRINTED_LPN = Initial_PRINTED_LPN;
+        this.id = id;
+    }
 
     public ItemModel(
             String Initial_PRINTED_LPN,
@@ -40,36 +40,36 @@ public class ItemModel implements Serializable {
             String footprint_name,
             String inventory_status,
             String name,
-            String shelf_life_days,
+            int shelf_life_days,
             String Implementation_period,
-            String item_weight,
-            String item_box,
-            String id,
-            String fact_item_weight,
-            String fact_item_box,
-            String fact_weight_empty_box,
+            int item_weight,
+            int item_box,
+            int id,
+            double fact_item_weight,
+            int fact_item_box,
+            double fact_weight_empty_box,
             String fact_weight_empty_pallet,
             String production_date,
             String number_party,
-            String item_id,
-            String wrh_zone,
-            String manufacturing_Date,
+            int item_id,
+            int wrh_zone,
+            String Manufacturing_Date,
             String inbound_date,
-            String lot_number_batch,
-            String transport_Equipment_Number,
-            String pallet_Type,
+            String Lot_number_batch,
+            String Transport_Equipment_Number,
+            int Pallet_Type,
             String pallet_name,
-            String plan_item_weight,
-            String plan_item_box) {
+            int plan_item_weight,
+            int plan_item_box, int cell_id, double netto, String staging_location, String item_no) {
 
-        this.initial_PRINTED_LPN = Initial_PRINTED_LPN;
+        this.Initial_PRINTED_LPN = Initial_PRINTED_LPN;
         this.Inbound_shipment_number = Inbound_shipment_number;
         this.item_article = item_article;
         this.footprint_name = footprint_name;
         this.inventory_status = inventory_status;
         this.name = name;
         this.shelf_life_days = shelf_life_days;
-        this.implementation_period = Implementation_period;
+        this.Implementation_period = Implementation_period;
         this.item_weight = item_weight;
         this.item_box = item_box;
         this.id = id;
@@ -81,19 +81,23 @@ public class ItemModel implements Serializable {
         this.number_party = number_party;
         this.item_id = item_id;
         this.wrh_zone = wrh_zone;
-        this.manufacturing_Date = manufacturing_Date;
+        this.Manufacturing_Date = Manufacturing_Date;
         this.inbound_date = inbound_date;
-        this.lot_number_batch = lot_number_batch;
-        this.transport_Equipment_Number = transport_Equipment_Number;
-        this.pallet_Type = pallet_Type;
+        this.Lot_number_batch = Lot_number_batch;
+        this.Transport_Equipment_Number = Transport_Equipment_Number;
+        this.Pallet_Type = Pallet_Type;
         this.pallet_name = pallet_name;
         this.plan_item_weight = plan_item_weight;
         this.plan_item_box = plan_item_box;
+        this.cell_id = cell_id;
+        this.netto = netto;
+        this.staging_location = staging_location;
+        this.item_no = item_no;
     }
 
     @NonNull
     @Override
     public String toString() {
-        return initial_PRINTED_LPN;
+        return Initial_PRINTED_LPN;
     }
 }

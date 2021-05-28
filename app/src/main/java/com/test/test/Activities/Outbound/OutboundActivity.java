@@ -10,7 +10,11 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
+import com.bosphere.filelogger.FL;
+import com.fxn.stash.Stash;
+import com.test.test.Activities.Inbound.ListActivity;
 import com.test.test.Models.OutboundListModel;
 import com.test.test.R;
 import com.test.test.Repository.DataRepo;
@@ -46,9 +50,14 @@ public class OutboundActivity extends AppCompatActivity {
                     JSONArray array = object.getJSONArray("rows");
                     final List<OutboundListModel> outboundList = new ArrayList<>();
                     for (int i = 0; i < array.length(); i++){
-                        outboundList.add(new OutboundListModel(array.getJSONObject(i).getString("id"),
-                                array.getJSONObject(i).getString("OutboundShipmentNumber"),
-                                array.getJSONObject(i).getString("Items")));
+                        JSONObject p = array.getJSONObject(i);
+                        outboundList.add(new OutboundListModel(p.getInt("id"),
+                                p.getString("OutboundShipmentNumber"),
+                                p.getString("Items"),
+                                p.getString("Supplier"),
+                                p.getString("Client"),
+                                p.getInt("status_id"),
+                                p.getInt("task_count")));
                     }
                     ArrayAdapter<OutboundListModel> adapter = new ArrayAdapter<>(OutboundActivity.this,
                             android.R.layout.simple_list_item_1, outboundList);
@@ -57,8 +66,10 @@ public class OutboundActivity extends AppCompatActivity {
                     mOutboundAutocomplete.setAdapter(adapterAutocomplete);
                     mOutboundAutocomplete.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                            startItem(outboundList, i);
+                        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                            String selected = (String) adapterView.getItemAtPosition(position);
+                            int pos = outboundList.indexOf(selected);
+                            startItem(outboundList, pos);
                         }
                     });
                     mOutboundListView.setAdapter(adapter);
@@ -69,7 +80,10 @@ public class OutboundActivity extends AppCompatActivity {
                         }
                     });
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    if(Stash.getBoolean("logger")) {
+                        FL.d("Error parse list: " + e.toString());
+                    }
+                    Toast.makeText(OutboundActivity.this, "Error parse list: " + e.toString(), Toast.LENGTH_SHORT).show();
                 }
             }
         });

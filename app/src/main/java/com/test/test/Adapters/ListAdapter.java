@@ -2,6 +2,7 @@ package com.test.test.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,13 +12,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.test.test.Activities.Inbound.DetailAWAYActivity;
 import com.test.test.Activities.Inbound.DetailActivity;
 import com.test.test.Models.ListModel;
 import com.test.test.R;
 
 import java.util.List;
 
-public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder> {
+public class ListAdapter extends AbstractDpadAdapter<ListAdapter.ListViewHolder> {
 
     private List<ListModel> mListModels;
     private Context mContext;
@@ -25,6 +27,30 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
     public ListAdapter(Context context, List<ListModel> model) {
         this.mContext = context;
         this.mListModels = model;
+    }
+
+    @Override
+    public void onAttachedToRecyclerView(final RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+
+        // Handle key up and key down and attempt to move selection
+        recyclerView.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                RecyclerView.LayoutManager lm = recyclerView.getLayoutManager();
+
+                // Return false if scrolled to the bounds and allow focus to move off the list
+                if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                    if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
+                        return tryMoveSelection(lm, 1);
+                    } else if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {
+                        return tryMoveSelection(lm, -1);
+                    }
+                }
+
+                return false;
+            }
+        });
     }
 
     public void clearAll() {
@@ -37,6 +63,10 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
         notifyDataSetChanged();
     }
 
+    public List<ListModel> getListModels() {
+        return mListModels;
+    }
+
     @NonNull
     @Override
     public ListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -47,18 +77,9 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull ListViewHolder holder, final int position) {
-        holder.shipmentNmber.setText(mListModels.get(position).inboundShipmentNumber);
-        holder.articles.setText(mListModels.get(position).articles);
-        holder.status.setText(mListModels.get(position).items);
-        holder.container.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(mContext, DetailActivity.class);
-                intent.putExtra("status_id", mListModels.get(position).status);
-                intent.putExtra("list_id", String.valueOf(mListModels.get(position).id));
-                mContext.startActivity(intent);
-            }
-        });
+        holder.shipmentNmber.setText(mListModels.get(position).Inbound_shipment_number);
+        holder.articles.setText("");//mListModels.get(position).Item_articles);
+        holder.status.setText(String.valueOf(mListModels.get(position).status_id));
     }
 
     @Override

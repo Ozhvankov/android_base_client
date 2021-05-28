@@ -1,6 +1,7 @@
 package com.test.test.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import android.content.Intent;
@@ -52,9 +53,13 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if (mIsChange) {
-            mFragmentManager.beginTransaction()
-                    .replace(R.id.container, mLoginFragment)
-                    .commit();
+            if(Stash.getString("domain").length() != 0) {
+                mFragmentManager.beginTransaction()
+                        .replace(R.id.container, mLoginFragment)
+                        .commit();
+            } else {
+                super.onBackPressed();
+            }
         } else {
             super.onBackPressed();
         }

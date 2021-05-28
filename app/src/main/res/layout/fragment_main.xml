@@ -67,7 +67,7 @@
             <ImageView
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:src="@drawable/ic_outbound" />
+                android:src="@drawable/ic_storehouse" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -79,27 +79,6 @@
                 android:textSize="22sp" />
 
         </LinearLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="20dp"
-            android:text="@string/warehouse" />
-
-        <Spinner
-            android:id="@+id/warehouse_spinner"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center" />
-
-        <Button
-            android:id="@+id/apply_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/apply"
-            android:layout_gravity="center"
-            android:layout_marginTop="5dp"/>
 
     </LinearLayout>
 
