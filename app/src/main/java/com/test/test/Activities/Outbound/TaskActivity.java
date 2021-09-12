@@ -18,8 +18,11 @@ import com.test.test.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class TaskActivity extends AppCompatActivity {
@@ -38,27 +41,37 @@ public class TaskActivity extends AppCompatActivity {
 
         final Intent intent = getIntent();
         if (intent != null) {
-            final String action = intent.getStringExtra("action");
+            final String name = intent.getStringExtra("name");
+            final String code = intent.getStringExtra("code");
             mTaskListModels = new ArrayList<>();
             mOutboundNumberTxt.setText(intent.getStringExtra("outbound"));
-            mTaskNameTxt.setText(intent.getStringExtra("action"));
+            mTaskNameTxt.setText(intent.getStringExtra("name"));
             try {
                 JSONArray array = new JSONArray(intent.getStringExtra("data"));
                 for (int i = 0; i < array.length(); i++) {
-                    mTaskListModels.add(new TaskListModel(array.getJSONObject(i).getString("id"),
-                            array.getJSONObject(i).getString("Initial_PRINTED_LPN")));
+                    JSONObject o = array.getJSONObject(i);
+                    mTaskListModels.add(new TaskListModel(o.getString("id"),
+                            o.getString("Initial_PRINTED_LPN"), o.getString("Location")));
                 }
+                Comparator<? super TaskListModel> c = new Comparator<TaskListModel>() {
+                    @Override
+                    public int compare(TaskListModel taskListModel1, TaskListModel taskListModel2) {
+                        return taskListModel1.Location.compareTo(taskListModel2.Location);
+                    }
+                };
+                Collections.sort(mTaskListModels, c);
                 ArrayAdapter<TaskListModel> adapter = new ArrayAdapter<>(TaskActivity.this,
                         android.R.layout.simple_list_item_1, mTaskListModels);
                 mListView.setAdapter(adapter);
                 mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                        if (action != null) {
+                        if (name != null) {
                             Intent startIntent = new Intent(TaskActivity.this, OubboundRefillOrStagingActivity.class);
                             startIntent.putExtra("id", mTaskListModels.get(i).id);
                             startIntent.putExtra("lpn", mTaskListModels.get(i).initialLPN);
-                            startIntent.putExtra("action", action);
+                            startIntent.putExtra("code", code);
+                            startIntent.putExtra("name", name);
                             startActivityForResult(startIntent, 100);
                         }
                     }
@@ -68,7 +81,8 @@ public class TaskActivity extends AppCompatActivity {
                     Intent startIntent = new Intent(TaskActivity.this, OubboundRefillOrStagingActivity.class);
                     startIntent.putExtra("id", mTaskListModels.get(0).id);
                     startIntent.putExtra("lpn", mTaskListModels.get(0).initialLPN);
-                    startIntent.putExtra("action", action);
+                    startIntent.putExtra("code", code);
+                    startIntent.putExtra("name", name);
                     startActivityForResult(startIntent, 100);
                 }
             } catch (JSONException e) {
