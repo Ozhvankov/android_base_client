@@ -18,8 +18,11 @@ import com.test.test.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class TaskActivity extends AppCompatActivity {
@@ -46,9 +49,17 @@ public class TaskActivity extends AppCompatActivity {
             try {
                 JSONArray array = new JSONArray(intent.getStringExtra("data"));
                 for (int i = 0; i < array.length(); i++) {
-                    mTaskListModels.add(new TaskListModel(array.getJSONObject(i).getString("id"),
-                            array.getJSONObject(i).getString("Initial_PRINTED_LPN")));
+                    JSONObject o = array.getJSONObject(i);
+                    mTaskListModels.add(new TaskListModel(o.getString("id"),
+                            o.getString("Initial_PRINTED_LPN"), o.getString("Location")));
                 }
+                Comparator<? super TaskListModel> c = new Comparator<TaskListModel>() {
+                    @Override
+                    public int compare(TaskListModel taskListModel1, TaskListModel taskListModel2) {
+                        return taskListModel1.Location.compareTo(taskListModel2.Location);
+                    }
+                };
+                Collections.sort(mTaskListModels, c);
                 ArrayAdapter<TaskListModel> adapter = new ArrayAdapter<>(TaskActivity.this,
                         android.R.layout.simple_list_item_1, mTaskListModels);
                 mListView.setAdapter(adapter);

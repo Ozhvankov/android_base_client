@@ -25,6 +25,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -134,8 +136,14 @@ public class OubboundRefillOrStagingActivity extends AppCompatActivity {
                                 celldata.put(String.valueOf(a.getInt(0)), a.getString(1));
                                 mCellsMap.put(a.getString(1), String.valueOf(a.getInt(0)));
                             }
+                            Comparator<String> c = new Comparator<String>() {
+                                @Override
+                                public int compare(String s1, String s2) {
+                                    return s1.compareTo(s2);
+                                }
+                            };
                             cellLocs = new ArrayList<>(mCellsMap.keySet());
-
+                            Collections.sort(cellLocs, c);
                             ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(OubboundRefillOrStagingActivity.this,
                                     android.R.layout.simple_dropdown_item_1line, cellLocs);
                             mCellsAutocomplete.setAdapter(arrayAdapter);
@@ -184,13 +192,20 @@ public class OubboundRefillOrStagingActivity extends AppCompatActivity {
                             box = infoObject.getInt("box");
                             int boxAvailable = infoObject.getInt("box_avaible");
                             ArrayList<String> d = new ArrayList<>();
-                            for(int i1 = 1, cnt1 = box + boxAvailable; i1 <= cnt1; i1++) {
+                            for(int i1 = 1, cnt1 = box + boxAvailable; i1 < cnt1; i1++) {
                                 d.add(""+i1);
                             }
                             ArrayAdapter<String> adapter = new ArrayAdapter<String>(OubboundRefillOrStagingActivity.this, android.R.layout.simple_spinner_item, d);
                             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                             mFactBoxSpinner.setAdapter(adapter);
-                            mFactBoxSpinner.setSelection(box-1);
+                            if(box < d.size())
+                                mFactBoxSpinner.setSelection(box);
+                            else {
+                                Toast.makeText(OubboundRefillOrStagingActivity.this, R.string.boxAvailable, Toast.LENGTH_LONG).show();
+                                setResult(100);
+                                finish();
+                                return;
+                            }
                             mFactBoxSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                                 @Override
                                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -261,9 +276,6 @@ public class OubboundRefillOrStagingActivity extends AppCompatActivity {
                 String factBox = (String)mFactBoxSpinner.getSelectedItem();
                 if (lpn_id_partial.length() == 0) {
                     Toast.makeText(OubboundRefillOrStagingActivity.this, "New Lpn no set", Toast.LENGTH_SHORT).show();
-                    return;
-                } else if(Integer.valueOf(factBox)==0){
-                    Toast.makeText(OubboundRefillOrStagingActivity.this, "Fact box no set", Toast.LENGTH_SHORT).show();
                     return;
                 } else
                     mDataRepo.savePartialTask(mId, cellId, lpnId, lpn_id_partial, factBox);

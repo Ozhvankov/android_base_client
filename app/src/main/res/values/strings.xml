@@ -77,6 +77,6 @@
     <string name="apply">apply</string>
     <string name="success">Success</string>
     <string name="err">Something went wrong</string>
-
+    <string name="boxAvailable">The task could not be completed, because boxAvailable = 0</string>
 
 </resources>
